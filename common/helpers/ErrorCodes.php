@@ -17,8 +17,9 @@ class ErrorCodes
         //
         PARAM_NOT_EXIST                                             =   20101,//参数缺失
         SIGN_NOT_TRUE                                               =   20102,//签名错误
-        COIN_NOT_EIST                                               =   20103,//币名不能为空
-        GET_USERID_ERROR                                            =   20104;//获取用户id失败
+        ADDRESS_NOT_EXIST                                           =   20103,//地址缺失
+        NICKNAM_EOVERSIZE                                           =   20104,//昵称过长
+        ADDRESS_EXIST                                               =   20105;//地址存在
 
 
     /**
@@ -32,8 +33,8 @@ class ErrorCodes
         self::SYSTEM_NOT_POST                                       =>'当前请求方式有误',
         self::PARAM_NOT_EXIST                                       =>'参数缺失',
         self::SIGN_NOT_TRUE                                         =>'签名错误',
-        self::COIN_NOT_EIST                                         =>'币名不能为空',
-        self::GET_USERID_ERROR                                      =>'获取用户id失败',
+        self::ADDRESS_NOT_EXIST                                     =>'地址无效',
+        self::ADDRESS_EXIST                                         =>'地址存在',
 
     ];
 
