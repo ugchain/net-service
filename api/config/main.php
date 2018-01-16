@@ -10,7 +10,18 @@ return [
     'id' => 'app-api',
     'basePath' => dirname(__DIR__),
     'bootstrap' => ['log'],
+    //控制器默认命名空间
     'controllerNamespace' => 'api\controllers',
+    //模块类
+    'modules' => [
+        'medal' => [
+            'class' => 'api\modules\medal\Module',
+        ],
+        'user' => [
+            'class' => 'api\modules\user\Module',
+        ],
+    ],
+    //'defaultRoute'=>'user/user/test',
     'components' => [
         'request' => [
             'csrfParam' => '_csrf-api',
@@ -36,14 +47,14 @@ return [
         'errorHandler' => [
             'errorAction' => 'site/error',
         ],
-        /*
+
         'urlManager' => [
             'enablePrettyUrl' => true,
             'showScriptName' => false,
             'rules' => [
             ],
         ],
-        */
+
     ],
     'params' => $params,
 ];
