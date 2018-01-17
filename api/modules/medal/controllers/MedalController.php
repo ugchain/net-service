@@ -2,6 +2,7 @@
 namespace api\modules\medal\controllers;
 
 
+use api\modules\medal\models\Medal;
 use Yii;
 use yii\web\Controller;
 use common\helpers\OutputHelper;
@@ -24,13 +25,30 @@ class MedalController extends  Controller
 //    }
 
     /**
-     *勋章-我的资产
+     * 勋章-我的资产
      * @param address 地址
      */
     public function actionGetList()
     {
         //地址
         $address = Yii::$app->request->post("address");
+        //页数
+        $page = Yii::$app->request->post("page",Yii::$app->params['pagination']['page']);
+        //展示数量
+        $pageSzie = Yii::$app->request->post("pageSzie",Yii::$app->params['pagination']['pageSize']);
+        //查询列表
+        $medal_list = Medal::getList($address,$page,$pageSzie);
+        $medal_list['page'] = $page;
+        $medal_list['pageSize'] = $pageSzie;
+        outputHelper::ouputErrorcodeJson(\common\helpers\ErrorCodes::SUCCESS,$medal_list);
+    }
+
+    /**
+     * 勋章详情
+     * @param medal_id 勋章ID
+     */
+    public function actionMedalDetail()
+    {
 
     }
 }
