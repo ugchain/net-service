@@ -31,20 +31,20 @@
 ###勋章表
     DROP TABLE IF EXISTS `ug_medal`;
     CREATE TABLE `ug_medal` (
-      `id` int(11) unsigned NOT NULL AUTO_INCREMENT COMMENT '自增ID',
-      `theme_id` int(11) NOT NULL DEFAULT '1' COMMENT '主题ID,跟app端定义',
-      `token_id` varchar(256) NOT NULL DEFAULT '0' COMMENT '唯一ID',
-      `theme_img` varchar(255) NOT NULL DEFAULT '' COMMENT '主题图片',
-      `medal_name` varchar(50) NOT NULL  COMMENT '勋章名称',
-      `theme_name` varchar(255) NOT NULL  COMMENT '刻字',
-      `material_type` tinyint(1) NOT NULL DEFAULT '1' COMMENT '1:钻石2:水晶3:金质4:银质5:铜质',
-      `amount` varchar(10) NOT NULL DEFAULT '0'  COMMENT '价格',
-      `address` varchar(42) NOT NULL  COMMENT '持有者地址',
-      `status` tinyint(4) NOT NULL DEFAULT '0' COMMENT '0:铸造中 1:成功 2:失败',
-      `addtime` int(11) NOT NULL COMMENT '添加时间',
-      PRIMARY KEY (`id`)
-    ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='勋章表';
-
+        `id` int(11) unsigned NOT NULL AUTO_INCREMENT COMMENT '自增ID',
+        `theme_id` int(11) NOT NULL DEFAULT '1' COMMENT '主题ID,跟app端定义',
+        `token_id` varchar(256) NOT NULL DEFAULT '0' COMMENT '唯一ID',
+        `theme_img` varchar(255) NOT NULL DEFAULT '' COMMENT '主题图片',
+        `theme_thumb_img` varchar(255) NOT NULL DEFAULT '' COMMENT '主题缩略图片',
+        `medal_name` varchar(50) NOT NULL COMMENT '勋章名称',
+        `theme_name` varchar(255) NOT NULL DEFAULT '' COMMENT '刻字',
+        `material_type` tinyint(1) NOT NULL DEFAULT '1' COMMENT '1:钻石2:水晶3:金质4:银质5:铜质',
+        `amount` varchar(10) NOT NULL DEFAULT '0' COMMENT '价格',
+        `address` varchar(42) NOT NULL COMMENT '持有者地址',
+        `status` tinyint(4) NOT NULL DEFAULT '0' COMMENT '0:铸造中 1:成功 2:失败',
+        `addtime` int(11) NOT NULL COMMENT '添加时间',
+        PRIMARY KEY (`id`)
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='勋章表';
 ###勋章赠送记录表
     DROP TABLE IF EXISTS `ug_medal_give`;
     CREATE TABLE `ug_medal_give` (
