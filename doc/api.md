@@ -1,9 +1,15 @@
 [TOC]
 ## 勋章&&虚拟资产接口文档
 
+### 测试环境host
+- `http://t7-cname.ugchain.com`
+
+### 生产环境host
+- 待定
+
 ### 创建账户
 **请求URL：** 
-- `http://xx.com/user/user/create-user`
+- `/user/user/create-user`
   
 **请求方式：**
 - POST 
@@ -30,7 +36,7 @@
 
 ### 创建勋章
 **请求URL：** 
-- `http://xx.com/medal/medal/create-medal`
+- `/medal/medal/create-medal`
   
 **请求方式：**
 - POST 
@@ -64,7 +70,7 @@
 
 ### 我的勋章列表-我的资产
 **请求URL：** 
-- `http://xx.com/medal/medal/get-list`
+- `/medal/medal/get-list`
   
 **请求方式：**
 - POST 
@@ -116,7 +122,7 @@
 
 ### 勋章详情
 **请求URL：** 
-- `http://xx.com/medal/medal/medal-detail`
+- `/medal/medal/medal-detail`
   
 **请求方式：**
 - POST 
@@ -168,7 +174,7 @@
 
 ### 勋章交易历史
 **请求URL：** 
-- `http://xx.com/medal/medal/medal-history`
+- `/medal/medal/medal-history`
   
 **请求方式：**
 - POST 
@@ -229,7 +235,7 @@
 
 ### 勋章转赠
 **请求URL：** 
-- `http://xx.com/medal/medal/medal-give`
+- `/medal/medal/medal-give`
   
 **请求方式：**
 - POST 
@@ -254,7 +260,7 @@
 
 ### 划转记录
 **请求URL：** 
-- `http://xx.com/user/asset/transfer-record`
+- `/user/asset/transfer-record`
   
 **请求方式：**
 - POST 
@@ -299,7 +305,7 @@
 
 ### 划转通知
 **请求URL：** 
-- `http://xx.com/user/asset/transfer-notice`
+- `/user/asset/transfer-notice`
   
 **请求方式：**
 - POST 
