@@ -24,6 +24,8 @@ class AssetController extends  Controller
         $txid = Yii::$app->request->post("txid", "");
         //地址
         $address = Yii::$app->request->post("address", "");
+        //价格
+        $amount = Yii::$app->request->post("amount", 0);
         //划转类型
         $type = Yii::$app->request->post("type", self::ETHUG);
 
@@ -41,7 +43,7 @@ class AssetController extends  Controller
         }
 
         //插入划转通知
-        if(!$result = CenterBridge::insertData($txid, $address, $type, CenterBridge::CONFIRMED, time())){
+        if(!$result = CenterBridge::insertData($txid, $address, $type, $amount, CenterBridge::CONFIRMED, time())){
             outputHelper::ouputErrorcodeJson(\common\helpers\ErrorCodes::FALL);
         }
         outputHelper::ouputErrorcodeJson(\common\helpers\ErrorCodes::SUCCESS);
