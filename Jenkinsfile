@@ -203,7 +203,7 @@ def deployJob(host) {
     sh "ssh root@${host} 'tar -zxf ${RELEASE_LIB}${PROJECT_NAME}/${VERSION}.tar.gz -C ${RELEASE_LIB}${PROJECT_NAME}/${VERSION} && rm -rf ${RELEASE_LIB}${PROJECT_NAME}/*.tar.gz'"
 
     //Yii2软链
-    sh "ssh root@${host} 'ln -sfn /data/runtime/${PROJECT_NAME}/backend/runtime ${RELEASE_LIB}${PROJECT_NAME}/${VERSION}/backend/ && ln -sfn /data/runtime/${PROJECT_NAME}/api/runtime ${RELEASE_LIB}${PROJECT_NAME}/${VERSION}/api/ && ln -sfn /data/runtime/${PROJECT_NAME}/console/runtime ${RELEASE_LIB}${PROJECT_NAME}/${VERSION}/console/ && ln -sfn /data/runtime/${PROJECT_NAME}/api/web/uploads ${RELEASE_LIB}${PROJECT_NAME}/${VERSION}/api/web/'"
+    sh "ssh root@${host} 'ln -sfn /data/runtime/${PROJECT_NAME}/backend/runtime ${RELEASE_LIB}${PROJECT_NAME}/${VERSION}/backend/ && ln -sfn /data/runtime/${PROJECT_NAME}/api/runtime ${RELEASE_LIB}${PROJECT_NAME}/${VERSION}/api/ && ln -sfn /data/runtime/${PROJECT_NAME}/console/runtime ${RELEASE_LIB}${PROJECT_NAME}/${VERSION}/console/ && ln -sfn /data/runtime/${PROJECT_NAME}/api/uploads ${RELEASE_LIB}${PROJECT_NAME}/${VERSION}/api/web/'"
 
     //删除老版本
     sh "ssh -T -q -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no -o CheckHostIP=false 'root'@'${host}' 'cd ${RELEASE_LIB}${PROJECT_NAME}/ && ls -1rt | tac | awk '\\''FNR > ${KEEP_VERSION_NUM}  {printf(\"rm -rf %s\\n\", \$0);}'\\'' | bash'"
