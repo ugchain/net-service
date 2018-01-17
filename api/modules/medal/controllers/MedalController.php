@@ -66,7 +66,7 @@ class MedalController extends  Controller
         //勋章id
         $medal_id = Yii::$app->request->post("medal_id", "");
         //接收勋章者
-        $address = Yii::$app->request->post("owner_address", "");
+        $recipient_address = Yii::$app->request->post("recipient_address", "");
 
         //校验持有者是否真实持有勋章
         if (empty(Medal::getMedalOwner($address, $medal_id))) {
@@ -77,7 +77,14 @@ class MedalController extends  Controller
             outputHelper::ouputErrorcodeJson(\common\helpers\ErrorCodes::ADDRESS_NOT_EXIST);
         }
 
-        //开始赠送
-        MedalGive::insertData();
+        //更新勋章持有者
+        if (!Medal::updateMedalOwner($address, $medal_id, $recipient_address)) {
+            outputHelper::ouputErrorcodeJson(\common\helpers\ErrorCodes::MEDAL_UPDATE_ERROR);
+        }
+        //赠送记录
+        if (MedalGive::insertData($address, $medal_id, $recipient_address, MedalGive::TURN_INCREASE)) {
+            outputHelper::ouputErrorcodeJson(\common\helpers\ErrorCodes::SUCCESS);
+        }
+        outputHelper::ouputErrorcodeJson(\common\helpers\ErrorCodes::MEDAL_GIVE_ADD_FAILED);
     }
 }

@@ -3,18 +3,18 @@ namespace api\modules\medal\models;
 
 use Yii;
 
-class MedalGive extends \common\models\Medal
+class MedalGive extends \common\models\MedalGive
 {
 
     //创建数据
-    public static function insertData($txid, $address, $type, $status, $time)
+    public static function insertData($address, $medal_id, $recipient_address, $status)
     {
         $model = new self();
-        $model->app_txid = $txid;
-        $model->address = $address;
-        $model->type = $type;
+        $model->medal_id = $medal_id;
+        $model->owner_address = $address;
+        $model->recipient_address = $recipient_address;
         $model->status = $status;
-        $model->addtime = $time;
+        $model->addtime = time();
         return $model->save();
     }
 

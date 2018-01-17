@@ -53,4 +53,13 @@ class Medal extends \common\models\Medal
         return Medal::find()->select("id")->where(['id' => $medal_id, "address" => $address])->asArray()->one();
     }
 
+    /**
+     * 更新勋章持有者
+     */
+    public static function updateMedalOwner($address, $medal_id, $recipient_address)
+    {
+        $customer = Medal::findOne(['id' => $medal_id, 'address' => $address]);
+        $customer->address = $recipient_address;
+        return $customer->update();
+    }
 }

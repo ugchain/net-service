@@ -21,7 +21,9 @@ class ErrorCodes
         NICKNAM_EOVERSIZE                                           =   20104,//昵称过长
         ADDRESS_EXIST                                               =   20105,//地址存在
         TXID_EXIST                                                  =   20106,//交易ID已存在
-        MEDAL_INFO_ERROR                                            =   20107;//勋章信息错误
+        MEDAL_INFO_ERROR                                            =   20107,//勋章信息错误
+        MEDAL_UPDATE_ERROR                                          =   20108,//勋章地址更新错误
+        MEDAL_GIVE_ADD_FAILED                                       =   20109;//转增记录添加失败
 
 
     /**
@@ -39,6 +41,8 @@ class ErrorCodes
         self::ADDRESS_EXIST                                         =>'地址存在',
         self::TXID_EXIST                                            =>'交易ID已存在',
         self::MEDAL_INFO_ERROR                                      =>'勋章信息错误',
+        self::MEDAL_UPDATE_ERROR                                    =>'勋章地址更新错误',
+        self::MEDAL_GIVE_ADD_FAILED                                 =>'转增记录添加失败',
     ];
 
 }
