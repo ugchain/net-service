@@ -49,7 +49,9 @@ class MedalController extends  Controller
      */
     public function actionMedalDetail()
     {
-
+        //勋章ID
+        $medal_id = Yii::$app->request->post("medal");
+        //判断是否为空
     }
 
     /**
