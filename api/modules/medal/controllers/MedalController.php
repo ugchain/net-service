@@ -4,6 +4,7 @@ namespace api\modules\medal\controllers;
 
 use api\modules\medal\models\Medal;
 use api\modules\medal\models\MedalGive;
+use api\modules\user\models\Address;
 use Yii;
 use yii\web\Controller;
 use common\helpers\OutputHelper;
@@ -121,5 +122,54 @@ class MedalController extends  Controller
         //组装数据
         $data = ["medal_info"=>$medal_base_info,"list"=>$give_data];
         outputHelper::ouputErrorcodeJson(\common\helpers\ErrorCodes::SUCCESS,$data);
+    }
+
+    /**
+     * 勋章转赠
+     */
+    public function actionMedalGive()
+    {
+        //持有者
+        $address = Yii::$app->request->post("owner_address", "");
+        //勋章id
+        $medal_id = Yii::$app->request->post("medal_id", "");
+        //接收勋章者
+        $recipient_address = Yii::$app->request->post("recipient_address", "");
+
+        //校验持有者是否真实持有勋章
+        if (empty(Medal::getMedalOwner($address, $medal_id))) {
+            outputHelper::ouputErrorcodeJson(\common\helpers\ErrorCodes::MEDAL_INFO_ERROR);
+        }
+        //校验接收勋章者是否存在
+        if (empty(Address::getInfoByAddress($address))) {
+            outputHelper::ouputErrorcodeJson(\common\helpers\ErrorCodes::ADDRESS_NOT_EXIST);
+        }
+
+        //更新勋章持有者
+        if (!Medal::updateMedalOwner($address, $medal_id, $recipient_address)) {
+            outputHelper::ouputErrorcodeJson(\common\helpers\ErrorCodes::MEDAL_UPDATE_ERROR);
+        }
+        //赠送记录
+        if (MedalGive::insertData($address, $medal_id, $recipient_address, MedalGive::TURN_INCREASE)) {
+            outputHelper::ouputErrorcodeJson(\common\helpers\ErrorCodes::SUCCESS);
+        }
+        outputHelper::ouputErrorcodeJson(\common\helpers\ErrorCodes::MEDAL_GIVE_ADD_FAILED);
+    }
+
+    /**
+     * 勋章交易历史
+     */
+    public function actionMedalHistory()
+    {
+        //地址
+        $address = Yii::$app->request->post("address", "");
+        $page = Yii::$app->request->post("page", "1");
+        $pageSize = Yii::$app->request->post("pageSize", "10");
+
+        $result = [];
+        //获取数据
+        $result = MedalGive::getList($address, $page, $pageSize);
+        outputHelper::ouputErrorcodeJson(\common\helpers\ErrorCodes::SUCCESS, $result);
+
     }
 }

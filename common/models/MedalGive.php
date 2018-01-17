@@ -17,6 +17,9 @@ use yii\data\ActiveDataProvider;
 
 class MedalGive extends ActiveRecord
 {
+    const TURN_INCREASE = 0;
+    const SUCCESS = 1;
+    const FAILED = 2;
 
     /**
      * @inheritdoc
@@ -38,4 +41,5 @@ class MedalGive extends ActiveRecord
             [['owner_address','recipient_address'], 'string'],
         ];
     }
+
 }

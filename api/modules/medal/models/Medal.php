@@ -48,6 +48,7 @@ class Medal extends \common\models\Medal
     }
 
     /**
+<<<<<<< HEAD
      * 勋章详情信息
      */
     public static function getInfoById($id)
@@ -75,12 +76,30 @@ class Medal extends \common\models\Medal
     public static function uploadFile($file)
     {
         $ext = $file->getExtension();
-        $path = self::uploadFile.time().rand(100,999).".".$ext;
+        $path = self::uploadFile . time() . rand(100, 999) . "." . $ext;
         try {
             $file->saveAs($path);
         } catch (Exception $e) {
-            print $e->getMessage();exit;
+            print $e->getMessage();
+            exit;
         }
         return $path;
+    }
+    /**
+     * 查询勋章持有者
+     */
+    public static function getMedalOwner($address, $medal_id)
+    {
+        return Medal::find()->select("id")->where(['id' => $medal_id, "address" => $address])->asArray()->one();
+    }
+
+    /**
+     * 更新勋章持有者
+     */
+    public static function updateMedalOwner($address, $medal_id, $recipient_address)
+    {
+        $customer = Medal::findOne(['id' => $medal_id, 'address' => $address]);
+        $customer->address = $recipient_address;
+        return $customer->update();
     }
 }

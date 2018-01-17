@@ -54,6 +54,8 @@ class AssetController extends  Controller
     {
         //地址
         $address = Yii::$app->request->post("address", "");
+        $page = Yii::$app->request->post("page", "1");
+        $pageSize = Yii::$app->request->post("pageSize", "10");
 
         //校验地址是否存在
         if (!$address_info = Address::getInfoByAddress($address)) {
@@ -61,7 +63,7 @@ class AssetController extends  Controller
         }
 
         $result = [];
-        $result = CenterBridge::getList($address);
+        $result = CenterBridge::getList($address, $page, $pageSize);
         outputHelper::ouputErrorcodeJson(\common\helpers\ErrorCodes::SUCCESS, $result);
     }
 }

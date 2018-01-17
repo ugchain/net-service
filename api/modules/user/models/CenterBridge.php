@@ -3,16 +3,6 @@ namespace api\modules\user\models;
 
 use Yii;
 
-/**
- * This is the model class for table "address".
- *
- * @property integer $id
- * @property string $nickname
- * @property string $address
- * @property integer $is_del
- * @property integer $addtime
- */
-
 class CenterBridge extends \common\models\CenterBridge
 {
     //创建数据
@@ -34,9 +24,22 @@ class CenterBridge extends \common\models\CenterBridge
     }
 
     //返回划转记录
-    public static function getList($address)
+    public static function getList($address, $page, $pageSize)
     {
-        return CenterBridge::find()->select("*")->where(["address" => $address])->asArray()->all();
+        $query = CenterBridge::find();
+        $query->where(["address" => $address]);
+        $query->orderBy('addtime DESC');
+        //分页
+        $count = $query->count();
+        $offset = ($page - 1) * $pageSize;
+        $query->offset($offset)->limit($pageSize);
+        $index_list = $query->asArray()->all();
+        //默认无下一页
+        $is_next_page = "0";
+        if ($count - ($page * $pageSize) >= 0) {
+            $is_next_page = "1";//有下一页
+        }
+        return ['list' => $index_list, 'is_next_page' => $is_next_page,"count"=>$count];
     }
 
 
