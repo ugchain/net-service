@@ -27,31 +27,19 @@ class MedalGive extends \common\models\MedalGive
      */
     public static function getList($address, $page, $pageSize)
     {
-
         $query = Yii::$app->db;
         $offset = ($page - 1) * $pageSize;
         $sql = "SELECT `m`.`*`, `mg`.`*` FROM `ug_medal_give` as `mg` LEFT JOIN `ug_medal` as `m` ON mg.medal_id = m.id where 
             mg.owner_address = '" . $address . "' or recipient_address = '" . $address . "' order by mg.addtime desc limit " . $pageSize . " offset " . $offset;
-        var_dump($sql);die;
         $commond = $query->createCommand($sql);
         $list = $commond->queryAll();
-
-        var_dump($list);die;
-        $where = ["or", ['owner_address' => $address], ['recipient_address' => $address]];
-        $query = MedalGive::find();
-        $query->where($where);
-        $query->orderBy('id DESC');
-        //分页
-        $count = $query->count();
-        $offset = ($page - 1) * $pageSize;
-        $query->offset($offset)->limit($pageSize);
-        $index_list = $query->asArray()->all();
+        $count = count($list);
         //默认无下一页
         $is_next_page = "0";
         if ($count - ($page * $pageSize) >= 0) {
             $is_next_page = "1";//有下一页
         }
-        return ['list' => $index_list, 'is_next_page' => $is_next_page,"count"=> $count];
+        return ['list' => $list, 'is_next_page' => $is_next_page,"count"=> $count];
     }
 
 
