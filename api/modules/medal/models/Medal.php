@@ -2,6 +2,8 @@
 namespace api\modules\medal\models;
 
 use Yii;
+use yii\base\Exception;
+use yii\web\UploadedFile;
 
 
 /**
@@ -23,7 +25,7 @@ use Yii;
 
 class Medal extends \common\models\Medal
 {
-
+    const uploadFile = "uploads/";
     /**
      * 我的资产列表
      */
@@ -45,4 +47,40 @@ class Medal extends \common\models\Medal
         return ['list' => $index_list, 'is_next_page' => $is_next_page,"count"=>$count];
     }
 
+    /**
+     * 勋章详情信息
+     */
+    public static function getInfoById($id)
+    {
+        return Medal::find()
+            ->select("id,token_id,theme_img,theme_thumb_img,medal_name,theme_name,material_type,amount,address,addtime")
+            ->where(['id'=>$id])->asArray()->one();
+    }
+    /**
+     * 上传图片
+     */
+    public function upload()
+    {
+        $object = self::uploadFile($this->theme_img);
+        $this->theme_img = $object;
+        $object = self::uploadFile($this->theme_thumb_img);
+        $this->theme_thumb_img = $object;
+    }
+
+    /**
+     * 上传到本地uploads/
+     * @param $file
+     * @return string
+     */
+    public static function uploadFile($file)
+    {
+        $ext = $file->getExtension();
+        $path = self::uploadFile.time().rand(100,999).".".$ext;
+        try {
+            $file->saveAs($path);
+        } catch (Exception $e) {
+            print $e->getMessage();exit;
+        }
+        return $path;
+    }
 }
