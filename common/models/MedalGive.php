@@ -5,6 +5,16 @@ use Yii;
 use yii\db\ActiveRecord;
 use yii\data\ActiveDataProvider;
 
+/**
+ * This is the model class for table "medal_give".
+ *
+ * @property integer $medal_id
+ * @property string $owner_address
+ * @property string $recipient_address
+ * @property integer $status
+ * @property integer $addtime
+ */
+
 class MedalGive extends ActiveRecord
 {
     const TURN_INCREASE = 0;
@@ -23,13 +33,13 @@ class MedalGive extends ActiveRecord
      * 参数规则
      * @inheritdoc
      */
-//    public function rules()
-//    {
-//        return [
-//            [['theme_id','material_type', 'addtime'], 'integer'],
-//            [['theme_thumb_img','theme_img',"token_id",'address','medal_name','addtime'], 'required'],
-//            [['token_id','theme_img','theme_thumb_img','medal_name','theme_name','amount','address'], 'string'],
-//        ];
-//    }
+    public function rules()
+    {
+        return [
+            [['medal_id','addtime',"status"], 'integer'],
+            [['medal_id','owner_address',"recipient_address",'addtime'], 'required'],
+            [['owner_address','recipient_address'], 'string'],
+        ];
+    }
 
 }
