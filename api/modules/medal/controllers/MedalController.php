@@ -33,4 +33,22 @@ class MedalController extends  Controller
         $address = Yii::$app->request->post("address");
 
     }
+
+    /**
+     * 勋章转赠
+     */
+    public function actionMedalGive()
+    {
+        //持有者
+        $address = Yii::$app->request->post("owner_address", "");
+        //勋章id
+        $medal_id = Yii::$app->request->post("medal_id", "");
+        //接收勋章者
+        $address = Yii::$app->request->post("owner_address", "");
+
+        //校验持有者是否真实持有勋章
+
+        //校验接收勋章者是否存在
+
+    }
 }
