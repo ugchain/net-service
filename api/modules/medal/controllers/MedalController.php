@@ -49,6 +49,11 @@ class MedalController extends  Controller
         if(!$model->medal_name || !$model->amount || !$model->address){
             outputHelper::ouputErrorcodeJson(\common\helpers\ErrorCodes::PARAM_NOT_EXIST);
         }
+        //判断地址是否存在
+        $address_info = Address::getInfoByAddress($model->address);
+        if(!$address_info){
+            outputHelper::ouputErrorcodeJson(\common\helpers\ErrorCodes::ADDRESS_NOT_EXIST);
+        }
         //实例化文件
         $model->theme_img = UploadedFile::getInstanceByName('theme_img');
         $model->theme_thumb_img = UploadedFile::getInstanceByName('theme_thumb_img');
@@ -117,11 +122,11 @@ class MedalController extends  Controller
             //转赠历史
             foreach ($medal_trade_info as $key=>$trade_info){
                 if($key==0){
-                    $give_data[]["address"] = $trade_info["owner_address"];
+                    $give_data[$key]["address"] = $trade_info["owner_address"];
                 }else{
-                    $give_data[]["address"] = $trade_info["recipient_address"];
+                    $give_data[$key]["address"] = $trade_info["recipient_address"];
                 }
-                $give_data[]["addtime"] = $trade_info["addtime"];
+                $give_data[$key]["addtime"] = $trade_info["addtime"];
             }
         }
         //组装数据
@@ -144,10 +149,6 @@ class MedalController extends  Controller
         //校验持有者是否真实持有勋章
         if (empty(Medal::getMedalOwner($address, $medal_id))) {
             outputHelper::ouputErrorcodeJson(\common\helpers\ErrorCodes::MEDAL_INFO_ERROR);
-        }
-        //校验接收勋章者是否存在
-        if (empty(Address::getInfoByAddress($address))) {
-            outputHelper::ouputErrorcodeJson(\common\helpers\ErrorCodes::ADDRESS_NOT_EXIST);
         }
 
         //更新勋章持有者
