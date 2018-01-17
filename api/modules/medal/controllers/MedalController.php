@@ -87,4 +87,21 @@ class MedalController extends  Controller
         }
         outputHelper::ouputErrorcodeJson(\common\helpers\ErrorCodes::MEDAL_GIVE_ADD_FAILED);
     }
+
+    /**
+     * 勋章交易历史
+     */
+    public function actionMedalHistory()
+    {
+        //地址
+        $address = Yii::$app->request->post("address", "");
+        $page = Yii::$app->request->post("page", "1");
+        $pageSize = Yii::$app->request->post("pageSize", "10");
+
+        $result = [];
+        //获取数据
+        $result = MedalGive::getList($address, $page, $pageSize);
+        outputHelper::ouputErrorcodeJson(\common\helpers\ErrorCodes::SUCCESS, $result);
+
+    }
 }
