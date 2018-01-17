@@ -57,15 +57,20 @@ class MedalController extends  Controller
         if(!$model->theme_img || !$model->theme_thumb_img){
             outputHelper::ouputErrorcodeJson(\common\helpers\ErrorCodes::UPLOAD_FILE_FALL);
         }
+        $model->addtime = time();
+        $model->status = MedalGive::SUCCESS;
+        $model->token_id = base64_encode(time().rand(0,9));
         //保存勋章表
         $status = $model->save();
         if(!$status){
             outputHelper::ouputErrorcodeJson(\common\helpers\ErrorCodes::FALL);
         }
         //初始化勋章转赠表
-
-        var_dump(Yii::$app->request->post());die;
-
+        $give_status = MedalGive::insertData($model->address,$model->id,"",MedalGive::SUCCESS);
+        if(!$give_status){
+            outputHelper::ouputErrorcodeJson(\common\helpers\ErrorCodes::FALL);
+        }
+        outputHelper::ouputErrorcodeJson(\common\helpers\ErrorCodes::SUCCESS);
     }
 
     /**
@@ -150,7 +155,7 @@ class MedalController extends  Controller
             outputHelper::ouputErrorcodeJson(\common\helpers\ErrorCodes::MEDAL_UPDATE_ERROR);
         }
         //赠送记录
-        if (MedalGive::insertData($address, $medal_id, $recipient_address, MedalGive::TURN_INCREASE)) {
+        if (MedalGive::insertData($address, $medal_id, $recipient_address, MedalGive::SUCCESS)) {
             outputHelper::ouputErrorcodeJson(\common\helpers\ErrorCodes::SUCCESS);
         }
         outputHelper::ouputErrorcodeJson(\common\helpers\ErrorCodes::MEDAL_GIVE_ADD_FAILED);
