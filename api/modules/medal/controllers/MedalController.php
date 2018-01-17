@@ -22,18 +22,15 @@ class MedalController extends  Controller
 //            ]
 //        ];
 //    }
+
     /**
-     * 创建/导入用户地址
+     *勋章-我的资产
+     * @param address 地址
      */
-    public function actionCreateUser()
+    public function actionGetList()
     {
-        //昵称
-        $nickname = Yii::$app->request->post("nickname","");
         //地址
         $address = Yii::$app->request->post("address");
-        if(!$address){
-            outputHelper::ouputErrorcodeJson(\common\helpers\ErrorCodes::PARAM_NOT_EXIST);
-        }
 
     }
 }

@@ -5,8 +5,8 @@
     CREATE TABLE `center_bridge` (
       `id` int(11) unsigned NOT NULL AUTO_INCREMENT COMMENT '自增ID',
       `app_txid` varchar(50) NOT NULL DEFAULT '' COMMENT 'apptxid',
-      `chain_txid` varchar(32) NOT NULL COMMENT '链上txid',
-      `address` varchar(32) NOT NULL COMMENT '地址',
+      `chain_txid` varchar(50) NOT NULL COMMENT '链上txid',
+      `address` varchar(42) NOT NULL COMMENT '地址',
       `amount` varchar(32) NOT NULL COMMENT '价格',
       `type` tinyint(1) NOT NULL DEFAULT '1' COMMENT '1:eth_ug 2:ug_eth',
       `owner_txid` varchar(32) NOT NULL COMMENT '执行者txid',
@@ -21,7 +21,7 @@
     CREATE TABLE `address` (
       `id` int(11) unsigned NOT NULL AUTO_INCREMENT COMMENT '自增ID',
       `nickname` varchar(50) NOT NULL DEFAULT '' COMMENT '钱包名称',
-      `address` varchar(32) NOT NULL COMMENT '钱包地址',
+      `address` varchar(42) NOT NULL COMMENT '钱包地址',
       `is_del` tinyint(4) NOT NULL DEFAULT '0' COMMENT '0:未删除1:已删除',
       `addtime` int(11) NOT NULL COMMENT '添加时间',
       PRIMARY KEY (`id`)
@@ -39,7 +39,7 @@
       `theme_name` varchar(255) NOT NULL  COMMENT '刻字',
       `material_type` tinyint(1) NOT NULL DEFAULT '1' COMMENT '1:钻石2:水晶3:金质4:银质5:铜质',
       `amount` varchar(10) NOT NULL DEFAULT '0'  COMMENT '价格',
-      `address` varchar(32) NOT NULL  COMMENT '持有者地址',
+      `address` varchar(42) NOT NULL  COMMENT '持有者地址',
       `status` tinyint(4) NOT NULL DEFAULT '0' COMMENT '0:铸造中 1:成功 2:失败',
       `addtime` int(11) NOT NULL COMMENT '添加时间',
       PRIMARY KEY (`id`)
@@ -50,13 +50,9 @@
     CREATE TABLE `ug_medal_give` (
       `id` int(11) unsigned NOT NULL AUTO_INCREMENT COMMENT '自增ID',
       `medal_id` int(11) NOT NULL DEFAULT '0' COMMENT '勋章ID',
-      `owner_address` varchar(32) NOT NULL  COMMENT '转增者地址',
-      `recipient_address` varchar(32) NOT NULL DEFAULT ''  COMMENT '接收者地址',
+      `owner_address` varchar(42) NOT NULL  COMMENT '转增者地址',
+      `recipient_address` varchar(42) NOT NULL DEFAULT ''  COMMENT '接收者地址',
       `status` tinyint(1) NOT NULL DEFAULT '0' COMMENT '0:转赠中 1:成功 2:失败',
       `addtime` int(11) NOT NULL COMMENT '添加时间',
       PRIMARY KEY (`id`)
     ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='勋章赠送记录表';
-
-
-
-
