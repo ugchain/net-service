@@ -20,7 +20,8 @@ class ErrorCodes
         ADDRESS_NOT_EXIST                                           =   20103,//地址缺失
         NICKNAM_EOVERSIZE                                           =   20104,//昵称过长
         ADDRESS_EXIST                                               =   20105,//地址存在
-        TXID_EXIST                                                  =   20106;//交易ID已存在
+        TXID_EXIST                                                  =   20106,//交易ID已存在
+        MEDAL_INFO_ERROR                                            =   20107;//勋章信息错误
 
 
     /**
@@ -37,7 +38,7 @@ class ErrorCodes
         self::ADDRESS_NOT_EXIST                                     =>'地址无效',
         self::ADDRESS_EXIST                                         =>'地址存在',
         self::TXID_EXIST                                            =>'交易ID已存在',
-
+        self::MEDAL_INFO_ERROR                                      =>'勋章信息错误',
     ];
 
 }

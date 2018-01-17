@@ -3,6 +3,8 @@ namespace api\modules\medal\controllers;
 
 
 use api\modules\medal\models\Medal;
+use api\modules\medal\models\MedalGive;
+use api\modules\user\models\Address;
 use Yii;
 use yii\web\Controller;
 use common\helpers\OutputHelper;
@@ -67,8 +69,15 @@ class MedalController extends  Controller
         $address = Yii::$app->request->post("owner_address", "");
 
         //校验持有者是否真实持有勋章
-
+        if (empty(Medal::getMedalOwner($address, $medal_id))) {
+            outputHelper::ouputErrorcodeJson(\common\helpers\ErrorCodes::MEDAL_INFO_ERROR);
+        }
         //校验接收勋章者是否存在
+        if (empty(Address::getInfoByAddress($address))) {
+            outputHelper::ouputErrorcodeJson(\common\helpers\ErrorCodes::ADDRESS_NOT_EXIST);
+        }
 
+        //开始赠送
+        MedalGive::insertData();
     }
 }

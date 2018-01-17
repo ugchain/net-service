@@ -3,16 +3,6 @@ namespace api\modules\user\models;
 
 use Yii;
 
-/**
- * This is the model class for table "address".
- *
- * @property integer $id
- * @property string $nickname
- * @property string $address
- * @property integer $is_del
- * @property integer $addtime
- */
-
 class CenterBridge extends \common\models\CenterBridge
 {
     //创建数据

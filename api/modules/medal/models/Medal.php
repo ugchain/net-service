@@ -45,4 +45,12 @@ class Medal extends \common\models\Medal
         return ['list' => $index_list, 'is_next_page' => $is_next_page,"count"=>$count];
     }
 
+    /**
+     * 查询勋章持有者
+     */
+    public static function getMedalOwner($address, $medal_id)
+    {
+        return Medal::find()->select("id")->where(['id' => $medal_id, "address" => $address])->asArray()->one();
+    }
+
 }
