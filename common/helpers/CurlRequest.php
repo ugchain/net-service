@@ -4,24 +4,26 @@ namespace common\helpers;
 class CurlRequest
 {
     /**
-     * curl请求
+     * curl通过jsonRpc获取数据
      * @param $url
+     * @param $request_data
+     * @param $method
      * @return mixed
      */
-    public static function curl($url)
+    public static function curl($url,$data,$type='post')
     {
-        //初始化
+        $json_data = json_encode($data);
         $ch = curl_init();
-        //设置选项，包括URL
+        curl_setopt($ch, CURLOPT_POST, true);
         curl_setopt($ch, CURLOPT_URL, $url);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $json_data);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, [
+                'Content-Type: application/json; charset=utf-8',
+                'Content-Length: ' . strlen($json_data)]
+        );
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);//不直接输出,存放到变量中
-        curl_setopt($ch, CURLOPT_HEADER, 0);
-        curl_setopt($ch, CURLOPT_TIMEOUT,10);   //只需要设置一个秒的数量就可以
-        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER , false);
-        //执行并获取HTML文档内容
-        $output = curl_exec($ch);
-        //释放curl句柄
-        curl_close($ch);
-        return $output;
+        $ret =curl_exec($ch);
+        curl_close ( $ch );
+        return $ret;
     }
 }

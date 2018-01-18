@@ -34,16 +34,51 @@ class CenterBridge extends ActiveRecord
         return 'center_bridge';
     }
 
-//    /**
-//     * 参数规则
-//     * @inheritdoc
-//     */
-//    public function rules()
-//    {
-//        return [
-//            [['is_del', 'addtime'], 'integer'],
-//            [['address'], 'required'],
-//            [['address','nickname'], 'string'],
-//        ];
-//    }
+    /**
+     * 查询各个状态数据
+     * @param string $app_txid
+     * @param string $type
+     * @param string $status
+     * @return array
+     */
+    public static function getListByTypeAndStatus($type="1",$status="0")
+    {
+        return CenterBridge::find()
+            ->where(["type"=>$type,"status"=>$status])
+            ->asArray()->all();
+    }
+
+    /**
+     * 更新blocknumber and gas_price
+     * @param $block_number
+     * @param $gas_price
+     * @return bool
+     */
+    public static function updateBlockAndGasPrice($block_number,$gas_price)
+    {
+        $model = new self();
+        $model->blocknumber = $block_number;
+        $model->gas_price = $gas_price;
+        return $model->save();
+    }
+
+    public static function getListByTypeAndStatusAndBlockNumber($type="1", $status="0")
+    {
+        return CenterBridge::find()
+            ->where(["type"=>$type,"status"=>$status])
+            ->andWhere(['not', ['blocknumber' => '0']])
+            ->asArray()->all();
+    }
+
+    /**
+     * 更新通知对方链成功
+     * @param $app_txid
+     * @param $gas_used
+     * @param string $status
+     * @return int
+     */
+    public static function updateGasUsedAndStatusAndTime($app_txid,$gas_used,$status="0")
+    {
+        return CenterBridge::updateAll(["gas_used"=>$gas_used,"status"=>$status,"block_send_succ_time"=>time()],["app_txid"=>$app_txid]);
+    }
 }
