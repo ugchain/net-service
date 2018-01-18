@@ -27,7 +27,7 @@
       KEY `owner_confirm` (`address`,`type`,`status`)
     ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='中心服务表';
     
-###ug链上内部转账表
+###ug内部转账表
     DROP TABLE IF EXISTS `ug_trade`;
     
     CREATE TABLE `ug_trade` (
@@ -40,6 +40,7 @@
       `blocknumber` varchar(100) NOT NULL DEFAULT '0' COMMENT 'ug链上块',
       `status` tinyint(1) NOT NULL DEFAULT '0' COMMENT '0:待确认,1:成功 2:失败',
       `addtime` int(11) NOT NULL COMMENT '添加时间',
+      `trade_time` int(11) NOT NULL COMMENT '执行时间',
       PRIMARY KEY (`id`),
       KEY `chain_confirm` (`app_txid`,`status`),
       KEY `my_trade` (`from_address`,`to_address`)

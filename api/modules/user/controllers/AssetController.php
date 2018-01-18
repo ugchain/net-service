@@ -99,4 +99,21 @@ class AssetController extends  Controller
         outputHelper::ouputErrorcodeJson(\common\helpers\ErrorCodes::SUCCESS);
     }
 
+    /**
+     * ug网络交易列表
+     */
+    public function actionTradeRecord()
+    {
+        //地址
+        $address = Yii::$app->request->post("address", "");
+        $page = Yii::$app->request->post("page", Yii::$app->params['pagination']['page']);
+        $pageSize = Yii::$app->request->post("pageSize", Yii::$app->params['pagination']['pageSize']);
+        //参数验证
+        if(!$address){
+            outputHelper::ouputErrorcodeJson(\common\helpers\ErrorCodes::PARAM_NOT_EXIST);
+        }
+        $trade_record = Trade::getRecordByAddress($address,$page,$pageSize);
+        outputHelper::ouputErrorcodeJson(\common\helpers\ErrorCodes::SUCCESS,$trade_record);
+    }
+
 }

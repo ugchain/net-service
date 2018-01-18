@@ -377,3 +377,60 @@
 }
 ```
 
+--
+
+### UG交易列表
+**请求URL：** 
+- `/user/asset/trade-record`
+  
+**请求方式：**
+- POST 
+
+**参数：** 
+
+|参数名|必选|类型|说明|
+|address |是  |string | 地址 |
+|page |否  |string | 当前页 |
+|pageSize |否  |string |每页展示数据 |
+
+ **返回示例**
+
+``` 
+{
+    "code": 0,
+    "message": "成功",
+    "data": {
+        "list": [
+            {
+                "id": "2",
+                "app_txid": "312321",
+                "ug_txid": "31231",
+                "from_address": "222",//转账地址
+                "to_address": "4231",//接收地址
+                "amount": "100",//金额
+                "blocknumber": "101",//块
+                "status": "1",//状态 0:待确认,1:成功 2:失败
+                "addtime": "3123132",//创建时间
+                "trade_time":"3123141"//交易时间
+            },
+            {
+                "id": "1",
+                "app_txid": "222",
+                "ug_txid": "222",
+                "from_address": "1111",
+                "to_address": "222",
+                "amount": "100",
+                "blocknumber": "100",
+                "status": "1",
+                "addtime": "31232131",
+                "trade_time":"3123141"
+            }
+        ],
+        "is_next_page": "0",//是否有下一页
+        "count": "2",
+        "page": "1",
+        "pageSize": "10"
+    }
+}
+```
+

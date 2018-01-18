@@ -19,4 +19,16 @@ class Trade extends ActiveRecord
         return 'ug_trade';
     }
 
+    /**
+     * 参数规则
+     * @inheritdoc
+     */
+    public function rules()
+    {
+        return [
+            [['status', 'addtime','trade_time'], 'integer'],
+            [['from_address','to_address','amount','addtime'], 'required'],
+            [['app_txid','ug_txid','from_address','to_address','amount','blocknumber'], 'string'],
+        ];
+    }
 }
