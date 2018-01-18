@@ -21,7 +21,7 @@ class CenterBridge extends \common\models\CenterBridge
     //查询txid是否存在
     public static function getTxidInfo($txid)
     {
-        return CenterBridge::find()->select("id, status")->where(["app_txid" => $txid])->asArray()->one();
+        return CenterBridge::find()->select("*")->where(["app_txid" => $txid])->asArray()->one();
     }
 
     //返回划转记录
