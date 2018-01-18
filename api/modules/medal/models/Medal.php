@@ -29,7 +29,7 @@ class Medal extends \common\models\Medal
     /**
      * 我的资产列表
      */
-    public static function getList($address,$page,$pageSize)
+    public static function getList($address,$page = "1",$pageSize = "10")
     {
         $query = Medal::find();
         $query->where(['address' => $address]);

@@ -21,7 +21,7 @@ class Trade extends \common\models\Trade
     /**
      * 查询交易记录
      */
-    public static function getRecordByAddress($address,$page,$pageSize)
+    public static function getRecordByAddress($address,$page="1",$pageSize="10")
     {
         $query = Trade::find();
         $query->where(['or' , ['=' , 'from_address' , $address] , ['=' , 'to_address' , $address]]);
@@ -37,6 +37,12 @@ class Trade extends \common\models\Trade
             $is_next_page = "1";//有下一页
         }
         return ['list' => $index_list, 'is_next_page' => $is_next_page,"count"=>$count,"page"=>$page,"pageSize"=>$pageSize];
+    }
+
+    //查询txid是否存在
+    public static function getTxidInfo($txid)
+    {
+        return Trade::find()->select("*")->where(["app_txid" => $txid])->asArray()->one();
     }
 
 }
