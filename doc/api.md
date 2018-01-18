@@ -5,7 +5,7 @@
 - `http://t9-cname.ugchain.com`
 
 ### 生产环境host
-- 待定
+- `http://app.ugchain.com`
 
 ### 创建账户(暂无使用)
 **请求URL：** 
@@ -318,6 +318,31 @@
 |txid |是  |string |交易id |
 |amount |是  |string |价格 |
 |type |是  |string |通知类型（1:eth->ug 2:ug->eth） |
+
+ **返回示例**
+
+``` 
+{
+ "code": "0",
+ "message": "success",
+ "data": ""
+}
+```
+--
+
+### 广告位申请
+**请求URL：** 
+- `/user/user/create-advertise`
+  
+**请求方式：**
+- POST 
+
+**参数：** 
+
+|参数名|必选|类型|说明|
+|:----    |:---|:----- |-----   |
+|address |是  |string | 地址 |
+|phone |是  |string |手机号 |
 
  **返回示例**
 

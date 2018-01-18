@@ -1,6 +1,7 @@
 <?php
 namespace api\modules\user\controllers;
 
+use api\modules\user\models\Advertise;
 use Yii;
 use yii\web\Controller;
 use common\helpers\OutputHelper;
@@ -56,6 +57,34 @@ class UserController extends  Controller
         }
         //更新is_del
         if(!Address::updateAddressByIsDel($address)){
+            outputHelper::ouputErrorcodeJson(\common\helpers\ErrorCodes::FALL);
+        }
+        outputHelper::ouputErrorcodeJson(\common\helpers\ErrorCodes::SUCCESS);
+    }
+
+    /**
+     * 广告位申请
+     */
+    public function actionCreateAdvertise()
+    {
+        //手机号
+        $phone = Yii::$app->request->post("phone","");
+        //地址
+        $address = Yii::$app->request->post("address","");
+
+        if(!$phone || !$address){
+            outputHelper::ouputErrorcodeJson(\common\helpers\ErrorCodes::PARAM_NOT_EXIST);
+        }
+        //判断手机号
+        if(!preg_match('#^13[\d]{9}$|^14[5,7]{1}\d{8}$|^15[^4]{1}\d{8}$|^17[0,6,7,8]{1}\d{8}$|^18[\d]{9}$#', $phone)){
+            outputHelper::ouputErrorcodeJson(\common\helpers\ErrorCodes::PHONE_WRONGFOL);
+        }
+        //判断是否申请过
+        if(Advertise::getAdvertiseInfoByAddressAndPhone($address,$phone)){
+            outputHelper::ouputErrorcodeJson(\common\helpers\ErrorCodes::ADVERTISE_EXIST);
+        }
+        //保存
+        if(!Advertise::saveAdvertise($address,$phone)){
             outputHelper::ouputErrorcodeJson(\common\helpers\ErrorCodes::FALL);
         }
         outputHelper::ouputErrorcodeJson(\common\helpers\ErrorCodes::SUCCESS);

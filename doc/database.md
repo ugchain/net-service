@@ -40,7 +40,7 @@
       `addtime` int(11) NOT NULL COMMENT '添加时间',
       PRIMARY KEY (`id`),
       KEY `chain_confirm` (`app_txid`,`status`),
-      KEY `my_trade` (`owner_address`,`recipient_address`)
+      KEY `my_trade` (`from_address`,`to_address`)
     ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='ug链上内部转账表';
    
 ##数据资产管理
@@ -90,7 +90,7 @@
       `addtime` int(11) NOT NULL COMMENT '添加时间',
       PRIMARY KEY (`id`),
       KEY `medal_id` (`medal_id`),
-      KEY `history_give` (`owner_address`,`recipient_address`)
+      KEY `history_give` (`from_address`,`to_address`)
     ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='勋章赠送记录表';
 
 ###广告申请表
@@ -98,8 +98,9 @@
     
     CREATE TABLE `ug_advertise` (
       `id` int(11) unsigned NOT NULL AUTO_INCREMENT COMMENT '自增ID',
-      `address` varchar(42) NOT NULL  COMMENT '地址',
-      `phone` varchar(11) NOT NULL  COMMENT '手机号',
+      `address` varchar(42) NOT NULL COMMENT '地址',
+      `phone` varchar(11) NOT NULL COMMENT '手机号',
       `addtime` int(11) NOT NULL COMMENT '添加时间',
-      PRIMARY KEY (`id`)
-    ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='广告申请表';
+      PRIMARY KEY (`id`),
+      UNIQUE KEY `unique_address_phone` (`address`,`phone`)
+    ) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8 COMMENT='广告申请表';

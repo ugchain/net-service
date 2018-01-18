@@ -24,7 +24,9 @@ class ErrorCodes
         UPLOAD_FILE_FALL                                            =   20107,//上传图片失败
         MEDAL_INFO_ERROR                                            =   20107,//勋章信息错误
         MEDAL_UPDATE_ERROR                                          =   20108,//勋章地址更新错误
-        MEDAL_GIVE_ADD_FAILED                                       =   20109;//转增记录添加失败
+        MEDAL_GIVE_ADD_FAILED                                       =   20109,//转增记录添加失败
+        PHONE_WRONGFOL                                              =   20110,//手机号不合法
+        ADVERTISE_EXIST                                             =   20111;//广告已申请
 
 
 
@@ -46,6 +48,8 @@ class ErrorCodes
         self::MEDAL_INFO_ERROR                                      =>'勋章信息错误',
         self::MEDAL_UPDATE_ERROR                                    =>'勋章地址更新错误',
         self::MEDAL_GIVE_ADD_FAILED                                 =>'转增记录添加失败',
+        self::PHONE_WRONGFOL                                        =>'手机号不合法',
+        self::ADVERTISE_EXIST                                       =>'广告已申请',
     ];
 
 }
