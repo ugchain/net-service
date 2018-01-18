@@ -11,6 +11,8 @@
       `amount` varchar(255) NOT NULL  COMMENT '价格',
       `blocknumber` varchar(100) NOT NULL DEFAULT '0' COMMENT '链上块',
       `type` tinyint(1) NOT NULL DEFAULT '1' COMMENT '1:eth_ug 2:ug_eth',
+      `gas_price` varchar(100) NOT NULL DEFAULT '0' COMMENT 'gas_price',
+      `gas_used` varchar(100) NOT NULL DEFAULT '0' COMMENT 'gas_used',
       `owner_txid` varchar(100) NOT NULL DEFAULT '' COMMENT '执行者txid',
       `status` tinyint(1) NOT NULL DEFAULT '0' COMMENT '0:待确认,1:块上成功,2:块上失败,3:发送给对方链成功,4:发送给对方链失败,5:监听owner成功,6:监听owner失败',
       `addtime` int(11) NOT NULL COMMENT '添加时间',
@@ -40,7 +42,7 @@
       `addtime` int(11) NOT NULL COMMENT '添加时间',
       PRIMARY KEY (`id`),
       KEY `chain_confirm` (`app_txid`,`status`),
-      KEY `my_trade` (`owner_address`,`recipient_address`)
+      KEY `my_trade` (`from_address`,`to_address`)
     ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='ug链上内部转账表';
    
 ##数据资产管理
@@ -90,7 +92,7 @@
       `addtime` int(11) NOT NULL COMMENT '添加时间',
       PRIMARY KEY (`id`),
       KEY `medal_id` (`medal_id`),
-      KEY `history_give` (`owner_address`,`recipient_address`)
+      KEY `history_give` (`from_address`,`to_address`)
     ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='勋章赠送记录表';
 
 ###广告申请表
