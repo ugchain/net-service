@@ -92,3 +92,14 @@
       KEY `medal_id` (`medal_id`),
       KEY `history_give` (`owner_address`,`recipient_address`)
     ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='勋章赠送记录表';
+
+###广告申请表
+    DROP TABLE IF EXISTS `ug_advertise`;
+    
+    CREATE TABLE `ug_advertise` (
+      `id` int(11) unsigned NOT NULL AUTO_INCREMENT COMMENT '自增ID',
+      `address` varchar(42) NOT NULL  COMMENT '地址',
+      `phone` varchar(11) NOT NULL  COMMENT '手机号',
+      `addtime` int(11) NOT NULL COMMENT '添加时间',
+      PRIMARY KEY (`id`)
+    ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='广告申请表';
