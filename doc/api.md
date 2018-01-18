@@ -258,7 +258,7 @@
 ```
 --
 
-### 划转记录
+### 跨链划转记录
 **请求URL：** 
 - `/user/asset/transfer-record`
   
@@ -270,6 +270,8 @@
 |参数名|必选|类型|说明|
 |:----    |:---|:----- |-----   |
 |address |是  |string | 地址 |
+|page |否  |string | 第几页(默认1) |
+|pageSize |否  |string | 几条（默认10） |
  **返回示例**
 
 ``` 
@@ -303,7 +305,7 @@
 ```
 --
 
-### 划转通知
+### 跨链划转通知
 **请求URL：** 
 - `/user/asset/transfer-notice`
   
@@ -333,6 +335,26 @@
 ### 广告位申请
 **请求URL：** 
 - `/user/user/create-advertise`
+
+|参数名|必选|类型|说明|
+|:----    |:---|:----- |-----   |
+|address |是  |string | 地址 |
+|phone |是  |string |手机号 |
+
+**返回示例**
+
+``` 
+{
+ "code": "0",
+ "message": "success",
+ "data": ""
+}
+```
+--
+
+### UG划转通知
+**请求URL：** 
+- `/user/asset/ug-transfer-notice`
   
 **请求方式：**
 - POST 
@@ -340,9 +362,10 @@
 **参数：** 
 
 |参数名|必选|类型|说明|
-|:----    |:---|:----- |-----   |
-|address |是  |string | 地址 |
-|phone |是  |string |手机号 |
+|from |是  |string | 地址 |
+|to |是  |string | 地址 |
+|txid |是  |string |交易id |
+|amount |是  |string |价格 |
 
  **返回示例**
 
