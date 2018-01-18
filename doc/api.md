@@ -2,12 +2,12 @@
 ## 勋章&&虚拟资产接口文档
 
 ### 测试环境host
-- `http://t7-cname.ugchain.com`
+- `http://t9-cname.ugchain.com`
 
 ### 生产环境host
 - 待定
 
-### 创建账户
+### 创建账户(暂无使用)
 **请求URL：** 
 - `/user/user/create-user`
   
