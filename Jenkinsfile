@@ -51,7 +51,7 @@ pipeline {
                 sh "git submodule init && git submodule update"
 
                 //Composer Build...
-                //sh "composer install -vvv"
+                sh "composer install -vvv"
 
                 //sh "composer update -vvv"
 
