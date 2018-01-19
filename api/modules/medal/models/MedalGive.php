@@ -8,8 +8,8 @@ use Yii;
  * This is the model class for table "medal_give".
  *
  * @property integer $medal_id
- * @property string $owner_address
- * @property string $recipient_address
+ * @property string $from_address
+ * @property string $to_address
  * @property integer $status
  * @property integer $addtime
  */
@@ -28,7 +28,7 @@ class MedalGive extends \common\models\MedalGive
     public static function getMedalGiveInfoByMedalId($medal_id)
     {
         return MedalGive::find()
-            ->select("owner_address,recipient_address,addtime")
+            ->select("from_address,to_address,addtime")
             ->where(["medal_id" => $medal_id])
             ->orderBy("addtime ASC")
             ->asArray()->all();
@@ -39,8 +39,8 @@ class MedalGive extends \common\models\MedalGive
     {
         $model = new self();
         $model->medal_id = $medal_id;
-        $model->owner_address = $address;
-        $model->recipient_address = $recipient_address;
+        $model->from_address = $address;
+        $model->to_address = $recipient_address;
         $model->status = $status;
         $model->addtime = time();
         return $model->save();
@@ -54,7 +54,7 @@ class MedalGive extends \common\models\MedalGive
         $query = Yii::$app->db;
         $offset = ($page - 1) * $pageSize;
         $sql = "SELECT `m`.`*`, `mg`.`*` FROM `ug_medal_give` as `mg` LEFT JOIN `ug_medal` as `m` ON mg.medal_id = m.id where 
-            mg.owner_address = '" . $address . "' or recipient_address = '" . $address . "' order by mg.addtime desc limit " . $pageSize . " offset " . $offset;
+            mg.from_address = '" . $address . "' or to_address = '" . $address . "' order by mg.addtime desc limit " . $pageSize . " offset " . $offset;
         $commond = $query->createCommand($sql);
         $list = $commond->queryAll();
         $count = count($list);

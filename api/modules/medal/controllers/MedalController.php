@@ -57,11 +57,12 @@ class MedalController extends  Controller
         //实例化文件
         $model->theme_img = UploadedFile::getInstanceByName('theme_img');
         $model->theme_thumb_img = UploadedFile::getInstanceByName('theme_thumb_img');
-        //上传文件到服务器
-        $model->upload();
+        //判断是否有图片上传
         if(!$model->theme_img || !$model->theme_thumb_img){
             outputHelper::ouputErrorcodeJson(\common\helpers\ErrorCodes::UPLOAD_FILE_FALL);
         }
+        //上传文件到服务器
+        $model->upload();
         $model->addtime = time();
         $model->status = MedalGive::SUCCESS;
         $model->token_id = base64_encode(time().rand(0,9));

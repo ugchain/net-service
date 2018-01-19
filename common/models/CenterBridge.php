@@ -9,10 +9,24 @@ use yii\data\ActiveDataProvider;
  * This is the model class for table "address".
  *
  * @property integer $id
- * @property string $nickname
+ * @property string $app_txid
+ * @property string $chain_txid
  * @property string $address
- * @property integer $is_del
+ * @property string $amount
+ * @property string $from_block
+ * @property string $to_block
+ * @property string $gas_price
+ * @property string $gas_used
+ * @property string $owner_txid
  * @property integer $addtime
+ * @property integer $type
+ * @property integer $status
+ * @property integer $block_succ_time
+ * @property integer $block_fall_time
+ * @property integer $block_send_succ_time
+ * @property integer $block_send_fall_time
+ * @property integer $block_listen_succ_time
+ * @property integer $block_listen_fall_time
  */
 
 class CenterBridge extends ActiveRecord
@@ -35,6 +49,19 @@ class CenterBridge extends ActiveRecord
     }
 
     /**
+     * 参数规则
+     * @inheritdoc
+     */
+    public function rules()
+    {
+        return [
+            [['type','status',"addtime","block_succ_time","block_fall_time","block_send_succ_time","block_send_fall_time","block_listen_succ_time","block_listen_fall_time"], 'integer'],
+            [['address','amount','addtime'], 'required'],
+            [['app_txid','chain_txid','address','amount','from_block','to_block','gas_price','gas_used','owner_txid'], 'string'],
+        ];
+    }
+
+    /**
      * 查询各个状态数据
      * @param string $app_txid
      * @param string $type
@@ -44,7 +71,7 @@ class CenterBridge extends ActiveRecord
     public static function getListByTypeAndStatus($type="1",$status="0")
     {
         return CenterBridge::find()
-            ->where(["type"=>$type,"status"=>$status])
+            ->where(["type"=>$type,"status"=>$status,'from_block' => '0'])
             ->asArray()->all();
     }
 
@@ -54,19 +81,16 @@ class CenterBridge extends ActiveRecord
      * @param $gas_price
      * @return bool
      */
-    public static function updateBlockAndGasPrice($block_number,$gas_price)
+    public static function updateBlockAndGasPrice($app_txid,$block_number,$gas_price)
     {
-        $model = new self();
-        $model->blocknumber = $block_number;
-        $model->gas_price = $gas_price;
-        return $model->save();
+        return CenterBridge::updateAll(["from_block"=>$block_number,"gas_price"=>$gas_price],["app_txid"=>$app_txid]);
     }
 
     public static function getListByTypeAndStatusAndBlockNumber($type="1", $status="0")
     {
         return CenterBridge::find()
             ->where(["type"=>$type,"status"=>$status])
-            ->andWhere(['not', ['blocknumber' => '0']])
+            ->andWhere(['not', ['from_block' => '0']])
             ->asArray()->all();
     }
 
@@ -77,8 +101,42 @@ class CenterBridge extends ActiveRecord
      * @param string $status
      * @return int
      */
-    public static function updateGasUsedAndStatusAndTime($app_txid,$gas_used,$status="0")
+    public static function updateGasUsedAndStatusAndTime($app_txid,$gas_used,$status="0",$owner_txid)
     {
-        return CenterBridge::updateAll(["gas_used"=>$gas_used,"status"=>$status,"block_send_succ_time"=>time()],["app_txid"=>$app_txid]);
+        return CenterBridge::updateAll(["gas_used"=>$gas_used,"status"=>$status,"block_send_succ_time"=>time(),"owner_txid"=>"1111"],["app_txid"=>$app_txid]);
+    }
+
+    public static function getListByTypeAndStatusAndOwnerTxid()
+    {
+        return CenterBridge::find()
+            ->where(["type"=>"2","status"=>"3"])
+            ->andWhere(['not', ['owner_txid' => '']])
+            ->asArray()->all();
+    }
+
+    public static function updateBlockByTxid($owner_txid,$to_block)
+    {
+        return CenterBridge::updateAll(["to_block"=>$to_block],["owner_txid"=>$owner_txid]);
+    }
+
+    /**
+     * 当to_block为空时,大于安全块直接成功
+     * @param $owner_txid
+     * @param $to_block
+     * @return int
+     */
+    public static function updateBlockAndTimeByTxid($owner_txid,$to_block)
+    {
+        return CenterBridge::updateAll(["to_block"=>$to_block,"status"=>self::LISTEN_CONFIRM_SUCCESS,"block_listen_succ_time"=>time()],["owner_txid"=>$owner_txid]);
+    }
+
+    /**
+     * 最终执行成功
+     * @param $owner_txid
+     * @return int
+     */
+    public static function updateListenSuccTimeByTxid($owner_txid)
+    {
+        return CenterBridge::updateAll(["status"=>self::LISTEN_CONFIRM_SUCCESS,"block_listen_succ_time"=>time()],["owner_txid"=>$owner_txid]);
     }
 }

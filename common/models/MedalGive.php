@@ -37,8 +37,8 @@ class MedalGive extends ActiveRecord
     {
         return [
             [['medal_id','addtime',"status"], 'integer'],
-            [['medal_id','owner_address','addtime'], 'required'],
-            [['owner_address','recipient_address'], 'string'],
+            [['medal_id','from_address','addtime'], 'required'],
+            [['from_address','to_address'], 'string'],
         ];
     }
 
