@@ -50,10 +50,10 @@ class MedalController extends  Controller
             outputHelper::ouputErrorcodeJson(\common\helpers\ErrorCodes::PARAM_NOT_EXIST);
         }
         //判断地址是否存在
-        $address_info = Address::getInfoByAddress($model->address);
-        if(!$address_info){
-            outputHelper::ouputErrorcodeJson(\common\helpers\ErrorCodes::ADDRESS_NOT_EXIST);
-        }
+//        $address_info = Address::getInfoByAddress($model->address);
+//        if(!$address_info){
+//            outputHelper::ouputErrorcodeJson(\common\helpers\ErrorCodes::ADDRESS_NOT_EXIST);
+//        }
         //实例化文件
         $model->theme_img = UploadedFile::getInstanceByName('theme_img');
         $model->theme_thumb_img = UploadedFile::getInstanceByName('theme_thumb_img');
