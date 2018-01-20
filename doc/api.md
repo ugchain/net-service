@@ -114,7 +114,8 @@ doc/api.md
        "page": "1",
        "pageSize": "10",
        "count": "100",
-       "is_next_page"=>"1"//1有下一页 0暂无数据
+       "is_next_page"=>"1"//1有下一页 0暂无数据\
+       "image_url"=>"http://***.com"
       }
   }
 ```
@@ -159,6 +160,7 @@ doc/api.md
                 "address": "0x03afebB4Fa17051a6F2f1306d732161d85E4A6b9",
                 "addtime": "1516366310"
             }
+        "image_url"=>"http://***.com"
         ]
     }
 }
@@ -207,7 +209,8 @@ doc/api.md
             }
         ],
         "is_next_page": "0",
-        "count": 1
+        "count": 1,
+        "image_url"=>"http://***.com"
     }
 }
 ```
