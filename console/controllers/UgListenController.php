@@ -20,9 +20,7 @@ class UgListenController extends Controller
      */
     public function actionListenTxid()
     {
-        $block_info = CurlRequest::UgCurl("eth_getTransactionReceipt",["0xd87802ad41e1372619d490098647d0ed4963cf848f7549253493e00f100a9904"]);
-        var_dump($block_info);die;
-        echo "开始";
+        echo "UG转账ETH开始".time();
         //读取日志文件
         OutputHelper::readLog(Yii::$app->getRuntimePath() . "/uglisten.log");
 
@@ -57,8 +55,7 @@ class UgListenController extends Controller
                 continue;
             }
         }
-
         OutputHelper::writeLog(Yii::$app->getRuntimePath() . '/uglisten.log',json_encode(["status"=>0]));
-        echo "更新结束";
+        echo "UG转账ETH结束".time();
     }
 }
