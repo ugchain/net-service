@@ -1,3 +1,4 @@
+doc/api.md
 [TOC]
 ## 勋章&&虚拟资产接口文档
 
@@ -81,7 +82,7 @@
 |:----    |:---|:----- |-----   |
 |address |是  |string | 账户地址 |
 |page |否  |string | 第几页（默认0）  |
-|pageSize |是  |string | 每页展示多少（默认10） |
+|pageSzie |是  |string | 每页展示多少（默认10） |
 
  **返回示例**
 
@@ -177,7 +178,7 @@
 |:----    |:---|:----- |-----   |
 |address |是  |string | 用户地址 |
 |page |否  |string | 第几页（默认0）  |
-|pageSize |是  |string | 每页展示多少（默认10） |
+|pageSzie |是  |string | 每页展示多少（默认10） |
 
  **返回示例**
 
@@ -188,18 +189,18 @@
     "data": {
         "list": [
             {
-                "id": "2",  //勋章id
-                "theme_id": "1",   //主题ID
-                "token_id": "MTUxNjM2NjMxMDU=", //唯一ID
-                "theme_img": "uploads/  1516366310696.jpg", //主题图片
-                "theme_thumb_img": "uploads/1516366310875.jpg", //主题缩略图片
-                "medal_name": "周康勋章", //勋章名称
-                "theme_name": "新年快乐", //刻字
-                "material_type": "5", //材质 1:钻石2:水晶3:金质4:银质5:铜质
-                "amount": "2000",  //价格
-                "address": "0x03afebB4Fa17051a6F2f1306d732161d85E4A6b9", //持有者地址
-                "status": "1",  //勋章状态 0:铸造中 1:成功 2:失败
-                "addtime": "1516366310", //创建时间
+                "id": "2",
+                "theme_id": "1",
+                "token_id": "MTUxNjM2NjMxMDU=",
+                "theme_img": "uploads/1516366310696.jpg",
+                "theme_thumb_img": "uploads/1516366310875.jpg",
+                "medal_name": "周康勋章",
+                "theme_name": "新年快乐",
+                "material_type": "5",
+                "amount": "2000",
+                "address": "0x03afebB4Fa17051a6F2f1306d732161d85E4A6b9",
+                "status": "1",   //0转增中；1成功；2失败
+                "addtime": "1516366310",
                 "medal_id": "2",
                 "from_address": "0x03afebB4Fa17051a6F2f1306d732161d85E4A6b9",
                 "to_address": ""
@@ -400,7 +401,7 @@
                 "to_address": "222",
                 "amount": "100",
                 "blocknumber": "100",
-                "status": "1",
+                "status": "1",  //0:待确认,1:成功 2:失败
                 "addtime": "31232131",
                 "trade_time":"3123141"
             }
@@ -412,4 +413,8 @@
     }
 }
 ```
+
+
+
+
 
