@@ -1,7 +1,6 @@
 <?php
 namespace console\controllers;
 
-
 use common\helpers\OutputHelper;
 use common\models\CenterBridge;
 use Yii;
@@ -26,8 +25,9 @@ class UgListenController extends Controller
 
         //写入执行状态status为1
         OutputHelper::writeLog(Yii::$app->getRuntimePath() . '/uglisten.log',json_encode(["status"=>1]));
+
         //查询数据信息待确认状态
-        $unsucc_info = CenterBridge::getListByTypeAndStatus(CenterBridge::CONFIRMED);
+        $unsucc_info = CenterBridge::getListByTypeAndStatus(CenterBridge::UG_ETH);
         if(!$unsucc_info){
             OutputHelper::writeLog(Yii::$app->getRuntimePath() . '/uglisten.log',json_encode(["status"=>0]));
             echo "暂无需要确认的数据";die();
@@ -46,7 +46,7 @@ class UgListenController extends Controller
             $owner_data = ["status"=>1,"owner_txid"=>"1111111"];
 
             //blockNumber截取前两位0x && 16进制 转换为10进制
-            $trade_info = OutputHelper::substrHexdec($block_info["result"]);
+            $trade_info = OutputHelper::substrHexdec($block_info["result"], 1);
 
             //更新数据库
             if(!CenterBridge::updateBlockAndGasPrice($list["app_txid"],$trade_info["blockNumber"],$trade_info["gasPrice"])){
