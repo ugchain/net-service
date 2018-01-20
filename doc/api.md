@@ -137,37 +137,29 @@
 
 ``` 
 {
-	"code": 0,
-	"message": "success",
-	"data": {
-		"medal_info": {
-			"medal_id": "1",
-			"medal_name": "名称",
-			"theme_name": "刻字信息",
-			"theme_img": "主题图片",
-			"theme_thumb_img": "主题缩略图",
-			"amount": "金额",
-			"token_id": "12313213112123123",
-			"address": "当前持有者信息",
-			"founder": "创始人地址"
-		},
-		"list": [{
-			"address": "1233",
-			"addtime": "1313231"
-		}, {
-			"address": "1233",
-			"addtime": "1313231"
-		}, {
-			"address": "1233",
-			"addtime": "1313231"
-		}, {
-			"address": "1233",
-			"addtime": "1313231"
-		}, {
-			"address": "1233",
-			"addtime": "1313231"
-		}]
-	}
+    "code": 0,
+    "message": "成功",
+    "data": {
+        "medal_info": {
+            "id": "2",
+            "token_id": "MTUxNjM2NjMxMDU=",
+            "theme_img": "uploads/1516366310696.jpg",
+            "theme_thumb_img": "uploads/1516366310875.jpg",
+            "medal_name": "周康勋章",
+            "theme_name": "新年快乐",
+            "material_type": "5",
+            "amount": "2000",
+            "address": "0x03afebB4Fa17051a6F2f1306d732161d85E4A6b9",
+            "addtime": "1516366310",
+            "founder": "0x03afebB4Fa17051a6F2f1306d732161d85E4A6b9"
+        },
+        "list": [
+            {
+                "address": "0x03afebB4Fa17051a6F2f1306d732161d85E4A6b9",
+                "addtime": "1516366310"
+            }
+        ]
+    }
 }
 ```
 --
