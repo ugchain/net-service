@@ -53,7 +53,7 @@ class MedalGive extends \common\models\MedalGive
     {
         $query = Yii::$app->db;
         $offset = ($page - 1) * $pageSize;
-        $sql = "SELECT `m`.`*`, `mg`.`*` FROM `ug_medal_give` as `mg` LEFT JOIN `ug_medal` as `m` ON mg.medal_id = m.id where 
+        $sql = "SELECT `m`.*, `mg`.* FROM `ug_medal_give` as `mg` LEFT JOIN `ug_medal` as `m` ON mg.medal_id = m.id where 
             mg.from_address = '" . $address . "' or to_address = '" . $address . "' order by mg.addtime desc limit " . $pageSize . " offset " . $offset;
         $commond = $query->createCommand($sql);
         $list = $commond->queryAll();
