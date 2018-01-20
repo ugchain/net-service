@@ -95,6 +95,7 @@ class MedalController extends  Controller
         $medal_list = Medal::getList($address,$page,$pageSzie);
         $medal_list['page'] = $page;
         $medal_list['pageSize'] = $pageSzie;
+        $medal_list['image_url'] = Yii::$app->params['image_url'];
         outputHelper::ouputErrorcodeJson(\common\helpers\ErrorCodes::SUCCESS,$medal_list);
     }
 
@@ -131,7 +132,7 @@ class MedalController extends  Controller
             }
         }
         //组装数据
-        $data = ["medal_info"=>$medal_base_info,"list"=>$give_data];
+        $data = ["medal_info"=>$medal_base_info,"list"=>$give_data, 'image_url' => Yii::$app->params['image_url']];
         outputHelper::ouputErrorcodeJson(\common\helpers\ErrorCodes::SUCCESS,$data);
     }
 
@@ -179,6 +180,7 @@ class MedalController extends  Controller
         $result = [];
         //获取数据
         $result = MedalGive::getList($address, $page, $pageSize);
+        $result['image_url'] = Yii::$app->params['image_url'];
         outputHelper::ouputErrorcodeJson(\common\helpers\ErrorCodes::SUCCESS, $result);
 
     }

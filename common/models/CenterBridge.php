@@ -39,6 +39,8 @@ class CenterBridge extends ActiveRecord
     const SEND_FAILED = 4;
     const LISTEN_CONFIRM_SUCCESS = 5;
     const LISTEN_CONFIRM_FAILED = 6;
+    const ETH_UG = 1;
+    const UG_ETH = 2;
 
     /**
      * @inheritdoc
