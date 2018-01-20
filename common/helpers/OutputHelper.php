@@ -13,19 +13,4 @@ class OutputHelper
         $errorcode['data'] = $data;
         echo json_encode($errorcode);die;
     }
-
-    /**
-     * 数字转为字符串（包括科学计数法）
-     */
-    public static function NumToStr($num){
-        if(false !== stripos($num, "e")){
-            $num = number_format($num,10,'.','');
-        }
-        if(false !== stripos($num, ".")){
-            while (eregi("0$", $num)){
-                $num = rtrim($num,'0');
-            };
-        }
-        return (string)$num;
-    }
 }

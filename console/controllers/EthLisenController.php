@@ -15,29 +15,13 @@ use yii\log\Logger;
 class EthLisenController extends Controller
 {
 
-    public function options($actionID)
-    {
-        return [
-            "coin_name",
-            "coin_type"
-        ];
-    }
-
-    public function optionAliases()
-    {
-        return [
-            'c' => 'coin_name',
-            'y' => 'coin_type',
-        ];
-    }
-
     /**
      * console of eth-listen/listen-txid 根据txid获取blocknumber and gas_price
      * @return string
      */
     public function actionListenTxid()
     {
-        echo "开始";
+        echo "eth-ug状态监听";
         //读取日志文件
         $ethlisten = file_get_contents(Yii::$app->getRuntimePath() . '/ethlisten.log');
         $ethlistenlog = json_decode($ethlisten,true);
@@ -129,7 +113,7 @@ class EthLisenController extends Controller
             //16进制 转换为10进制
             $txid_info["result"]["gasUsed"] = hexdec($txid_info["result"]["gasUsed"]);
 
-            //todo 通知owners--暂时不写--返回txid后去 ug网络确认直接更新数据库状态为转账成功
+            //todo 1:签名服务器做签名api 2:去ug链上转账操作返回txid后(api) 3:ug网络确认(api)直接更新数据库状态为转账成功
             $owner_status = "1";
             if(!$owner_status){
                 continue;
