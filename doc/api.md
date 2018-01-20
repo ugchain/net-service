@@ -345,6 +345,7 @@ doc/api.md
 **参数：** 
 
 |参数名|必选|类型|说明|
+|:----    |:---|:----- |-----   |
 |from |是  |string | 地址 |
 |to |是  |string | 地址 |
 |txid |是  |string |交易id |
@@ -372,6 +373,7 @@ doc/api.md
 **参数：** 
 
 |参数名|必选|类型|说明|
+|:----    |:---|:----- |-----   |
 |address |是  |string | 地址 |
 |page |否  |string | 当前页 |
 |pageSize |否  |string |每页展示数据 |
