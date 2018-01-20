@@ -119,13 +119,13 @@ class MedalController extends  Controller
         $give_data = [];
         //存在信息是则取第一条
         if($medal_trade_info){
-            $medal_base_info["founder"] = $medal_trade_info[0]["owner_address"];
+            $medal_base_info["founder"] = $medal_trade_info[0]["from_address"];
             //转赠历史
             foreach ($medal_trade_info as $key=>$trade_info){
                 if($key==0){
-                    $give_data[$key]["address"] = $trade_info["owner_address"];
+                    $give_data[$key]["address"] = $trade_info["from_address"];
                 }else{
-                    $give_data[$key]["address"] = $trade_info["recipient_address"];
+                    $give_data[$key]["address"] = $trade_info["to_address"];
                 }
                 $give_data[$key]["addtime"] = $trade_info["addtime"];
             }
