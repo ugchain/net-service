@@ -19,6 +19,8 @@ class UgListenController extends Controller
      */
     public function actionListenTxid()
     {
+        $block_info = CurlRequest::UgCurl("eth_getTransactionReceipt",["0xd87802ad41e1372619d490098647d0ed4963cf848f7549253493e00f100a9904"]);
+        var_dump($block_info);die;
         echo "开始";
         //读取日志文件
         $ethlisten = file_get_contents(Yii::$app->getRuntimePath() . '/uglisten.log');
@@ -35,7 +37,7 @@ class UgListenController extends Controller
         }
         foreach ($unsucc_info as $list)
         {
-            $block_info = CurlRequest::EthCurl("eth_getTransactionReceipt",[$list["app_txid"]]);
+            $block_info = CurlRequest::UgCurl("eth_getTransactionReceipt",[$list["app_txid"]]);
             if(!$block_info){
                 continue;
             }
@@ -43,7 +45,7 @@ class UgListenController extends Controller
             if(isset($block_info["error"])){
                 continue;
             }
-            //todo 1:签名服务器做签名 2:去eth链上转账操作返回txid后 3:更新数据库 status=3&&blockNumber&&owner_txid&&block_send_succ_time
+            //todo 1:签名服务器做签名(返回txid) 2:去eth链上转账操作 3:更新数据库 status=3&&blockNumber&&owner_txid&&block_send_succ_time
             $owner_data = ["status"=>1,"owner_txid"=>"1111111"];
             $trade_info = $block_info["result"];
             //blockNumber截取前两位0x
