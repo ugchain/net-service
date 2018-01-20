@@ -81,7 +81,7 @@
 |:----    |:---|:----- |-----   |
 |address |是  |string | 账户地址 |
 |page |否  |string | 第几页（默认0）  |
-|pageSzie |是  |string | 每页展示多少（默认10） |
+|pageSize |是  |string | 每页展示多少（默认10） |
 
  **返回示例**
 
@@ -137,37 +137,29 @@
 
 ``` 
 {
-	"code": 0,
-	"message": "success",
-	"data": {
-		"medal_info": {
-			"medal_id": "1",
-			"medal_name": "名称",
-			"theme_name": "刻字信息",
-			"theme_img": "主题图片",
-			"theme_thumb_img": "主题缩略图",
-			"amount": "金额",
-			"token_id": "12313213112123123",
-			"address": "当前持有者信息",
-			"founder": "创始人地址"
-		},
-		"list": [{
-			"address": "1233",
-			"addtime": "1313231"
-		}, {
-			"address": "1233",
-			"addtime": "1313231"
-		}, {
-			"address": "1233",
-			"addtime": "1313231"
-		}, {
-			"address": "1233",
-			"addtime": "1313231"
-		}, {
-			"address": "1233",
-			"addtime": "1313231"
-		}]
-	}
+    "code": 0,
+    "message": "成功",
+    "data": {
+        "medal_info": {
+            "id": "2",
+            "token_id": "MTUxNjM2NjMxMDU=",
+            "theme_img": "uploads/1516366310696.jpg",
+            "theme_thumb_img": "uploads/1516366310875.jpg",
+            "medal_name": "周康勋章",
+            "theme_name": "新年快乐",
+            "material_type": "5",
+            "amount": "2000",
+            "address": "0x03afebB4Fa17051a6F2f1306d732161d85E4A6b9",
+            "addtime": "1516366310",
+            "founder": "0x03afebB4Fa17051a6F2f1306d732161d85E4A6b9"
+        },
+        "list": [
+            {
+                "address": "0x03afebB4Fa17051a6F2f1306d732161d85E4A6b9",
+                "addtime": "1516366310"
+            }
+        ]
+    }
 }
 ```
 --
@@ -184,51 +176,38 @@
 |参数名|必选|类型|说明|
 |:----    |:---|:----- |-----   |
 |address |是  |string | 用户地址 |
+|page |否  |string | 第几页（默认0）  |
+|pageSize |是  |string | 每页展示多少（默认10） |
 
  **返回示例**
 
 ``` 
 {
-	"code": 0,
-	"message": "success",
-	"data": {
-		"list": [{
-			"medal_id": "1",
-			"medal_name": "名字",
-			"theme_name": "大吉大利,今晚吃鸡",
-			"amount": "100",
-			"address": "1213132",
-			"addtime": "5234242",
-			"status": "1"
-		},
-		{
-			"medal_id": "2",
-			"medal_name": "名字",
-			"theme_name": "大吉大利,今晚吃鸡",
-			"amount": "100",
-			"address": "1213132",
-			"addtime": "5234242",
-			"status": "1"
-		},
-		{
-			"medal_id": "3",
-			"medal_name": "名字",
-			"theme_name": "大吉大利,今晚吃鸡",
-			"amount": "100",
-			"address": "1213132",
-			"addtime": "5234242",
-			"status": "1"
-		},
-		{
-			"medal_id": "4",
-			"medal_name": "名字",
-			"theme_name": "大吉大利,今晚吃鸡",
-			"amount": "100",
-			"address": "1213132",
-			"addtime": "5234242",
-			"status": "1"
-		}]
-	}
+    "code": 0,
+    "message": "成功",
+    "data": {
+        "list": [
+            {
+                "id": "2",  //勋章id
+                "theme_id": "1",   //主题ID
+                "token_id": "MTUxNjM2NjMxMDU=", //唯一ID
+                "theme_img": "uploads/  1516366310696.jpg", //主题图片
+                "theme_thumb_img": "uploads/1516366310875.jpg", //主题缩略图片
+                "medal_name": "周康勋章", //勋章名称
+                "theme_name": "新年快乐", //刻字
+                "material_type": "5", //材质 1:钻石2:水晶3:金质4:银质5:铜质
+                "amount": "2000",  //价格
+                "address": "0x03afebB4Fa17051a6F2f1306d732161d85E4A6b9", //持有者地址
+                "status": "1",  //勋章状态 0:铸造中 1:成功 2:失败
+                "addtime": "1516366310", //创建时间
+                "medal_id": "2",
+                "from_address": "0x03afebB4Fa17051a6F2f1306d732161d85E4A6b9",
+                "to_address": ""
+            }
+        ],
+        "is_next_page": "0",
+        "count": 1
+    }
 }
 ```
 --

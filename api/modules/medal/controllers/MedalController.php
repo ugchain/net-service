@@ -173,6 +173,9 @@ class MedalController extends  Controller
         $page = Yii::$app->request->post("page", "1");
         $pageSize = Yii::$app->request->post("pageSize", "10");
 
+        if(!$address) {
+            outputHelper::ouputErrorcodeJson(\common\helpers\ErrorCodes::PARAM_NOT_EXIST);
+        }
         $result = [];
         //获取数据
         $result = MedalGive::getList($address, $page, $pageSize);
