@@ -4,6 +4,7 @@ namespace console\controllers;
 
 use common\helpers\OutputHelper;
 use common\models\CenterBridge;
+use common\models\ExtraPrice;
 use Yii;
 use yii\console\Controller;
 use common\helpers\CurlRequest;
@@ -32,9 +33,12 @@ class UgListenController extends Controller
             OutputHelper::writeLog(Yii::$app->getRuntimePath() . '/uglisten.log',json_encode(["status"=>0]));
             echo "暂无需要确认的数据";die();
         }
+        //获取gas_price
+        $gas_info = ExtraPrice::getList();
+        $gas_price = $gas_info['gas_min_price'];
         foreach ($unsucc_info as $list)
         {
-            $block_info = CurlRequest::UgCurl("eth_getTransactionReceipt",[$list["app_txid"]]);
+            $block_info = CurlRequest::ChainCurl(Yii::$app->params["ug_host"],"eth_getTransactionReceipt",[$list["app_txid"]]);
             if(!$block_info){
                 continue;
             }
@@ -43,13 +47,31 @@ class UgListenController extends Controller
                 continue;
             }
             //todo 1:签名服务器做签名(返回txid) 2:去eth链上转账操作 3:更新数据库 status=3&&blockNumber&&owner_txid&&block_send_succ_time
-            $owner_data = ["status"=>1,"owner_txid"=>"1111111"];
 
+            //获取nonce值 --暂时不获取
+            $send_sign_data = [
+                "address"=>$list["address"],
+                "value"=>$list["amount"],
+                "gasPrice"=>$gas_price,
+                "gas"=>"20",
+                "nonce"=>"111"
+            ];
+            $sign_res = CurlRequest::curl(Yii::$app->params["sign_host"]."/ethSign",$send_sign_data);
+            if(!$sign_res){
+                continue;
+            }
+            $sign_res_data = json_decode($sign_res,true);
+            //eth链上广播交易
+            $ug_res = CurlRequest::ChainCurl(Yii::$app->params["eth_host"],"eth_sendRawTransaction",["data"=>$sign_res_data["row_transaction"]]);
+            if(!$ug_res){
+                continue;
+            }
+            //返回owner_txid
+            $ug_res_data = json_decode($ug_res,true);
             //blockNumber截取前两位0x && 16进制 转换为10进制
             $trade_info = OutputHelper::substrHexdec($block_info["result"]);
-
             //更新数据库
-            if(!CenterBridge::updateBlockAndGasPrice($list["app_txid"],$trade_info["blockNumber"],$trade_info["gasPrice"])){
+            if(!CenterBridge::updateBlockAndOwnerTxid($list["app_txid"],$trade_info["blockNumber"],$ug_res_data["result"])){
                 OutputHelper::writeLog(Yii::$app->getRuntimePath() . '/uglisten.log',json_encode(["status"=>0]));
                 echo "更新数据库失败";
                 continue;

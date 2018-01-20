@@ -11,14 +11,13 @@ class CurlRequest
      * @param $method
      * @return mixed
      */
-    public static function EthCurl($method,$params=[],$type='post')
+    public static function ChainCurl($url,$method,$params=[],$type='post')
     {
         $data = ["jsonrpc"=>"2.0","method"=>$method,"params"=>$params,"id"=>"1"];
-        //var_dump($data);die;
         $json_data = json_encode($data);
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_POST, true);
-        curl_setopt($ch, CURLOPT_URL, Yii::$app->params["eth_host"]);
+        curl_setopt($ch, CURLOPT_URL, $url);
         curl_setopt($ch, CURLOPT_POSTFIELDS, $json_data);
         curl_setopt($ch, CURLOPT_HTTPHEADER, [
                 'Content-Type: application/json; charset=utf-8',
@@ -37,15 +36,13 @@ class CurlRequest
      * @param $method
      * @return mixed
      */
-    public static function UgCurl($method,$params=[],$type='post')
+    public static function curl($url,$params=[],$type='post')
     {
-        $data = ["jsonrpc"=>"2.0","method"=>$method,"params"=>$params,"id"=>"1"];
-        //var_dump($data);die;
-        $json_data = json_encode($data);
+        $json_data = json_encode($params);
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_POST, true);
         curl_setopt($ch, CURLOPT_URL, Yii::$app->params["ug_host"]);
-        curl_setopt($ch, CURLOPT_POSTFIELDS, $json_data);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $url);
         curl_setopt($ch, CURLOPT_HTTPHEADER, [
                 'Content-Type: application/json; charset=utf-8',
                 'Content-Length: ' . strlen($json_data)]

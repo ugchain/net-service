@@ -54,4 +54,12 @@ class OutputHelper
 
         return $trade_info;
     }
+
+    /**
+     * ug签名时gas值
+     */
+    public static function UgGasPrice()
+    {
+        return Yii::$app->params["ug"]["gas_price"];
+    }
 }
