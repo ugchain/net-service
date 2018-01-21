@@ -3,6 +3,8 @@ namespace common\wallet;
 use Yii;
 use common\models\CenterBridge;
 use common\helpers\CurlRequest;
+use common\helpers\OutputHelper;
+use common\helpers\ErrorCodes;
 
 class Operating
 {
@@ -68,7 +70,7 @@ class Operating
      */
     public static function getNewSafetyBlock()
     {
-        $new_block_data = CurlRequest::EthCurl("eth_blockNumber",[]);
+        $new_block_data = CurlRequest::ChainCurl(Yii::$app->params["eth_host"],"eth_blockNumber",[]);
         //{"jsonrpc":"2.0","id":"1","result":"0xaa6"} result 是16进制 需要转换为10进制
         if(!$new_block_data){
             echo "eth返回块信息错误";die;
@@ -144,8 +146,8 @@ class Operating
     {
         //查询数据信息待确认状态
         $unsucc_info = CenterBridge::getListByTypeAndStatus($type);
-        if(!$unsucc_info){
-            OutputHelper::writeLog($logFile, json_encode(["status" => OutputHelper::LOG_UNLOCK_STATUS]));
+        if (!$unsucc_info) {
+            OutputHelper::writeLog($logFile, json_encode(["status" => self::LOG_UNLOCK_STATUS]));
             return false;
         }
         return $unsucc_info;

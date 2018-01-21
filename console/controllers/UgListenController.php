@@ -28,7 +28,7 @@ class UgListenController extends Controller
         //写入执行状态status为1
         OutputHelper::writeLog(Yii::$app->getRuntimePath() . '/uglisten.log',json_encode(["status" => Operating::LOG_LOCK_STATUS]));
 
-        //获取数据库中待确认信息
+        //获取数据库中待确认信息且
         $unsucc_info = Operating::getUnconfirmedList(CenterBridge::UG_ETH, Yii::$app->getRuntimePath() . '/uglisten.log');
 
         //获取gas_price
