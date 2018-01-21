@@ -260,31 +260,54 @@ doc/api.md
 
 ``` 
 {
-	"code": "0",
-	"message": "success",
-	"data": {
-		"list": [{
-			"txid": "11111",
-			"type": "1",
-			"addtime": "5231312",
-			"amount": "200",
-			"status": "0"//确认中
-		}, 
-		{
-			"txid": "11111",
-			"type": "1",
-			"addtime": "5231312",
-			"amount": "200",
-			"status": "5"//成功
-		},
-		{
-			"txid": "11111",
-			"type": "1",
-			"addtime": "5231312",
-			"amount": "200",
-			"status": "6"//失败
-		}]
-	}
+    "code": 0,
+    "message": "成功",
+    "data": {
+        "list": [
+            {
+                "id": "5",                         //记录id
+                "app_txid": "0x32211e3e13e332e3",  //交易id
+                "chain_txid": "0",
+                "address": "0x0e10d1b1ae10ae124939ff657f96836c34b42f10", //地址
+                "amount": "30",                     //金额
+                "blocknumber": "0",                 //区块号
+                "type": "2",                        //1：eth->ug;2:ug->eth
+                "gas_price": "0",                   //gas_price * gas_used = 手续费（去掉18个0）
+                "gas_used": "0",
+                "owner_txid": "",
+                "status": "4",                      //状态；0-4待确认；5成功；6失败
+                "addtime": "1549382323",            //创建交易时间
+                "block_succ_time": "0",         
+                "block_fall_time": "0",
+                "block_send_succ_time": "0",
+                "block_send_fall_time": "0",
+                "block_listen_succ_time": "0",      //交易成功时间
+                "block_listen_fall_time": "0"       //交易失败时间
+            },
+            {
+                "id": "3",
+                "app_txid": "0x432432432432432432",
+                "chain_txid": "0",
+                "address": "0x0e10d1b1ae10ae124939ff657f96836c34b42f10",
+                "amount": "300",
+                "blocknumber": "0",
+                "type": "2",
+                "gas_price": "0",
+                "gas_used": "0",
+                "owner_txid": "",
+                "status": "1",
+                "addtime": "1529999233",
+                "block_succ_time": "0",
+                "block_fall_time": "0",
+                "block_send_succ_time": "0",
+                "block_send_fall_time": "0",
+                "block_listen_succ_time": "0",
+                "block_listen_fall_time": "0"
+            }
+        ],
+        "is_next_page": "0",
+        "count": "7"
+    }
 }
 ```
 --
