@@ -161,7 +161,7 @@ doc/api.md
                 "addtime": "1516366310"
             }
         ]
-        "image_url"=>"http://t9-cname.ugchain.com"
+        "image_url":"http://t9-cname.ugchain.com"
     }
 }
 ```
