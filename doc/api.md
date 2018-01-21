@@ -82,7 +82,7 @@ doc/api.md
 |:----    |:---|:----- |-----   |
 |address |是  |string | 账户地址 |
 |page |否  |string | 第几页（默认0）  |
-|pageSzie |是  |string | 每页展示多少（默认10） |
+|pageSize |是  |string | 每页展示多少（默认10） |
 
  **返回示例**
 
@@ -114,8 +114,8 @@ doc/api.md
        "page": "1",
        "pageSize": "10",
        "count": "100",
-       "is_next_page"=>"1"//1有下一页 0暂无数据\
-       "image_url"=>"http://***.com"
+       "is_next_page":"1"//1有下一页 0暂无数据\
+       "image_url":"http://t9-cname.ugchain.com"
       }
   }
 ```
@@ -160,8 +160,8 @@ doc/api.md
                 "address": "0x03afebB4Fa17051a6F2f1306d732161d85E4A6b9",
                 "addtime": "1516366310"
             }
-        "image_url"=>"http://***.com"
         ]
+        "image_url":"http://t9-cname.ugchain.com"
     }
 }
 ```
@@ -210,7 +210,8 @@ doc/api.md
         ],
         "is_next_page": "0",
         "count": 1,
-        "image_url"=>"http://***.com"
+        "image_url"=>"http://t9-cname.ugchain.com"
+
     }
 }
 ```
@@ -345,6 +346,7 @@ doc/api.md
 **参数：** 
 
 |参数名|必选|类型|说明|
+|:----    |:---|:----- |-----   |
 |from |是  |string | 地址 |
 |to |是  |string | 地址 |
 |txid |是  |string |交易id |
@@ -372,6 +374,7 @@ doc/api.md
 **参数：** 
 
 |参数名|必选|类型|说明|
+|:----    |:---|:----- |-----   |
 |address |是  |string | 地址 |
 |page |否  |string | 当前页 |
 |pageSize |否  |string |每页展示数据 |

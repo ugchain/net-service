@@ -88,6 +88,17 @@ class CenterBridge extends ActiveRecord
         return CenterBridge::updateAll(["from_block"=>$block_number,"owner_txid"=>$owner_txid],["app_txid"=>$app_txid]);
     }
 
+    /**
+     * 更新blocknumber and OwnerTxid
+     * @param $block_number
+     * @param $gas_price
+     * @return bool
+     */
+    public static function updateBlockAndGasPrice($app_txid,$block_number,$gas_price)
+    {
+        return CenterBridge::updateAll(["from_block"=>$block_number,"gas_price"=>$gas_price],["app_txid"=>$app_txid]);
+    }
+
     public static function getListByTypeAndStatusAndBlockNumber($type="1", $status="0")
     {
         return CenterBridge::find()

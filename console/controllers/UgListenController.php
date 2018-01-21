@@ -1,7 +1,6 @@
 <?php
 namespace console\controllers;
 
-
 use common\helpers\OutputHelper;
 use common\models\CenterBridge;
 use common\models\ExtraPrice;
@@ -27,8 +26,9 @@ class UgListenController extends Controller
 
         //写入执行状态status为1
         OutputHelper::writeLog(Yii::$app->getRuntimePath() . '/uglisten.log',json_encode(["status"=>1]));
+
         //查询数据信息待确认状态
-        $unsucc_info = CenterBridge::getListByTypeAndStatus(CenterBridge::CONFIRMED);
+        $unsucc_info = CenterBridge::getListByTypeAndStatus(CenterBridge::UG_ETH);
         if(!$unsucc_info){
             OutputHelper::writeLog(Yii::$app->getRuntimePath() . '/uglisten.log',json_encode(["status"=>0]));
             echo "暂无需要确认的数据";die();
@@ -69,7 +69,9 @@ class UgListenController extends Controller
             //返回owner_txid
             $ug_res_data = json_decode($ug_res,true);
             //blockNumber截取前两位0x && 16进制 转换为10进制
-            $trade_info = OutputHelper::substrHexdec($block_info["result"]);
+
+            $trade_info = OutputHelper::substrHexdec($block_info["result"], 1);
+
             //更新数据库
             if(!CenterBridge::updateBlockAndOwnerTxid($list["app_txid"],$trade_info["blockNumber"],$ug_res_data["result"])){
                 OutputHelper::writeLog(Yii::$app->getRuntimePath() . '/uglisten.log',json_encode(["status"=>0]));
