@@ -6,6 +6,7 @@ use Yii;
 use yii\console\Controller;
 use common\helpers\CurlRequest;
 use common\helpers\OutputHelper;
+use common\Wallet\Operating;
 use yii\db\Exception;
 use yii\log\Logger;
 /**
@@ -26,39 +27,34 @@ class EthLisenController extends Controller
         OutputHelper::readLog(Yii::$app->getRuntimePath() . "/ethlisten.log");
 
         //写入执行状态status为1
-        OutputHelper::writeLog(Yii::$app->getRuntimePath() . '/ethlisten.log',json_encode(["status"=>1]));
+        OutputHelper::writeLog(Yii::$app->getRuntimePath() . '/ethlisten.log',json_encode(["status" => Operating::LOG_LOCK_STATUS]));
 
-        //查询数据信息待确认状态
-        $unsucc_info = CenterBridge::getListByTypeAndStatus(CenterBridge::ETH_UG);
-        if(!$unsucc_info){
-            echo "暂无需要确认的数据";die();
-        }
+        //获取数据库中待确认信息
+        $unsucc_info = Operating::getUnconfirmedList(CenterBridge::ETH_UG, Yii::$app->getRuntimePath() . '/ethlisten.log');
+
         foreach ($unsucc_info as $list)
         {
-            $block_info = CurlRequest::ChainCurl(Yii::$app->params["eth_host"],"eth_getTransactionByHash",[$list["app_txid"]]);
-            if(!$block_info){
+            $block_info = Operating::txidByTransactionInfo(Yii::$app->params["eth_host"], "eth_getTransactionByHash", [$list["app_txid"]]);
+            if (!$block_info) {
                 continue;
             }
 
-            $block_info = json_decode($block_info,true);
-            if(isset($block_info["error"])){
-                continue;
-            }
             $trade_info = $block_info["result"];
-            if($trade_info["blockNumber"] == null){
+            if ($trade_info["blockNumber"] == null) {
                 continue;
             }
+
             //blockNumber截取前两位0x && 16进制 转换为10进制
-            $trade_info = OutputHelper::substrHexdec($block_info["result"], 1);
+            $trade_info = Operating::substrHexdec($block_info["result"], 1);
 
             //更新数据库
-            if(!CenterBridge::updateBlockAndGasPrice($list["app_txid"],$trade_info["blockNumber"],$trade_info["gasPrice"])){
-                OutputHelper::writeLog(Yii::$app->getRuntimePath() . '/ethlisten.log',json_encode(["status"=>0]));
+            if(!CenterBridge::updateBlockAndGasPrice($list["app_txid"], $trade_info["blockNumber"], $trade_info["gasPrice"])){
+                OutputHelper::writeLog(Yii::$app->getRuntimePath() . '/ethlisten.log', json_encode(["status" => Operating::LOG_UNLOCK_STATUS]));
                 echo "更新数据库失败";
                 continue;
             }
         }
-        OutputHelper::writeLog(Yii::$app->getRuntimePath() . '/ethlisten.log',json_encode(["status"=>0]));
+        OutputHelper::writeLog(Yii::$app->getRuntimePath() . '/ethlisten.log', json_encode(["status" => Operating::LOG_UNLOCK_STATUS]));
         echo "更新结束";
     }
 
@@ -73,61 +69,40 @@ class EthLisenController extends Controller
     public function actionListenBlocknumber()
     {
         echo "开始";
-        //1：获取最新安全块
-        $new_block_data = CurlRequest::ChainCurl(Yii::$app->params["eth_host"],"eth_blockNumber",[]);
-        //{"jsonrpc":"2.0","id":"1","result":"0xaa6"} result 是16进制 需要转换为10进制
-        if(!$new_block_data){
-            echo "eth返回块信息错误";die;
-        }
-        //解析最新块
-        $newblock_str = json_decode($new_block_data,true)["result"];
-        //截取前两位0x
-        $newblock_str = substr($newblock_str,2);
-        //16进制 转换为10进制 后 -12块获取最新块
 
-        $newblock = OutputHelper::getNewSafetyBlock();
+        //16进制 转换为10进制 后 -12块获取最新块
+        $newblock = Operating::getNewSafetyBlock();
+
         //获取blocknumber不为0且状态为待确认状态
         if (!$trade_info = CenterBridge::getListByTypeAndStatusAndBlockNumber()) {
             echo "暂无区块信息";die;
         }
-        //获取gas_price
-        $gas_price = OutputHelper::UgGasPrice();
+
         foreach ($trade_info as  $k=> $v) {
-            if($newblock < $v["from_block"] + 12){
+            if ($newblock < $v["from_block"] + Operating::SECURITY_BLOCK) {
                 continue;
             }
-            $txid_info = CurlRequest::ChainCurl(Yii::$app->params["eth_host"],"eth_getTransactionReceipt",[$v['app_txid']]);
-            if(!$txid_info){
+
+            //根据txid获取交易详细信息
+            $txid_info = Operating::txidByTransactionInfo(Yii::$app->params["eth_host"], "eth_getTransactionReceipt", [$v["app_txid"]]);
+            if (!$txid_info) {
                 continue;
             }
-            $txid_info = json_decode($txid_info,true);
-            if(isset($txid_info["error"])){
-                continue;
-            }
+
             //截取gasUsed
-            $txid_info = OutputHelper::substrHexdec($txid_info["result"], 2);
+            $txid_info = Operating::substrHexdec($txid_info["result"], Operating::SUBSTR_TYPE_GASUSED);
+
             //todo 1:签名服务器做签名api 2:去ug链上转账操作返回txid后(api) 3:ug网络确认(api)直接更新数据库状态为转账成功
-            //获取nonce值 --暂时不获取
-            $send_sign_data = [
-                "address"=>$v["address"],
-                "value"=>$v["amount"],
-                "gasPrice"=>$gas_price,
-                "gas"=>"0",
-                "nonce"=>"111"
-            ];
-            $sign_res = CurlRequest::curl(Yii::$app->params["sign_host"]."/ugSign",$send_sign_data);
-            if(!$sign_res){
+            //获取nince且组装签名数据
+            $send_sign_data = Operating::getNonceAssembleData($v, Operating::UgGasPrice(), Yii::$app->params["eth_host"], "eth.getTransactionCount", [$v['address']]);
+
+            //根据组装数据获取签名且广播交易
+            $res_data = Operating::getSignatureAndBroadcast(Yii::$app->params["sign_host"]."/ugSign", $send_sign_data, Yii::$app->params["ug_host"], "eth_sendRawTransaction");
+            if (!$res_data) {
                 continue;
             }
-            $sign_res_data = json_decode($sign_res,true);
-            //UG链上广播交易
-            $ug_res = CurlRequest::ChainCurl(Yii::$app->params["ug_host"],"eth_sendRawTransaction",["data"=>$sign_res_data["row_transaction"]]);
-            if(!$ug_res){
-                continue;
-            }
-            $ug_res_data = json_decode($ug_res,true);
             //txid去块上确认
-            $ug_block_listen = CurlRequest::ChainCurl(Yii::$app->params["ug_host"],"eth_getTransactionReceipt",[$ug_res_data["result"]]);
+            $ug_block_listen = CurlRequest::ChainCurl(Yii::$app->params["ug_host"],"eth_getTransactionReceipt",[$res_data["result"]]);
             //这个地方不会出错,秒级
             if(!$ug_block_listen){
                 continue;
@@ -140,8 +115,9 @@ class EthLisenController extends Controller
             if($trade_info["blockNumber"] == null){
                 continue;
             }
+
             //更新数据库
-            if(!CenterBridge::updateGasUsedAndStatusAndTime($v["app_txid"],$txid_info["result"]["gasUsed"],CenterBridge::LISTEN_CONFIRM_SUCCESS,$ug_res_data["result"],$trade_info["blockNumber"])){
+            if(!CenterBridge::updateGasUsedAndStatusAndTime($v["app_txid"], $txid_info["result"]["gasUsed"], CenterBridge::LISTEN_CONFIRM_SUCCESS, $res_data["result"], $trade_info["blockNumber"])){
                 echo "更新数据库失败";
                 continue;
             }
@@ -165,32 +141,30 @@ class EthLisenController extends Controller
             echo "暂无处理数据";die;
         }
         //获取最新安全块
-        $newblock = OutputHelper::getNewSafetyBlock();
+        $newblock = Operating::getNewSafetyBlock();
         foreach ($info as $owner){
-            if($owner['to_block'] == 0){
-                $block_info = CurlRequest::ChainCurl(Yii::$app->params["eth_host"],"eth_getTransactionByHash",[$owner["owner_txid"]]);
-                if(!$block_info){
+            if ($owner['to_block'] == 0) {
+                //根据owner_txid获取交易详细信息
+                $block_info = Operating::txidByTransactionInfo(Yii::$app->params["eth_host"], "eth_getTransactionByHash", [$owner["owner_txid"]]);
+                if (!$block_info) {
                     continue;
                 }
-                $block_info = json_decode($block_info,true);
-                if(isset($block_info["error"])){
-                    continue;
-                }
+
                 $trade_info = $block_info["result"];
-                if($trade_info["blockNumber"] == null){
+                if ($trade_info["blockNumber"] == null) {
                     continue;
                 }
 
                 //blockNumber截取前两位0x && 16进制 转换为10进制
-                $trade_info = OutputHelper::substrHexdec($block_info["result"], 1);
+                $trade_info = Operating::substrHexdec($block_info["result"], 1);
 
-                if($newblock < $trade_info["blockNumber"]){
-                    CenterBridge::updateBlockByTxid($owner["owner_txid"],$trade_info["blockNumber"]);
-                }else{
-                    CenterBridge::updateBlockAndTimeByTxid($owner["owner_txid"],$trade_info["blockNumber"]);
+                if ($newblock < $trade_info["blockNumber"]) {
+                    CenterBridge::updateBlockByTxid($owner["owner_txid"], $trade_info["blockNumber"]);
+                } else {
+                    CenterBridge::updateBlockAndTimeByTxid($owner["owner_txid"], $trade_info["blockNumber"]);
                 }
-            }else{
-                if($newblock > $owner["to_block"]){
+            } else {
+                if ($newblock > $owner["to_block"]) {
                     CenterBridge::updateListenSuccTimeByTxid($owner["owner_txid"]);
                 }
             }

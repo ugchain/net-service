@@ -46,7 +46,7 @@ doc/api.md
 
 |参数名|必选|类型|说明|
 |:----    |:---|:----- |-----   |
-|theme_id |是  |string |  主题id |
+|theme_id |是  |string |  主题id (1-7)|
 |medal_name |是  |string | 勋章名称  |
 |theme_img |是  |string | 主题图片  |
 |theme_thumb_img |是  |string | 主题缩略图片  |
