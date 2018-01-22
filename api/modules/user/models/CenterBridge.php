@@ -6,12 +6,13 @@ use Yii;
 class CenterBridge extends \common\models\CenterBridge
 {
     //创建数据
-    public static function insertData($txid, $address, $type, $amount, $status, $time)
+    public static function insertData($txid, $address, $type, $amount, $gasPrice, $status, $time)
     {
         $model = new self();
         $model->app_txid = $txid;
         $model->address = $address;
         $model->amount = $amount;
+        $model->gas_price = (string)$gasPrice;
         $model->type = $type;
         $model->status = $status;
         $model->addtime = $time;

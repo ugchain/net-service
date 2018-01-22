@@ -48,7 +48,7 @@ class AssetController extends  Controller
         }
 
         //插入划转通知
-        if(!$result = CenterBridge::insertData($txid, $address, $type, $amount, $gasPrice ,CenterBridge::CONFIRMED, time())){
+        if(!$result = CenterBridge::insertData($txid, $address, $type, $amount, $gasPrice, CenterBridge::CONFIRMED, time())){
             outputHelper::ouputErrorcodeJson(\common\helpers\ErrorCodes::FALL);
         }
         outputHelper::ouputErrorcodeJson(\common\helpers\ErrorCodes::SUCCESS);
