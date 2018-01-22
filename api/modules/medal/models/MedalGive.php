@@ -25,13 +25,22 @@ class MedalGive extends \common\models\MedalGive
      * @param $medal_id 勋章ID
      * @return  array
      */
-    public static function getMedalGiveInfoByMedalId($medal_id)
+    public static function getMedalGiveInfoByMedalId($medal_id, $page = "1", $pageSize = "10")
     {
-        return MedalGive::find()
-            ->select("from_address,to_address,addtime")
-            ->where(["medal_id" => $medal_id])
-            ->orderBy("addtime ASC")
-            ->asArray()->all();
+        $query = MedalGive::find();
+        $query->where(['medal_id' => $medal_id]);
+        $query->orderBy('addtime ASC');
+        //分页
+        $count = $query->count();
+        $offset = ($page - 1) * $pageSize;
+        $query->offset($offset)->limit($pageSize);
+        $index_list = $query->asArray()->all();
+        //默认无下一页
+        $is_next_page = "0";
+        if ($count - ($page * $pageSize) >= 0) {
+            $is_next_page = "1";//有下一页
+        }
+        return ['list' => $index_list, 'is_next_page' => $is_next_page,"count"=>$count];
     }
 
     //创建数据

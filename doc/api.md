@@ -99,7 +99,9 @@ doc/api.md
                "medal_name": "阿瓦隆大狗币",
                "theme_name": "刻字内容",
                "material_type": "勋章材质",
-               "amount":"勋章价格",               "create_time": "1516006696"
+               "amount":"勋章价格",               
+               "create_time": "1516006696",
+               "update_time": "1516006696"
            },
            {
                "id": "2",
@@ -108,13 +110,15 @@ doc/api.md
                "medal_name": "阿瓦隆大狗币2",
                "theme_name": "刻字内容",
                "material_type":"勋章材质",
-               "amount":"勋章价格",               "create_time": "1516006696"
+               "amount":"勋章价格",               
+               "create_time": "1516006696",
+               "update_time": "1516006696"
            }
        ],
        "page": "1",
        "pageSize": "10",
        "count": "100",
-       "is_next_page":"1"//1有下一页 0暂无数据\
+       "is_next_page":"1" //1有下一页 0暂无数据,
        "image_url":"http://t9-cname.ugchain.com"
       }
   }
@@ -134,6 +138,8 @@ doc/api.md
 |参数名|必选|类型|说明|
 |:----    |:---|:----- |-----   |
 |medal_id |是  |string | 勋章id |
+|page |否  |string |  |
+|pageSize |否  |string |  |
 
  **返回示例**
 
@@ -142,26 +148,16 @@ doc/api.md
     "code": 0,
     "message": "成功",
     "data": {
-        "medal_info": {
-            "id": "2",
-            "token_id": "MTUxNjM2NjMxMDU=",
-            "theme_img": "uploads/1516366310696.jpg",
-            "theme_thumb_img": "uploads/1516366310875.jpg",
-            "medal_name": "周康勋章",
-            "theme_name": "新年快乐",
-            "material_type": "5",
-            "amount": "2000",
-            "address": "0x03afebB4Fa17051a6F2f1306d732161d85E4A6b9",
-            "addtime": "1516366310",
-            "founder": "0x03afebB4Fa17051a6F2f1306d732161d85E4A6b9"
-        },
         "list": [
             {
-                "address": "0x03afebB4Fa17051a6F2f1306d732161d85E4A6b9",
-                "addtime": "1516366310"
+                "address": "r74ry74yr74yr74y7ry74yr7y47yry4ry4rrrrewr",
+                "addtime": "1516174975"
             }
-        ]
-        "image_url":"http://t9-cname.ugchain.com"
+        ],
+        "is_next_page": "0",
+        "count": "1",
+        "page": "1",
+        "pageSize": "10"
     }
 }
 ```
@@ -469,6 +465,10 @@ doc/api.md
 ```
 
 --
+
+
+
+
 
 
 

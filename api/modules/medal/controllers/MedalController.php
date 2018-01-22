@@ -107,22 +107,25 @@ class MedalController extends  Controller
     {
         //勋章ID
         $medal_id = Yii::$app->request->post("medal_id");
+        //page
+        $page = Yii::$app->request->post("page", Yii::$app->params['pagination']['page']);
+        //pageSize
+        $pageSize = Yii::$app->request->post("pageSize", Yii::$app->params['pagination']['pageSize']);
         //判断是否为空 && 是否是数字
         if(!$medal_id || !is_numeric($medal_id)){
             outputHelper::ouputErrorcodeJson(\common\helpers\ErrorCodes::PARAM_NOT_EXIST);
         }
-        //查询勋章基本数据
-        $medal_base_info = Medal::getInfoById($medal_id);
-        //查询勋章转增记录
-        $medal_trade_info = MedalGive::getMedalGiveInfoByMedalId($medal_id);
-        //初始化创始人地址
-        $medal_base_info["founder"] = $medal_base_info["address"];
+//        //查询勋章基本数据
+//        $medal_base_info = Medal::getInfoById($medal_id);
+//        //查询勋章转增记录
+        $medal_trade_info = MedalGive::getMedalGiveInfoByMedalId($medal_id, $page, $pageSize);
+//        //初始化创始人地址
+//        $medal_base_info["founder"] = $medal_base_info["address"];
         $give_data = [];
         //存在信息是则取第一条
-        if($medal_trade_info){
-            $medal_base_info["founder"] = $medal_trade_info[0]["from_address"];
+        if($medal_trade_info['list']){
             //转赠历史
-            foreach ($medal_trade_info as $key=>$trade_info){
+            foreach ($medal_trade_info['list'] as $key=>$trade_info){
                 if($key==0){
                     $give_data[$key]["address"] = $trade_info["from_address"];
                 }else{
@@ -132,7 +135,7 @@ class MedalController extends  Controller
             }
         }
         //组装数据
-        $data = ["medal_info"=>$medal_base_info,"list"=>$give_data, 'image_url' => Yii::$app->params['image_url']];
+        $data = ["list"=>$give_data, "is_next_page" => $medal_trade_info['is_next_page'], "count" => $medal_trade_info['count'], 'page' => $page, 'pageSize' => $pageSize];
         outputHelper::ouputErrorcodeJson(\common\helpers\ErrorCodes::SUCCESS,$data);
     }
 

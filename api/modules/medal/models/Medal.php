@@ -33,7 +33,7 @@ class Medal extends \common\models\Medal
     {
         $query = Medal::find();
         $query->where(['address' => $address]);
-        $query->orderBy('addtime DESC');
+        $query->orderBy('update_time DESC');
         //分页
         $count = $query->count();
         $offset = ($page - 1) * $pageSize;
@@ -48,7 +48,6 @@ class Medal extends \common\models\Medal
     }
 
     /**
-<<<<<<< HEAD
      * 勋章详情信息
      */
     public static function getInfoById($id)
@@ -100,6 +99,7 @@ class Medal extends \common\models\Medal
     {
         $customer = Medal::findOne(['id' => $medal_id, 'address' => $address]);
         $customer->address = $recipient_address;
+        $customer->update_time = time();
         return $customer->update();
     }
 }
