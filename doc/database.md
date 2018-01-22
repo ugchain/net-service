@@ -41,7 +41,7 @@
       `blocknumber` varchar(100) NOT NULL DEFAULT '0' COMMENT 'ug链上块',
       `status` tinyint(1) NOT NULL DEFAULT '0' COMMENT '0:待确认,1:成功 2:失败',
       `addtime` int(11) NOT NULL COMMENT '添加时间',
-      `trade_time` int(11) NOT NULL COMMENT '执行时间',
+      `trade_time` int(11) NOT NULL DEFAULT '0' COMMENT '执行时间',
       PRIMARY KEY (`id`),
       KEY `chain_confirm` (`app_txid`,`status`),
       KEY `my_trade` (`from_address`,`to_address`)
@@ -78,7 +78,7 @@
       `address` varchar(42) NOT NULL COMMENT '持有者地址',
       `status` tinyint(1) NOT NULL DEFAULT '0' COMMENT '0:铸造中 1:成功 2:失败',
       `addtime` int(11) NOT NULL COMMENT '添加时间',
-      `update_time` int(11) NOT NULL COMMENT '转赠时间',
+      `update_time` int(11) NOT NULL DEFAULT '0' COMMENT '转赠时间',
       PRIMARY KEY (`id`),
       UNIQUE KEY `token_id` (`token_id`),
       KEY `address` (`address`)
