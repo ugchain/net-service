@@ -4,6 +4,6 @@ return [
     'supportEmail' => 'support@example.com',
     'user.passwordResetTokenExpire' => 3600,
     "ug"=>[
-        "gas_price"=>900000000,
+        "gas_price"=>0,
     ]
 ];

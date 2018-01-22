@@ -82,7 +82,7 @@ class Operating
             "address" => $data["address"],
             "value" => $data["amount"],
             "gasPrice" => $gas_price,
-            "gas" => "0",
+            "gas" => "30000",
             "nonce" => $nonce
         ];
 

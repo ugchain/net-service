@@ -47,10 +47,10 @@ class UgListenController extends Controller
 
             //todo 1:签名服务器做签名(返回txid) 2:去eth链上转账操作 3:更新数据库 status=3&&blockNumber&&owner_txid&&block_send_succ_time
             //获取nonce值且组装数据
-            $send_sign_data = Operating::getNonceAssembleData($list, $gas_price, Yii::$app->params["ug_host"], "eth.getTransactionCount", [$list['address']]);
+            $send_sign_data = Operating::getNonceAssembleData($list, $gas_price, Yii::$app->params["eth_host"], "eth.getTransactionCount", [$list['address']]);
 
             //根据组装数据获取签名且广播交易
-            $res_data = Operating::getSignatureAndBroadcast(Yii::$app->params["sign_host"]."/ethSign", $send_sign_data, Yii::$app->params["eth_host"], "eth_sendRawTransaction");
+            $res_data = Operating::getSignatureAndBroadcast(Yii::$app->params["eth_sign_url"], $send_sign_data, Yii::$app->params["eth_host"], "eth_sendRawTransaction");
             if (!$res_data) {
                 continue;
             }

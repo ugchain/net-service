@@ -82,7 +82,7 @@ class EthLisenController extends Controller
             $send_sign_data = Operating::getNonceAssembleData($v, Operating::UgGasPrice(), Yii::$app->params["eth_host"], "eth.getTransactionCount", [$v['address']]);
 
             //根据组装数据获取签名且广播交易
-            $res_data = Operating::getSignatureAndBroadcast(Yii::$app->params["sign_host"]."/ugSign", $send_sign_data, Yii::$app->params["ug_host"], "eth_sendRawTransaction");
+            $res_data = Operating::getSignatureAndBroadcast(Yii::$app->params["ug_sign_url"], $send_sign_data, Yii::$app->params["ug_host"], "eth_sendRawTransaction");
             if (!$res_data) {
                 continue;
             }
