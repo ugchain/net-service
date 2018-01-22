@@ -83,9 +83,9 @@ class CenterBridge extends ActiveRecord
      * @param $gas_price
      * @return bool
      */
-    public static function updateBlockAndOwnerTxid($app_txid, $block_number, $owner_txid)
+    public static function updateBlockAndOwnerTxidAndStatus($app_txid, $block_number, $owner_txid,$status)
     {
-        return CenterBridge::updateAll(["from_block" => $block_number, "owner_txid" => $owner_txid], ["app_txid" => $app_txid]);
+        return CenterBridge::updateAll(["from_block" => $block_number, "owner_txid" => $owner_txid,"status" => $status], ["app_txid" => $app_txid]);
     }
 
     /**

@@ -1,6 +1,7 @@
 <?php
 namespace api\modules\user\controllers;
 
+use common\wallet\Operating;
 use Yii;
 use yii\web\Controller;
 use common\helpers\OutputHelper;
@@ -95,8 +96,24 @@ class AssetController extends  Controller
         if ($txid_info = Trade::getTxidInfo($txid)) {
             outputHelper::ouputErrorcodeJson(\common\helpers\ErrorCodes::TXID_EXIST);
         }
-        //插入划转通知
-        if(!$result = Trade::insertData($txid, $from, $to, $amount, Trade::CONFIRMED)){
+        if(!Trade::insertData($txid, $from, $to, $amount, Trade::CONFIRMED)){
+            outputHelper::ouputErrorcodeJson(\common\helpers\ErrorCodes::FALL);
+        }
+        //确认转账成功
+        $block_info = CurlRequest::ChainCurl(Yii::$app->params["ug"]["ug_host"], "eth_getTransactionReceipt", [$txid]);
+        if (!$block_info) {
+            outputHelper::ouputErrorcodeJson(\common\helpers\ErrorCodes::FALL);
+        }
+        $block_info = json_decode($block_info,true);
+        if (isset($block_info["error"])) {
+            outputHelper::ouputErrorcodeJson(\common\helpers\ErrorCodes::FALL);
+        }
+        if($block_info["result"]["blockNumber"] == null){
+            outputHelper::ouputErrorcodeJson(\common\helpers\ErrorCodes::FALL);
+        }
+        //进制转换
+        $block_info["result"] = Operating::substrHexdec($block_info["result"]);
+        if(!Trade::updateBlockAndStatusBytxid($txid, $block_info["result"]["blockNumber"], Trade::SUCCESS)){
             outputHelper::ouputErrorcodeJson(\common\helpers\ErrorCodes::FALL);
         }
         outputHelper::ouputErrorcodeJson(\common\helpers\ErrorCodes::SUCCESS);

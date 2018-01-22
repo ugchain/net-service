@@ -61,9 +61,8 @@ class UgListenController extends Controller
             if (!$res_data) {
                 continue;
             }
-
-            //todo 更新数据库--差更新状态为3
-            if(!CenterBridge::updateBlockAndOwnerTxid($list["app_txid"], $trade_info["blockNumber"], $res_data["hash"])){
+            //更新数据库
+            if(!CenterBridge::updateBlockAndOwnerTxidAndStatus($list["app_txid"], $trade_info["blockNumber"], $res_data["hash"],CenterBridge::SEND_SUCCESS)){
                 echo "更新数据库失败".PHP_EOL;
                 continue;
             }
