@@ -52,7 +52,7 @@ class Trade extends ActiveRecord
      */
     public static function updateBlockAndStatusBytxid($txid, $blockNumber, $status)
     {
-        return Trade::updateAll(["blocknumber" => $blockNumber, "status" => $status, trade_time => time()], ["app_txid" => $txid]);
+        return Trade::updateAll(["blocknumber" => $blockNumber, "status" => $status, "trade_time" => time()], ["app_txid" => $txid]);
     }
 
 }

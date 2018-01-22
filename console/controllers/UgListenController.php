@@ -24,13 +24,13 @@ class UgListenController extends Controller
     {
         echo "UG转账ETH开始".time().PHP_EOL;
         //读取日志文件
-        OutputHelper::readLog(__DIR__. "/ugListen.log");
+       // OutputHelper::readLog(__DIR__. "/ugListen.log");
 
         //写入执行状态status为1
-        OutputHelper::writeLog(__DIR__. '/ugListen.log',json_encode(["status" => Operating::LOG_LOCK_STATUS]));
+      //  OutputHelper::writeLog(__DIR__. '/ugListen.log',json_encode(["status" => Operating::LOG_LOCK_STATUS]));
 
         //获取数据库中待确认信息
-        $unsucc_info = Operating::getUnconfirmedList(CenterBridge::UG_ETH, Yii::$app->getRuntimePath() . '/ugListen.log');
+        $unsucc_info = Operating::getUnconfirmedList(CenterBridge::UG_ETH,  __DIR__. '/ugListen.log');
         if (!$unsucc_info) {
             OutputHelper::writeLog(__DIR__. '/ugListen.log',json_encode(["status" => Operating::LOG_UNLOCK_STATUS]));
             echo "暂无交易数据！".PHP_EOL;die;
