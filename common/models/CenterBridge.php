@@ -70,7 +70,7 @@ class CenterBridge extends ActiveRecord
      * @param string $status
      * @return array
      */
-    public static function getListByTypeAndStatus($type="1", $status = self::CONFIRMED)
+    public static function getListByTypeAndStatus($type=self::ETH_UG, $status = self::CONFIRMED)
     {
         return CenterBridge::find()
             ->where(["type" => $type,"status" => $status,'from_block' => '0'])
@@ -85,7 +85,7 @@ class CenterBridge extends ActiveRecord
      */
     public static function updateBlockAndOwnerTxid($app_txid, $block_number, $owner_txid)
     {
-        return CenterBridge::updateAll(["from_block" => $block_number, "owner_txid" => $owner_txid],["app_txid" => $app_txid]);
+        return CenterBridge::updateAll(["from_block" => $block_number, "owner_txid" => $owner_txid], ["app_txid" => $app_txid]);
     }
 
     /**
@@ -99,7 +99,7 @@ class CenterBridge extends ActiveRecord
         return CenterBridge::updateAll(["from_block" => $block_number, 'gas_used' => $gas_used], ["app_txid" => $app_txid]);
     }
 
-    public static function getListByTypeAndStatusAndBlockNumber($type = "1", $status = self::CONFIRMED)
+    public static function getListByTypeAndStatusAndBlockNumber($type = self::ETH_UG, $status = self::CONFIRMED)
     {
         return CenterBridge::find()
             ->where(["type"=>$type,"status"=>$status])
@@ -114,7 +114,7 @@ class CenterBridge extends ActiveRecord
      * @param string $status
      * @return int
      */
-    public static function supdateStatusAndTime($app_txid,$status="0",$owner_txid,$to_block)
+    public static function supdateStatusAndTime($app_txid,$status=self::CONFIRMED,$owner_txid,$to_block)
     {
         return CenterBridge::updateAll(["status" => $status, "block_send_succ_time" => time(), "owner_txid" => $owner_txid, "to_block" => $to_block], ["app_txid" => $app_txid]);
     }
@@ -122,7 +122,7 @@ class CenterBridge extends ActiveRecord
     public static function getListByTypeAndStatusAndOwnerTxid()
     {
         return CenterBridge::find()
-            ->where(["type"=>"2","status"=>"3"])
+            ->where(["type"=>self::UG_ETH,"status"=>self::SEND_SUCCESS])
             ->andWhere(['not', ['owner_txid' => '']])
             ->asArray()->all();
     }

@@ -72,10 +72,10 @@ class Operating
      *
      * @return array
      */
-    public static function getNonceAssembleData($data, $gas_price, $ug_host, $function, $param)
+    public static function getNonceAssembleData($data, $gas_price, $host, $function, $param)
     {
         //获取nonce值
-        $nonce = CurlRequest::ChainCurl($ug_host, $function, $param);
+        $nonce = CurlRequest::ChainCurl($host, $function, $param);
 
         //组装数据
         $send_sign_data = [
