@@ -24,10 +24,10 @@ class EthLisenController extends Controller
     {
         echo "eth-ug状态监听";
         //读取日志文件
-        OutputHelper::readLog(Yii::$app->getRuntimePath() . "/ethListen.log");
+        OutputHelper::readLog(__DIR__. "/ethListen.log");
 
         //写入执行状态status为1
-        OutputHelper::writeLog(Yii::$app->getRuntimePath() . '/ethListen.log',json_encode(["status" => Operating::LOG_LOCK_STATUS]));
+        OutputHelper::writeLog(__DIR__ . '/ethListen.log',json_encode(["status" => Operating::LOG_LOCK_STATUS]));
 
         //获取数据库中待确认信息
         $unsucc_info = Operating::getUnconfirmedList(CenterBridge::ETH_UG, Yii::$app->getRuntimePath() . '/ethListen.log');
@@ -50,7 +50,7 @@ class EthLisenController extends Controller
                 continue;
             }
         }
-        OutputHelper::writeLog(Yii::$app->getRuntimePath() . '/ethListen.log', json_encode(["status" => Operating::LOG_UNLOCK_STATUS]));
+        OutputHelper::writeLog(__DIR__ . '/ethListen.log', json_encode(["status" => Operating::LOG_UNLOCK_STATUS]));
         echo "更新结束";
     }
 
