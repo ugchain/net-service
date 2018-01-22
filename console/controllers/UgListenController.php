@@ -31,6 +31,7 @@ class UgListenController extends Controller
         //获取数据库中待确认信息
         $unsucc_info = Operating::getUnconfirmedList(CenterBridge::UG_ETH, Yii::$app->getRuntimePath() . '/ugListen.log');
         if (!$unsucc_info) {
+            OutputHelper::writeLog(__DIR__. '/ugListen.log',json_encode(["status" => Operating::LOG_UNLOCK_STATUS]));
             echo "暂无交易数据！";die;
         }
         //获取gas_price
