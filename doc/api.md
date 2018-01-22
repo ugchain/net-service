@@ -326,6 +326,7 @@ doc/api.md
 |address |是  |string | 地址 |
 |txid |是  |string |交易id |
 |amount |是  |string |价格 |
+|gasPrice |否  |string |gasPrice（type=1） |
 |type |是  |string |通知类型（1:eth->ug 2:ug->eth） |
 
  **返回示例**
