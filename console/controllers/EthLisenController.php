@@ -31,7 +31,7 @@ class EthLisenController extends Controller
         //获取数据库中待确认信息
         $unsucc_info = Operating::getUnconfirmedList(CenterBridge::ETH_UG, Yii::$app->getRuntimePath() . '/ethListen.log');
         if (!$unsucc_info) {
-            echo "暂无交易数据！";
+            echo "暂无交易数据！";die;
         }
 
         foreach ($unsucc_info as $list)
