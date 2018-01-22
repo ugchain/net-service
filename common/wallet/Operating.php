@@ -22,10 +22,12 @@ class Operating
      */
     public static function substrHexdec($trade_info)
     {
-        //blockNumber截取前两位0x
-        $trade_info["blockNumber"] = substr($trade_info["blockNumber"],self::SUB_BIT);
-        //16进制 转换为10进制 后 -12块获取最新块
-        $trade_info["blockNumber"] = hexdec($trade_info["blockNumber"]);
+        if(isset($trade_info["blockNumber"])){
+            //blockNumber截取前两位0x
+            $trade_info["blockNumber"] = substr($trade_info["blockNumber"],self::SUB_BIT);
+            //16进制 转换为10进制 后 -12块获取最新块
+            $trade_info["blockNumber"] = hexdec($trade_info["blockNumber"]);
+        }
         if (isset($trade_info["gasUsed"])) {
             //gas_used截取前两位0x
             $trade_info["gasUsed"]= substr($trade_info["gasUsed"],self::SUB_BIT);
@@ -89,7 +91,7 @@ class Operating
         //组装数据
         $send_sign_data = [
             "address" => $data["address"],
-            "value" => $data["amount"],
+            "amount" => $data["amount"],
             "gasPrice" => $gas_price,
             "gas" => "30000",
             "nonce" => $nonce_data["result"]

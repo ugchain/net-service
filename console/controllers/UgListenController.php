@@ -51,7 +51,7 @@ class UgListenController extends Controller
 
             //todo 1:签名服务器做签名(返回txid) 2:去eth链上转账操作 3:更新数据库 status=3&&blockNumber&&owner_txid&&block_send_succ_time
             //获取nonce值且组装数据
-            $send_sign_data = Operating::getNonceAssembleData($list, $gas_price, Yii::$app->params["eth"]["eth_host"], "eth.getTransactionCount", [$list['address']]);
+            $send_sign_data = Operating::getNonceAssembleData($list, $gas_price, Yii::$app->params["eth"]["eth_host"], "eth_getTransactionCount", [$list['address'],"latest"]);
             if (!$send_sign_data) {
                 continue;
             }
@@ -62,7 +62,7 @@ class UgListenController extends Controller
                 continue;
             }
 
-            //更新数据库
+            //todo 更新数据库--差更新状态为3
             if(!CenterBridge::updateBlockAndOwnerTxid($list["app_txid"], $trade_info["blockNumber"], $res_data["hash"])){
                 echo "更新数据库失败".PHP_EOL;
                 continue;
