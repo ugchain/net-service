@@ -42,7 +42,7 @@ class OutputHelper
      */
     public static function writeLog($logUrl, $status)
     {
-        file_put_contents($logUrl ,json_encode(["status" => $status]));
+        file_put_contents($logUrl, $status);
         return true;
     }
 

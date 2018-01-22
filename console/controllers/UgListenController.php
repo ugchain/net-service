@@ -23,13 +23,13 @@ class UgListenController extends Controller
     {
         echo "UG转账ETH开始".time();
         //读取日志文件
-        OutputHelper::readLog(Yii::$app->getRuntimePath() . "/uglisten.log");
+        OutputHelper::readLog(Yii::$app->getRuntimePath() . "/ugListen.log");
 
         //写入执行状态status为1
-        OutputHelper::writeLog(Yii::$app->getRuntimePath() . '/uglisten.log',json_encode(["status" => Operating::LOG_LOCK_STATUS]));
+        OutputHelper::writeLog(Yii::$app->getRuntimePath() . '/ugListen.log',json_encode(["status" => Operating::LOG_LOCK_STATUS]));
 
         //获取数据库中待确认信息
-        $unsucc_info = Operating::getUnconfirmedList(CenterBridge::UG_ETH, Yii::$app->getRuntimePath() . '/uglisten.log');
+        $unsucc_info = Operating::getUnconfirmedList(CenterBridge::UG_ETH, Yii::$app->getRuntimePath() . '/ugListen.log');
         if (!$unsucc_info) {
             echo "暂无交易数据！";
         }
@@ -59,13 +59,13 @@ class UgListenController extends Controller
 
             //更新数据库
             if(!CenterBridge::updateBlockAndOwnerTxid($list["app_txid"], $trade_info["blockNumber"], $res_data["hash"])){
-                OutputHelper::writeLog(Yii::$app->getRuntimePath() . '/uglisten.log',json_encode(["status" => Operating::LOG_UNLOCK_STATUS]));
+                OutputHelper::writeLog(Yii::$app->getRuntimePath() . '/ugListen.log',json_encode(["status" => Operating::LOG_UNLOCK_STATUS]));
                 echo "更新数据库失败";
                 continue;
             }
         }
 
-        OutputHelper::writeLog(Yii::$app->getRuntimePath() . '/uglisten.log',json_encode(["status" => Operating::LOG_UNLOCK_STATUS]));
+        OutputHelper::writeLog(Yii::$app->getRuntimePath() . '/ugListen.log',json_encode(["status" => Operating::LOG_UNLOCK_STATUS]));
         echo "UG转账ETH结束".time();
     }
 }

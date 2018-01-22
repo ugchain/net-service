@@ -64,6 +64,7 @@ class MedalController extends  Controller
         //上传文件到服务器
         $model->upload();
         $model->addtime = time();
+        $model->update_time = time();
         $model->status = MedalGive::SUCCESS;
         $model->token_id = base64_encode(time().rand(0,9));
         //保存勋章表

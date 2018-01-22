@@ -24,13 +24,13 @@ class EthLisenController extends Controller
     {
         echo "eth-ug状态监听";
         //读取日志文件
-        OutputHelper::readLog(Yii::$app->getRuntimePath() . "/ethlisten.log");
+        OutputHelper::readLog(Yii::$app->getRuntimePath() . "/ethListen.log");
 
         //写入执行状态status为1
-        OutputHelper::writeLog(Yii::$app->getRuntimePath() . '/ethlisten.log',json_encode(["status" => Operating::LOG_LOCK_STATUS]));
+        OutputHelper::writeLog(Yii::$app->getRuntimePath() . '/ethListen.log',json_encode(["status" => Operating::LOG_LOCK_STATUS]));
 
         //获取数据库中待确认信息
-        $unsucc_info = Operating::getUnconfirmedList(CenterBridge::ETH_UG, Yii::$app->getRuntimePath() . '/ethlisten.log');
+        $unsucc_info = Operating::getUnconfirmedList(CenterBridge::ETH_UG, Yii::$app->getRuntimePath() . '/ethListen.log');
         if (!$unsucc_info) {
             echo "暂无交易数据！";
         }
@@ -46,12 +46,12 @@ class EthLisenController extends Controller
 
             //更新数据库
             if (!CenterBridge::updateBlockAndGasUsed($list["app_txid"], $trade_info["blockNumber"], $trade_info["gasUsed"])) {
-                OutputHelper::writeLog(Yii::$app->getRuntimePath() . '/ethlisten.log', json_encode(["status" => Operating::LOG_UNLOCK_STATUS]));
+                OutputHelper::writeLog(Yii::$app->getRuntimePath() . '/ethListen.log', json_encode(["status" => Operating::LOG_UNLOCK_STATUS]));
                 echo "更新数据库失败";
                 continue;
             }
         }
-        OutputHelper::writeLog(Yii::$app->getRuntimePath() . '/ethlisten.log', json_encode(["status" => Operating::LOG_UNLOCK_STATUS]));
+        OutputHelper::writeLog(Yii::$app->getRuntimePath() . '/ethListen.log', json_encode(["status" => Operating::LOG_UNLOCK_STATUS]));
         echo "更新结束";
     }
 
@@ -65,12 +65,18 @@ class EthLisenController extends Controller
     public function actionListenBlocknumber()
     {
         echo "开始";
+        //读取日志文件
+        OutputHelper::readLog(Yii::$app->getRuntimePath() . "/blockNumListen.log");
+
+        //写入执行状态status为1
+        OutputHelper::writeLog(Yii::$app->getRuntimePath() . '/blockNumListen.log',json_encode(["status" => Operating::LOG_LOCK_STATUS]));
 
         //16进制 转换为10进制 后 -12块获取最新块
         $safetyBlock = Operating::getNewSafetyBlock();
 
         //获取blocknumber不为0且状态为待确认状态
         if (!$trade_info = CenterBridge::getListByTypeAndStatusAndBlockNumber()) {
+            OutputHelper::writeLog(Yii::$app->getRuntimePath() . '/blockNumListen.log',json_encode(["status" => Operating::LOG_UNLOCK_STATUS]));
             echo "暂无区块信息";die;
         }
         //var_dump($trade_info);die;
@@ -101,10 +107,13 @@ class EthLisenController extends Controller
 
             //更新数据库
             if(!CenterBridge::updateStatusAndTime($v["app_txid"], CenterBridge::LISTEN_CONFIRM_SUCCESS, $res_data["hash"], $trade_info["blockNumber"])){
+                OutputHelper::writeLog(Yii::$app->getRuntimePath() . '/blockNumListen.log',json_encode(["status" => Operating::LOG_UNLOCK_STATUS]));
                 echo "更新数据库失败";
                 continue;
             }
         }
+
+        OutputHelper::writeLog(Yii::$app->getRuntimePath() . '/blockNumListen.log',json_encode(["status" => Operating::LOG_UNLOCK_STATUS]));
         echo "更新成功!";
     }
 
@@ -118,11 +127,19 @@ class EthLisenController extends Controller
     public function actionListenOwnerExecutionStatus()
     {
         echo "开始";
+        //读取日志文件
+        OutputHelper::readLog(Yii::$app->getRuntimePath() . "/executionListen.log");
+
+        //写入执行状态status为1
+        OutputHelper::writeLog(Yii::$app->getRuntimePath() . '/executionListen.log',json_encode(["status" => Operating::LOG_LOCK_STATUS]));
+
         //获取数据库状态为:3的数据 类型为:ug-eth owner_id 不为空
         $info = CenterBridge::getListByTypeAndStatusAndOwnerTxid();
         if(!$info){
+            OutputHelper::writeLog(Yii::$app->getRuntimePath() . '/executionListen.log',json_encode(["status" => Operating::LOG_UNLOCK_STATUS]));
             echo "暂无处理数据";die;
         }
+
         //获取最新安全块
         $safetyBlock = Operating::getNewSafetyBlock();
         foreach ($info as $owner){
@@ -147,6 +164,8 @@ class EthLisenController extends Controller
                 }
             }
         }
+
+        OutputHelper::writeLog(Yii::$app->getRuntimePath() . '/executionListen.log',json_encode(["status" => Operating::LOG_UNLOCK_STATUS]));
         echo "更新成功";
     }
 
