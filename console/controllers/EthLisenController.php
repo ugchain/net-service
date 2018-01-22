@@ -67,7 +67,7 @@ class EthLisenController extends Controller
         echo "开始";
 
         //16进制 转换为10进制 后 -12块获取最新块
-       // $safetyBlock = Operating::getNewSafetyBlock();
+        $safetyBlock = Operating::getNewSafetyBlock();
 
         //获取blocknumber不为0且状态为待确认状态
         if (!$trade_info = CenterBridge::getListByTypeAndStatusAndBlockNumber()) {
@@ -76,9 +76,9 @@ class EthLisenController extends Controller
         //var_dump($trade_info);die;
         foreach ($trade_info as  $k=> $v) {
             //判断是否超过安全块
-//            if ($safetyBlock < $v["from_block"]) {
-//                continue;
-//            }
+            if ($safetyBlock < $v["from_block"]) {
+                continue;
+            }
 
             //todo 1:签名服务器做签名api 2:去ug链上转账操作返回txid后(api) 3:ug网络确认(api)直接更新数据库状态为转账成功
             //获取nince且组装签名数据
