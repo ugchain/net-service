@@ -49,7 +49,7 @@ class Operating
      */
     public static function getNewSafetyBlock()
     {
-        $new_block_data = CurlRequest::ChainCurl(Yii::$app->params["eth_host"],"eth_blockNumber",[]);
+        $new_block_data = CurlRequest::ChainCurl(Yii::$app->params["eth"]["eth_host"],"eth_blockNumber",[]);
         //{"jsonrpc":"2.0","id":"1","result":"0xaa6"} result 是16进制 需要转换为10进制
         if(!$new_block_data){
             echo "eth返回块信息错误";die;
@@ -75,17 +75,18 @@ class Operating
     public static function getNonceAssembleData($data, $gas_price, $host, $function, $param)
     {
         //获取nonce值
-        $nonce = CurlRequest::ChainCurl($host, $function, $param);
-
+        //$nonce = CurlRequest::ChainCurl($host, $function, $param);
+        $nonce = "2";
         //组装数据
         $send_sign_data = [
+            "txId"  =>$data["app_txid"],
             "address" => $data["address"],
-            "value" => $data["amount"],
+            "amount"  => $data["amount"],
             "gasPrice" => $gas_price,
-            "gas" => "30000",
+            "gas" => "0",
             "nonce" => $nonce
         ];
-
+        //var_dump($send_sign_data);die();
         return $send_sign_data;
     }
 
@@ -101,7 +102,7 @@ class Operating
     public static function getSignatureAndBroadcast($sign_host, $send_sign_data, $host, $function)
     {
         //获取离线签名
-        $sign_res = CurlRequest::curl($sign_host, $send_sign_data);
+        $sign_res = CurlRequest::curl($sign_host,$send_sign_data);
         if(!$sign_res){
             return false;
         }
@@ -111,6 +112,7 @@ class Operating
         if(!$broadcasting){
             return false;
         }
+        $broadcasting["hash"] = $sign_res_data["transaction_hash"];
         return json_decode($broadcasting,true);
     }
 

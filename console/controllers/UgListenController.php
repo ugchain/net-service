@@ -58,7 +58,7 @@ class UgListenController extends Controller
             }
 
             //更新数据库
-            if(!CenterBridge::updateBlockAndOwnerTxid($list["app_txid"], $trade_info["blockNumber"], $res_data["result"])){
+            if(!CenterBridge::updateBlockAndOwnerTxid($list["app_txid"], $trade_info["blockNumber"], $res_data["hash"])){
                 OutputHelper::writeLog(Yii::$app->getRuntimePath() . '/uglisten.log',json_encode(["status" => Operating::LOG_UNLOCK_STATUS]));
                 echo "更新数据库失败";
                 continue;
