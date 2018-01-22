@@ -99,9 +99,9 @@ class UserController extends  Controller
         $address = Yii::$app->request->post("address","");
 
         //判断地址是否申请过
-        $result = 'YES';
+        $result['is_applied'] = 'YES';
         if (!Advertise::getAdvertiseInfoByAddress($address)) {
-            $result = 'NO';
+            $result['is_applied'] = 'NO';
         }
 
 

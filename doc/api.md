@@ -462,7 +462,9 @@ doc/api.md
 {
  "code": "0",
  "message": "success",
- "data": "NO" //YES | NO ;如果YES说明该地址已添加过，反之。
+ "data": {
+    "is_applied": "YES",//YES | NO ;如果YES说明该地址已添加过，反之。
+ } 
 }
 ```
 
