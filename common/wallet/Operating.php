@@ -127,7 +127,6 @@ class Operating
      * 获取待确认信息
      * @param string $type
      * @param        $logFile
-     *
      * @return array|bool
      */
     public static function getUnconfirmedList($type = CenterBridge::ETH_UG, $logFile)
