@@ -94,9 +94,9 @@ class CenterBridge extends ActiveRecord
      * @param $gas_price
      * @return bool
      */
-    public static function updateBlockAndGasPrice($app_txid, $block_number, $gas_price)
+    public static function updateBlockAndGasUsed($app_txid, $block_number, $gas_used)
     {
-        return CenterBridge::updateAll(["from_block" => $block_number],["app_txid" => $app_txid]);
+        return CenterBridge::updateAll(["from_block" => $block_number, 'gas_used' => $gas_used], ["app_txid" => $app_txid]);
     }
 
     public static function getListByTypeAndStatusAndBlockNumber($type = "1", $status = self::CONFIRMED)
@@ -114,9 +114,9 @@ class CenterBridge extends ActiveRecord
      * @param string $status
      * @return int
      */
-    public static function updateGasUsedAndStatusAndTime($app_txid,$gas_used,$status="0",$owner_txid,$to_block)
+    public static function supdateStatusAndTime($app_txid,$status="0",$owner_txid,$to_block)
     {
-        return CenterBridge::updateAll(["gas_used"=>$gas_used,"status"=>$status,"block_send_succ_time"=>time(),"owner_txid"=>$owner_txid,"to_block"=>$to_block],["app_txid"=>$app_txid]);
+        return CenterBridge::updateAll(["status" => $status, "block_send_succ_time" => time(), "owner_txid" => $owner_txid, "to_block" => $to_block], ["app_txid" => $app_txid]);
     }
 
     public static function getListByTypeAndStatusAndOwnerTxid()

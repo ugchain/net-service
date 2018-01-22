@@ -28,7 +28,7 @@ class UgListenController extends Controller
         //写入执行状态status为1
         OutputHelper::writeLog(Yii::$app->getRuntimePath() . '/uglisten.log',json_encode(["status" => Operating::LOG_LOCK_STATUS]));
 
-        //获取数据库中待确认信息且更新log
+        //获取数据库中待确认信息
         $unsucc_info = Operating::getUnconfirmedList(CenterBridge::UG_ETH, Yii::$app->getRuntimePath() . '/uglisten.log');
 
         //获取gas_price
@@ -43,7 +43,7 @@ class UgListenController extends Controller
             }
 
             //blockNumber截取前两位0x && 16进制 转换为10进制
-            $trade_info = Operating::substrHexdec($block_info["result"], Operating::SUBSTR_TYPE_GASPRICE);
+            $trade_info = Operating::substrHexdec($block_info);
 
             //todo 1:签名服务器做签名(返回txid) 2:去eth链上转账操作 3:更新数据库 status=3&&blockNumber&&owner_txid&&block_send_succ_time
             //获取nonce值且组装数据

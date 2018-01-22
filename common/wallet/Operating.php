@@ -8,12 +8,10 @@ use common\helpers\ErrorCodes;
 
 class Operating
 {
-    const SECURITY_BLOCK = 12;
-    const SUB_BIT = 2;
-    const LOG_UNLOCK_STATUS = 0;
-    const LOG_LOCK_STATUS = 1;
-    const SUBSTR_TYPE_GASUSED = 2;
-    const SUBSTR_TYPE_GASPRICE = 1;
+    const SECURITY_BLOCK = 12;  //安全块
+    const SUB_BIT = 2;          //截取位数
+    const LOG_UNLOCK_STATUS = 0;//日志文件锁状态（开）
+    const LOG_LOCK_STATUS = 1;  //日志文件锁状态（关）
 
     /**
      * 截取数据和进制转换
@@ -21,20 +19,13 @@ class Operating
      *
      * @return mixed
      */
-    public static function substrHexdec($trade_info, $type = 1)
+    public static function substrHexdec($trade_info)
     {
-        if ($type == 1) {
-            //blockNumber截取前两位0x
-            $trade_info["blockNumber"] = substr($trade_info["blockNumber"],self::SUB_BIT);
-            //16进制 转换为10进制 后 -12块获取最新块
-            $trade_info["blockNumber"] = hexdec($trade_info["blockNumber"]);
-
-            //gas_price截取前两位0x
-            $trade_info["gasPrice"] = substr($trade_info["gasPrice"],self::SUB_BIT);
-            //16进制 转换为10进制
-            $trade_info["gasPrice"] = hexdec($trade_info["gasPrice"]);
-
-        } else {
+        //blockNumber截取前两位0x
+        $trade_info["blockNumber"] = substr($trade_info["blockNumber"],self::SUB_BIT);
+        //16进制 转换为10进制 后 -12块获取最新块
+        $trade_info["blockNumber"] = hexdec($trade_info["blockNumber"]);
+        if (isset($trade_info["gasUsed"])) {
             //gas_used截取前两位0x
             $trade_info["gasUsed"]= substr($trade_info["gasUsed"],self::SUB_BIT);
             //16进制 转换为10进制
@@ -130,7 +121,7 @@ class Operating
      *
      * @return array|bool
      */
-    public static function getUnconfirmedList($type = "1", $logFile)
+    public static function getUnconfirmedList($type = CenterBridge::ETH_UG, $logFile)
     {
         //查询数据信息待确认状态
         $unsucc_info = CenterBridge::getListByTypeAndStatus($type);
@@ -153,6 +144,11 @@ class Operating
             return false;
         }
 
-        return $block_info;
+        $trade_info = $block_info["result"];
+        if($trade_info["blockNumber"] == null){
+            return false;
+        }
+
+        return $trade_info;
     }
 }
