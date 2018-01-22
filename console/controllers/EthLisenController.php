@@ -46,7 +46,6 @@ class EthLisenController extends Controller
 
             //更新数据库
             if (!CenterBridge::updateBlockAndGasUsed($list["app_txid"], $trade_info["blockNumber"], $trade_info["gasUsed"])) {
-                OutputHelper::writeLog(Yii::$app->getRuntimePath() . '/ethListen.log', json_encode(["status" => Operating::LOG_UNLOCK_STATUS]));
                 echo "更新数据库失败";
                 continue;
             }
@@ -107,7 +106,6 @@ class EthLisenController extends Controller
 
             //更新数据库
             if(!CenterBridge::updateStatusAndTime($v["app_txid"], CenterBridge::LISTEN_CONFIRM_SUCCESS, $res_data["hash"], $trade_info["blockNumber"])){
-                OutputHelper::writeLog(Yii::$app->getRuntimePath() . '/blockNumListen.log',json_encode(["status" => Operating::LOG_UNLOCK_STATUS]));
                 echo "更新数据库失败";
                 continue;
             }
