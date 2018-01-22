@@ -98,7 +98,7 @@ pipeline {
                 sh "rm -rf README.md"
 
                 //删除文件(Yii2)
-                sh "rm -rf console/runtime/logs backend/runtime api/runtime"
+                sh "rm -rf console/runtime backend/runtime api/runtime"
                 sh "rm -rf console/web/assets/* backend/web/assets/* api/web/assets/*"
 
                 //打包
