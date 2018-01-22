@@ -24,14 +24,14 @@ class EthLisenController extends Controller
     {
         echo "eth-ug状态监听".time().PHP_EOL;
         //读取日志文件
-        OutputHelper::readLog(__DIR__. "/ethListen.log");
+        OutputHelper::readLog(dirname(__DIR__). "/locklog/ethListen.log");
 
         //写入执行状态status为1
-        OutputHelper::writeLog(__DIR__ . '/ethListen.log',json_encode(["status" => Operating::LOG_LOCK_STATUS]));
+        OutputHelper::writeLog(dirname(__DIR__) . '/locklog/ethListen.log',json_encode(["status" => Operating::LOG_LOCK_STATUS]));
         //获取数据库中待确认信息
         $unsucc_info = Operating::getUnconfirmedList(CenterBridge::ETH_UG, Yii::$app->getRuntimePath() . '/ethListen.log');
         if (!$unsucc_info) {
-            OutputHelper::writeLog(__DIR__ . '/ethListen.log', json_encode(["status" => Operating::LOG_UNLOCK_STATUS]));
+            OutputHelper::writeLog(dirname(__DIR__) . '/locklog/ethListen.log', json_encode(["status" => Operating::LOG_UNLOCK_STATUS]));
             echo "暂无交易数据！".PHP_EOL;die;
         }
 
@@ -50,7 +50,7 @@ class EthLisenController extends Controller
                 continue;
             }
         }
-        OutputHelper::writeLog(__DIR__ . '/ethListen.log', json_encode(["status" => Operating::LOG_UNLOCK_STATUS]));
+        OutputHelper::writeLog(dirname(__DIR__) . '/locklog/ethListen.log', json_encode(["status" => Operating::LOG_UNLOCK_STATUS]));
         echo "更新结束".time().PHP_EOL;
     }
 
@@ -66,20 +66,20 @@ class EthLisenController extends Controller
         echo "开始".time().PHP_EOL;
         //echo __DIR__;die;
         //读取日志文件
-        OutputHelper::readLog( __DIR__."/blockNumListen.log");
+        OutputHelper::readLog(dirname(__DIR__) . "/locklog/blockNumListen.log");
 
         //写入执行状态status为1
-        OutputHelper::writeLog( __DIR__.'/blockNumListen.log',json_encode(["status" => Operating::LOG_LOCK_STATUS]));
+        OutputHelper::writeLog( dirname(__DIR__) . "/locklog/blockNumListen.log",json_encode(["status" => Operating::LOG_LOCK_STATUS]));
 
         //16进制 转换为10进制 后 -12块获取最新块
         $safetyBlock = Operating::getNewSafetyBlock();
         if(!$safetyBlock){
-            OutputHelper::writeLog(__DIR__. '/blockNumListen.log',json_encode(["status" => Operating::LOG_UNLOCK_STATUS]));
+            OutputHelper::writeLog(dirname(__DIR__) . "/locklog/blockNumListen.log",json_encode(["status" => Operating::LOG_UNLOCK_STATUS]));
             echo "获取安全块错误".PHP_EOL;die();
         }
         //获取blocknumber不为0且状态为待确认状态
         if (!$trade_info = CenterBridge::getListByTypeAndStatusAndBlockNumber()) {
-            OutputHelper::writeLog(__DIR__. '/blockNumListen.log',json_encode(["status" => Operating::LOG_UNLOCK_STATUS]));
+            OutputHelper::writeLog(dirname(__DIR__) . "/locklog/blockNumListen.log",json_encode(["status" => Operating::LOG_UNLOCK_STATUS]));
             echo "暂无区块信息".PHP_EOL;die;
         }
         //var_dump($trade_info);die;
@@ -118,7 +118,7 @@ class EthLisenController extends Controller
             }
         }
 
-        OutputHelper::writeLog(__DIR__. '/blockNumListen.log',json_encode(["status" => Operating::LOG_UNLOCK_STATUS]));
+        OutputHelper::writeLog(dirname(__DIR__) . "/locklog/blockNumListen.log",json_encode(["status" => Operating::LOG_UNLOCK_STATUS]));
         echo "更新成功!".time().PHP_EOL;
     }
 
@@ -133,22 +133,22 @@ class EthLisenController extends Controller
     {
         echo "开始".time().PHP_EOL;
         //读取日志文件
-        OutputHelper::readLog(__DIR__. "/executionListen.log");
+        OutputHelper::readLog(dirname(__DIR__) . "/locklog/executionListen.log");
 
         //写入执行状态status为1
-        OutputHelper::writeLog(__DIR__. '/executionListen.log',json_encode(["status" => Operating::LOG_LOCK_STATUS]));
+        OutputHelper::writeLog(dirname(__DIR__) . '/locklog/executionListen.log',json_encode(["status" => Operating::LOG_LOCK_STATUS]));
 
         //获取数据库状态为:3的数据 类型为:ug-eth owner_id 不为空
         $info = CenterBridge::getListByTypeAndStatusAndOwnerTxid();
         if(!$info){
-            OutputHelper::writeLog(__DIR__. '/executionListen.log',json_encode(["status" => Operating::LOG_UNLOCK_STATUS]));
+            OutputHelper::writeLog(dirname(__DIR__) . '/locklog/executionListen.log',json_encode(["status" => Operating::LOG_UNLOCK_STATUS]));
             echo "暂无处理数据".PHP_EOL;die;
         }
 
         //获取最新安全块
         $safetyBlock = Operating::getNewSafetyBlock();
         if(!$safetyBlock){
-            OutputHelper::writeLog(__DIR__. '/executionListen.log',json_encode(["status" => Operating::LOG_UNLOCK_STATUS]));
+            OutputHelper::writeLog(dirname(__DIR__) . '/locklog/executionListen.log',json_encode(["status" => Operating::LOG_UNLOCK_STATUS]));
             echo "获取安全块错误".PHP_EOL;die();
         }
         foreach ($info as $owner){
@@ -174,7 +174,7 @@ class EthLisenController extends Controller
             }
         }
 
-        OutputHelper::writeLog(__DIR__. '/executionListen.log',json_encode(["status" => Operating::LOG_UNLOCK_STATUS]));
+        OutputHelper::writeLog(dirname(__DIR__) . '/locklog/executionListen.log',json_encode(["status" => Operating::LOG_UNLOCK_STATUS]));
         echo "更新成功".time().PHP_EOL;
     }
 
