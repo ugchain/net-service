@@ -70,10 +70,10 @@ class CenterBridge extends ActiveRecord
      * @param string $status
      * @return array
      */
-    public static function getListByTypeAndStatus($type="1",$status="0")
+    public static function getListByTypeAndStatus($type="1", $status = self::CONFIRMED)
     {
         return CenterBridge::find()
-            ->where(["type"=>$type,"status"=>$status,'from_block' => '0'])
+            ->where(["type" => $type,"status" => $status,'from_block' => '0'])
             ->asArray()->all();
     }
 
@@ -83,9 +83,9 @@ class CenterBridge extends ActiveRecord
      * @param $gas_price
      * @return bool
      */
-    public static function updateBlockAndOwnerTxid($app_txid,$block_number,$owner_txid)
+    public static function updateBlockAndOwnerTxid($app_txid, $block_number, $owner_txid)
     {
-        return CenterBridge::updateAll(["from_block"=>$block_number,"owner_txid"=>$owner_txid],["app_txid"=>$app_txid]);
+        return CenterBridge::updateAll(["from_block" => $block_number, "owner_txid" => $owner_txid],["app_txid" => $app_txid]);
     }
 
     /**
@@ -94,12 +94,12 @@ class CenterBridge extends ActiveRecord
      * @param $gas_price
      * @return bool
      */
-    public static function updateBlockAndGasPrice($app_txid,$block_number,$gas_price)
+    public static function updateBlockAndGasPrice($app_txid, $block_number, $gas_price)
     {
-        return CenterBridge::updateAll(["from_block"=>$block_number,"gas_price"=>$gas_price],["app_txid"=>$app_txid]);
+        return CenterBridge::updateAll(["from_block" => $block_number],["app_txid" => $app_txid]);
     }
 
-    public static function getListByTypeAndStatusAndBlockNumber($type="1", $status="0")
+    public static function getListByTypeAndStatusAndBlockNumber($type = "1", $status = self::CONFIRMED)
     {
         return CenterBridge::find()
             ->where(["type"=>$type,"status"=>$status])

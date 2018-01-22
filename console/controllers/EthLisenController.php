@@ -34,7 +34,7 @@ class EthLisenController extends Controller
 
         foreach ($unsucc_info as $list)
         {
-            $block_info = Operating::txidByTransactionInfo(Yii::$app->params["eth_host"], "eth_getTransactionByHash", [$list["app_txid"]]);
+            $block_info = Operating::txidByTransactionInfo(Yii::$app->params["eth_host"], "eth_getTransactionReceipt", [$list["app_txid"]]);
             if (!$block_info) {
                 continue;
             }
@@ -48,7 +48,7 @@ class EthLisenController extends Controller
             $trade_info = Operating::substrHexdec($block_info["result"], 1);
 
             //更新数据库
-            if(!CenterBridge::updateBlockAndGasPrice($list["app_txid"], $trade_info["blockNumber"], $trade_info["gasPrice"])){
+            if(!CenterBridge::updateBlockAndGasPrice($list["app_txid"], $trade_info["blockNumber"])){
                 OutputHelper::writeLog(Yii::$app->getRuntimePath() . '/ethlisten.log', json_encode(["status" => Operating::LOG_UNLOCK_STATUS]));
                 echo "更新数据库失败";
                 continue;

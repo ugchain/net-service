@@ -17,7 +17,7 @@ class AssetController extends  Controller
     const ADDRESSLEN = 42;
 
     /**
-     * 划转通知
+     * 跨链划转通知
      */
     public function actionTransferNotice()
     {
@@ -29,6 +29,9 @@ class AssetController extends  Controller
         $amount = Yii::$app->request->post("amount", 0);
         //划转类型
         $type = Yii::$app->request->post("type", self::ETHUG);
+        //gasPrice
+        $gasPrice = Yii::$app->request->post("gasPrice", 0);
+
 
 //        //检查地址位数及空
 //        if (!$address || strlen($address) != self::ADDRESSLEN) {
@@ -45,14 +48,14 @@ class AssetController extends  Controller
         }
 
         //插入划转通知
-        if(!$result = CenterBridge::insertData($txid, $address, $type, $amount, CenterBridge::CONFIRMED, time())){
+        if(!$result = CenterBridge::insertData($txid, $address, $type, $amount, $gasPrice ,CenterBridge::CONFIRMED, time())){
             outputHelper::ouputErrorcodeJson(\common\helpers\ErrorCodes::FALL);
         }
         outputHelper::ouputErrorcodeJson(\common\helpers\ErrorCodes::SUCCESS);
     }
 
     /**
-     * 划转记录
+     * 跨链划转记录
      */
     public function actionTransferRecord()
     {
@@ -100,7 +103,7 @@ class AssetController extends  Controller
     }
 
     /**
-     * ug网络交易列表
+     * ug交易记录
      */
     public function actionTradeRecord()
     {
