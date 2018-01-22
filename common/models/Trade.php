@@ -31,4 +31,28 @@ class Trade extends ActiveRecord
             [['app_txid','ug_txid','from_address','to_address','amount','blocknumber'], 'string'],
         ];
     }
+
+    /**
+     * 获取交易详细信息
+     * @param int $status
+     * @return array|ActiveRecord[]
+     */
+    public static function getInfoByStatus($status = self::CONFIRMED)
+    {
+        return Trade::find()
+            ->where(["status" => $status, 'blocknumber' => '0'])
+            ->asArray()->all();
+    }
+
+    /**
+     * 根据txid修改blocknumber & status & time
+     * @param $txid
+     * @param $blockNumber
+     * @param $status
+     */
+    public static function updateBlockAndStatusBytxid($txid, $blockNumber, $status)
+    {
+        return Trade::updateAll(["blocknumber" => $blockNumber, "status" => $status, trade_time => time()], ["app_txid" => $txid]);
+    }
+
 }

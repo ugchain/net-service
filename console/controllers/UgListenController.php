@@ -1,6 +1,7 @@
 <?php
 namespace console\controllers;
 
+use api\modules\user\models\Trade;
 use common\helpers\OutputHelper;
 use common\wallet\Operating;
 use common\models\CenterBridge;
@@ -70,5 +71,48 @@ class UgListenController extends Controller
 
         OutputHelper::writeLog(__DIR__. '/ugListen.log',json_encode(["status" => Operating::LOG_UNLOCK_STATUS]));
         echo "UG转账ETH结束".time().PHP_EOL;
+    }
+
+    /**
+     * 检查Ug内部转账
+     * 根据txid到链上获取交易信息，获取blocknumber
+     * 更新数据库blocknumber && status && trade_time
+     */
+    public function actionListenTradeTxid()
+    {
+        echo "UG内部转账开始".time().PHP_EOL;
+        //读取日志文件
+        OutputHelper::readLog(__DIR__. "/ugTradeListen.log");
+
+        //写入执行状态status为1
+        OutputHelper::writeLog(__DIR__. '/ugTradeListen.log',json_encode(["status" => Operating::LOG_LOCK_STATUS]));
+
+        //获取数据库中待确认信息
+        $unsucc_info = Trade::getInfoByStatus(Trade::CONFIRMED);
+        if (!$unsucc_info) {
+            OutputHelper::writeLog(__DIR__. '/ugTradeListen.log',json_encode(["status" => Operating::LOG_UNLOCK_STATUS]));
+            echo "暂无交易数据！".PHP_EOL;die;
+        }
+
+        foreach ($unsucc_info as $info) {
+            //根据交易id获取订单信息
+            $block_info = Operating::txidByTransactionInfo(Yii::$app->params['ug']["ug_host"],
+                "eth_getTransactionReceipt", [$info["app_txid"]]);
+            if (!$block_info) {
+                continue;
+            }
+
+            //blockNumber截取前两位0x && 16进制 转换为10进制
+            $trade_info = Operating::substrHexdec($block_info);
+
+            //更新数据库
+            if(!Trade::updateBlockAndStatusBytxid($info["app_txid"], $trade_info["blockNumber"], Trade::SUCCESS)){
+                echo "更新数据库失败".PHP_EOL;
+                continue;
+            }
+        }
+
+        OutputHelper::writeLog(__DIR__. '/ugTradeListen.log',json_encode(["status" => Operating::LOG_UNLOCK_STATUS]));
+        echo "UG内部转账结束".time().PHP_EOL;
     }
 }
