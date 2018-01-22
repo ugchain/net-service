@@ -1,5 +1,6 @@
 <?php
 namespace common\wallet;
+
 use Yii;
 use common\models\CenterBridge;
 use common\helpers\CurlRequest;
@@ -49,7 +50,7 @@ class Operating
      */
     public static function getNewSafetyBlock()
     {
-        $new_block_data = CurlRequest::ChainCurl(Yii::$app->params["eth_host"],"eth_blockNumber",[]);
+        $new_block_data = CurlRequest::ChainCurl(Yii::$app->params["eth"]["eth_host"],"eth_blockNumber",[]);
         //{"jsonrpc":"2.0","id":"1","result":"0xaa6"} result 是16进制 需要转换为10进制
         if(!$new_block_data){
             echo "eth返回块信息错误";die;

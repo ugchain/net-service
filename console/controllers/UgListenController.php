@@ -2,7 +2,7 @@
 namespace console\controllers;
 
 use common\helpers\OutputHelper;
-use common\Wallet\Operating;
+use common\wallet\Operating;
 use common\models\CenterBridge;
 use common\models\ExtraPrice;
 use Yii;

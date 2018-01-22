@@ -6,7 +6,7 @@ use Yii;
 use yii\console\Controller;
 use common\helpers\CurlRequest;
 use common\helpers\OutputHelper;
-use common\Wallet\Operating;
+use common\wallet\Operating;
 use yii\db\Exception;
 use yii\log\Logger;
 /**
@@ -28,7 +28,7 @@ class EthLisenController extends Controller
 
         //写入执行状态status为1
         OutputHelper::writeLog(__DIR__ . '/ethListen.log',json_encode(["status" => Operating::LOG_LOCK_STATUS]));
-
+echo 111;die;
         //获取数据库中待确认信息
         $unsucc_info = Operating::getUnconfirmedList(CenterBridge::ETH_UG, Yii::$app->getRuntimePath() . '/ethListen.log');
         if (!$unsucc_info) {
