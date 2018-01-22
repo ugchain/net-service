@@ -114,7 +114,7 @@ class CenterBridge extends ActiveRecord
      * @param string $status
      * @return int
      */
-    public static function supdateStatusAndTime($app_txid,$status=self::CONFIRMED,$owner_txid,$to_block)
+    public static function updateStatusAndTime($app_txid,$status=self::CONFIRMED,$owner_txid,$to_block)
     {
         return CenterBridge::updateAll(["status" => $status, "block_send_succ_time" => time(), "owner_txid" => $owner_txid, "to_block" => $to_block], ["app_txid" => $app_txid]);
     }
