@@ -79,7 +79,7 @@ class EthLisenController extends Controller
 
             //todo 1:签名服务器做签名api 2:去ug链上转账操作返回txid后(api) 3:ug网络确认(api)直接更新数据库状态为转账成功
             //获取nince且组装签名数据
-            $send_sign_data = Operating::getNonceAssembleData($v, Operating::UgGasPrice(), Yii::$app->params["eth_host"], "eth.getTransactionCount", [$v['address']]);
+            $send_sign_data = Operating::getNonceAssembleData($v, Operating::UgGasPrice(), Yii::$app->params["ug_host"], "eth.getTransactionCount", [$v['address']]);
 
             //根据组装数据获取签名且广播交易
             $res_data = Operating::getSignatureAndBroadcast(Yii::$app->params["ug_sign_url"], $send_sign_data, Yii::$app->params["ug_host"], "eth_sendRawTransaction");
