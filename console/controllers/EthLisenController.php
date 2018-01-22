@@ -64,18 +64,19 @@ class EthLisenController extends Controller
     public function actionListenBlocknumber()
     {
         echo "开始";
+        //echo __DIR__;die;
         //读取日志文件
-        OutputHelper::readLog(Yii::$app->getRuntimePath() . "/blockNumListen.log");
+        OutputHelper::readLog( __DIR__."/blockNumListen.log");
 
         //写入执行状态status为1
-        OutputHelper::writeLog(Yii::$app->getRuntimePath() . '/blockNumListen.log',json_encode(["status" => Operating::LOG_LOCK_STATUS]));
+        OutputHelper::writeLog( __DIR__.'/blockNumListen.log',json_encode(["status" => Operating::LOG_LOCK_STATUS]));
 
         //16进制 转换为10进制 后 -12块获取最新块
         $safetyBlock = Operating::getNewSafetyBlock();
 
         //获取blocknumber不为0且状态为待确认状态
         if (!$trade_info = CenterBridge::getListByTypeAndStatusAndBlockNumber()) {
-            OutputHelper::writeLog(Yii::$app->getRuntimePath() . '/blockNumListen.log',json_encode(["status" => Operating::LOG_UNLOCK_STATUS]));
+            OutputHelper::writeLog(__DIR__. '/blockNumListen.log',json_encode(["status" => Operating::LOG_UNLOCK_STATUS]));
             echo "暂无区块信息";die;
         }
         //var_dump($trade_info);die;
@@ -111,7 +112,7 @@ class EthLisenController extends Controller
             }
         }
 
-        OutputHelper::writeLog(Yii::$app->getRuntimePath() . '/blockNumListen.log',json_encode(["status" => Operating::LOG_UNLOCK_STATUS]));
+        OutputHelper::writeLog(__DIR__. '/blockNumListen.log',json_encode(["status" => Operating::LOG_UNLOCK_STATUS]));
         echo "更新成功!";
     }
 
@@ -126,15 +127,15 @@ class EthLisenController extends Controller
     {
         echo "开始";
         //读取日志文件
-        OutputHelper::readLog(Yii::$app->getRuntimePath() . "/executionListen.log");
+        OutputHelper::readLog(__DIR__. "/executionListen.log");
 
         //写入执行状态status为1
-        OutputHelper::writeLog(Yii::$app->getRuntimePath() . '/executionListen.log',json_encode(["status" => Operating::LOG_LOCK_STATUS]));
+        OutputHelper::writeLog(__DIR__. '/executionListen.log',json_encode(["status" => Operating::LOG_LOCK_STATUS]));
 
         //获取数据库状态为:3的数据 类型为:ug-eth owner_id 不为空
         $info = CenterBridge::getListByTypeAndStatusAndOwnerTxid();
         if(!$info){
-            OutputHelper::writeLog(Yii::$app->getRuntimePath() . '/executionListen.log',json_encode(["status" => Operating::LOG_UNLOCK_STATUS]));
+            OutputHelper::writeLog(__DIR__. '/executionListen.log',json_encode(["status" => Operating::LOG_UNLOCK_STATUS]));
             echo "暂无处理数据";die;
         }
 
@@ -163,7 +164,7 @@ class EthLisenController extends Controller
             }
         }
 
-        OutputHelper::writeLog(Yii::$app->getRuntimePath() . '/executionListen.log',json_encode(["status" => Operating::LOG_UNLOCK_STATUS]));
+        OutputHelper::writeLog(__DIR__. '/executionListen.log',json_encode(["status" => Operating::LOG_UNLOCK_STATUS]));
         echo "更新成功";
     }
 

@@ -23,10 +23,10 @@ class UgListenController extends Controller
     {
         echo "UG转账ETH开始".time();
         //读取日志文件
-        OutputHelper::readLog(Yii::$app->getRuntimePath() . "/ugListen.log");
+        OutputHelper::readLog(__DIR__. "/ugListen.log");
 
         //写入执行状态status为1
-        OutputHelper::writeLog(Yii::$app->getRuntimePath() . '/ugListen.log',json_encode(["status" => Operating::LOG_LOCK_STATUS]));
+        OutputHelper::writeLog(__DIR__. '/ugListen.log',json_encode(["status" => Operating::LOG_LOCK_STATUS]));
 
         //获取数据库中待确认信息
         $unsucc_info = Operating::getUnconfirmedList(CenterBridge::UG_ETH, Yii::$app->getRuntimePath() . '/ugListen.log');
@@ -64,7 +64,7 @@ class UgListenController extends Controller
             }
         }
 
-        OutputHelper::writeLog(Yii::$app->getRuntimePath() . '/ugListen.log',json_encode(["status" => Operating::LOG_UNLOCK_STATUS]));
+        OutputHelper::writeLog(__DIR__. '/ugListen.log',json_encode(["status" => Operating::LOG_UNLOCK_STATUS]));
         echo "UG转账ETH结束".time();
     }
 }

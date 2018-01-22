@@ -27,6 +27,7 @@ class OutputHelper
     {
         $ethlisten = file_get_contents($logFileName);
         $ethlistenlog = json_decode($ethlisten,true);
+        var_dump($ethlistenlog);die;
         if($ethlistenlog["status"] != 0){
             echo "正在执行中";die();
         }
