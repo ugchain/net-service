@@ -22,7 +22,7 @@ class EthLisenController extends Controller
      */
     public function actionListenTxid()
     {
-        echo "eth-ug状态监听";
+        echo "eth-ug状态监听".time().PHP_EOL;
         //读取日志文件
         OutputHelper::readLog(__DIR__. "/ethListen.log");
 
@@ -32,7 +32,7 @@ class EthLisenController extends Controller
         $unsucc_info = Operating::getUnconfirmedList(CenterBridge::ETH_UG, Yii::$app->getRuntimePath() . '/ethListen.log');
         if (!$unsucc_info) {
             OutputHelper::writeLog(__DIR__ . '/ethListen.log', json_encode(["status" => Operating::LOG_UNLOCK_STATUS]));
-            echo "暂无交易数据！";die;
+            echo "暂无交易数据！".PHP_EOL;die;
         }
 
         foreach ($unsucc_info as $list)
@@ -46,12 +46,12 @@ class EthLisenController extends Controller
 
             //更新数据库
             if (!CenterBridge::updateBlockAndGasUsed($list["app_txid"], $trade_info["blockNumber"], $trade_info["gasUsed"])) {
-                echo "更新数据库失败";
+                echo "更新数据库失败".PHP_EOL;
                 continue;
             }
         }
         OutputHelper::writeLog(__DIR__ . '/ethListen.log', json_encode(["status" => Operating::LOG_UNLOCK_STATUS]));
-        echo "更新结束";
+        echo "更新结束".time().PHP_EOL;
     }
 
     /**
@@ -63,7 +63,7 @@ class EthLisenController extends Controller
      */
     public function actionListenBlocknumber()
     {
-        echo "开始";
+        echo "开始".time().PHP_EOL;
         //echo __DIR__;die;
         //读取日志文件
         OutputHelper::readLog( __DIR__."/blockNumListen.log");
@@ -73,11 +73,14 @@ class EthLisenController extends Controller
 
         //16进制 转换为10进制 后 -12块获取最新块
         $safetyBlock = Operating::getNewSafetyBlock();
-
+        if(!$safetyBlock){
+            OutputHelper::writeLog(__DIR__. '/blockNumListen.log',json_encode(["status" => Operating::LOG_UNLOCK_STATUS]));
+            echo "获取安全块错误".PHP_EOL;die();
+        }
         //获取blocknumber不为0且状态为待确认状态
         if (!$trade_info = CenterBridge::getListByTypeAndStatusAndBlockNumber()) {
             OutputHelper::writeLog(__DIR__. '/blockNumListen.log',json_encode(["status" => Operating::LOG_UNLOCK_STATUS]));
-            echo "暂无区块信息";die;
+            echo "暂无区块信息".PHP_EOL;die;
         }
         //var_dump($trade_info);die;
         foreach ($trade_info as  $k=> $v) {
@@ -88,7 +91,10 @@ class EthLisenController extends Controller
 
             //todo 1:签名服务器做签名api 2:去ug链上转账操作返回txid后(api) 3:ug网络确认(api)直接更新数据库状态为转账成功
             //获取nince且组装签名数据
-            $send_sign_data = Operating::getNonceAssembleData($v, Yii::$app->params["ug"]["gas_price"], Yii::$app->params["ug"]["ug_host"], "eth.getTransactionCount", [$v['address']]);
+            $send_sign_data = Operating::getNonceAssembleData($v, Yii::$app->params["ug"]["gas_price"], Yii::$app->params["ug"]["ug_host"], "eth.getTransactionCount", [$v['address'],"latest"]);
+            if (!$send_sign_data) {
+                continue;
+            }
 
             //根据组装数据获取签名且广播交易
             $res_data = Operating::getSignatureAndBroadcast(Yii::$app->params["ug"]["ug_sign_url"], $send_sign_data, Yii::$app->params["ug"]["ug_host"], "eth_sendRawTransaction");
@@ -107,13 +113,13 @@ class EthLisenController extends Controller
 
             //更新数据库
             if(!CenterBridge::updateStatusAndTime($v["app_txid"], CenterBridge::LISTEN_CONFIRM_SUCCESS, $res_data["hash"], $trade_info["blockNumber"])){
-                echo "更新数据库失败";
+                echo "更新数据库失败".PHP_EOL;
                 continue;
             }
         }
 
         OutputHelper::writeLog(__DIR__. '/blockNumListen.log',json_encode(["status" => Operating::LOG_UNLOCK_STATUS]));
-        echo "更新成功!";
+        echo "更新成功!".time().PHP_EOL;
     }
 
     /**
@@ -125,7 +131,7 @@ class EthLisenController extends Controller
      */
     public function actionListenOwnerExecutionStatus()
     {
-        echo "开始";
+        echo "开始".time().PHP_EOL;
         //读取日志文件
         OutputHelper::readLog(__DIR__. "/executionListen.log");
 
@@ -136,11 +142,15 @@ class EthLisenController extends Controller
         $info = CenterBridge::getListByTypeAndStatusAndOwnerTxid();
         if(!$info){
             OutputHelper::writeLog(__DIR__. '/executionListen.log',json_encode(["status" => Operating::LOG_UNLOCK_STATUS]));
-            echo "暂无处理数据";die;
+            echo "暂无处理数据".PHP_EOL;die;
         }
 
         //获取最新安全块
         $safetyBlock = Operating::getNewSafetyBlock();
+        if(!$safetyBlock){
+            OutputHelper::writeLog(__DIR__. '/executionListen.log',json_encode(["status" => Operating::LOG_UNLOCK_STATUS]));
+            echo "获取安全块错误".PHP_EOL;die();
+        }
         foreach ($info as $owner){
             if ($owner['to_block'] == 0) {
                 //根据owner_txid获取交易详细信息
@@ -165,7 +175,7 @@ class EthLisenController extends Controller
         }
 
         OutputHelper::writeLog(__DIR__. '/executionListen.log',json_encode(["status" => Operating::LOG_UNLOCK_STATUS]));
-        echo "更新成功";
+        echo "更新成功".time().PHP_EOL;
     }
 
 }

@@ -32,6 +32,10 @@ class Operating
             //16进制 转换为10进制
             $trade_info["gasUsed"] = hexdec($trade_info["gasUsed"]);
         }
+        if($trade_info["result"]){
+            $trade_info["result"] = substr($trade_info["result"],self::SUB_BIT);
+            $trade_info["result"] = hexdec($trade_info["result"]);
+        }
 
         return $trade_info;
     }
@@ -53,7 +57,7 @@ class Operating
         $new_block_data = CurlRequest::ChainCurl(Yii::$app->params["eth"]["eth_host"],"eth_blockNumber",[]);
         //{"jsonrpc":"2.0","id":"1","result":"0xaa6"} result 是16进制 需要转换为10进制
         if(!$new_block_data){
-            echo "eth返回块信息错误";die;
+            return false;
         }
         //解析最新块
         $newblock_str = json_decode($new_block_data,true)["result"];
@@ -77,14 +81,18 @@ class Operating
     {
         //获取nonce值
         $nonce = CurlRequest::ChainCurl($host, $function, $param);
-
+        if(!$nonce){
+            return false;
+        }
+        $nonce_data = json_decode($nonce,true);
+        $nonce_data = self::substrHexdec($nonce_data);
         //组装数据
         $send_sign_data = [
             "address" => $data["address"],
             "value" => $data["amount"],
             "gasPrice" => $gas_price,
             "gas" => "30000",
-            "nonce" => $nonce
+            "nonce" => $nonce_data["result"]
         ];
 
         return $send_sign_data;

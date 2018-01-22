@@ -10,7 +10,8 @@ return [
     "eth"=>[
         "gas_price"=>0,
         "gas_limit"=>150000,
-        "eth_host"   => "https://ropsten.infura.io/5SIQud3rd1716ZjUfO6m",
+//        "eth_host"   => "https://ropsten.infura.io/5SIQud3rd1716ZjUfO6m",
+        "eth_host" => "http://118.190.137.150:8545",
         "eth_sign_url"  => "http://118.190.137.150:10000/eth/defreeze",//eth签名
     ],
 ];

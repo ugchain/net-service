@@ -21,7 +21,7 @@ class UgListenController extends Controller
      */
     public function actionListenTxid()
     {
-        echo "UG转账ETH开始".time();
+        echo "UG转账ETH开始".time().PHP_EOL;
         //读取日志文件
         OutputHelper::readLog(__DIR__. "/ugListen.log");
 
@@ -32,7 +32,7 @@ class UgListenController extends Controller
         $unsucc_info = Operating::getUnconfirmedList(CenterBridge::UG_ETH, Yii::$app->getRuntimePath() . '/ugListen.log');
         if (!$unsucc_info) {
             OutputHelper::writeLog(__DIR__. '/ugListen.log',json_encode(["status" => Operating::LOG_UNLOCK_STATUS]));
-            echo "暂无交易数据！";die;
+            echo "暂无交易数据！".PHP_EOL;die;
         }
         //获取gas_price
         $gas_info = ExtraPrice::getList();
@@ -51,6 +51,9 @@ class UgListenController extends Controller
             //todo 1:签名服务器做签名(返回txid) 2:去eth链上转账操作 3:更新数据库 status=3&&blockNumber&&owner_txid&&block_send_succ_time
             //获取nonce值且组装数据
             $send_sign_data = Operating::getNonceAssembleData($list, $gas_price, Yii::$app->params["eth"]["eth_host"], "eth.getTransactionCount", [$list['address']]);
+            if (!$send_sign_data) {
+                continue;
+            }
 
             //根据组装数据获取签名且广播交易
             $res_data = Operating::getSignatureAndBroadcast(Yii::$app->params["eth"]["eth_sign_url"], $send_sign_data, Yii::$app->params["eth"]["eth_host"], "eth_sendRawTransaction");
@@ -60,12 +63,12 @@ class UgListenController extends Controller
 
             //更新数据库
             if(!CenterBridge::updateBlockAndOwnerTxid($list["app_txid"], $trade_info["blockNumber"], $res_data["hash"])){
-                echo "更新数据库失败";
+                echo "更新数据库失败".PHP_EOL;
                 continue;
             }
         }
 
         OutputHelper::writeLog(__DIR__. '/ugListen.log',json_encode(["status" => Operating::LOG_UNLOCK_STATUS]));
-        echo "UG转账ETH结束".time();
+        echo "UG转账ETH结束".time().PHP_EOL;
     }
 }
