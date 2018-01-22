@@ -33,4 +33,12 @@ class Advertise extends \common\models\Advertise
     {
         return Advertise::find()->where(["address"=>$address,"phone"=>$phone])->asArray()->one();
     }
+
+    /**
+     * 判断是否申请过
+     */
+    public static function getAdvertiseInfoByAddress($address)
+    {
+        return Advertise::find()->where(["address"=>$address])->asArray()->one();
+    }
 }

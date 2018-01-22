@@ -89,4 +89,23 @@ class UserController extends  Controller
         }
         outputHelper::ouputErrorcodeJson(\common\helpers\ErrorCodes::SUCCESS);
     }
+
+    /**
+     * 地址申请限制
+     */
+    public function actionCheckAddressAdvert()
+    {
+        //地址
+        $address = Yii::$app->request->post("address","");
+
+        //判断地址是否申请过
+        $result = 'YES';
+        if (!Advertise::getAdvertiseInfoByAddress($address)) {
+            $result = 'NO';
+        }
+
+
+        //返回值
+        outputHelper::ouputErrorcodeJson(\common\helpers\ErrorCodes::SUCCESS, $result);
+    }
 }

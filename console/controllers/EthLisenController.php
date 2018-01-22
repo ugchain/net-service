@@ -38,7 +38,6 @@ class EthLisenController extends Controller
             if (!$trade_info) {
                 continue;
             }
-
             //blockNumber截取前两位0x && 16进制 转换为10进制
             $trade_info = Operating::substrHexdec($trade_info);
 

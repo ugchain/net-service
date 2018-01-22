@@ -443,6 +443,31 @@ doc/api.md
     }
 }
 ```
+### 广告申请是否提交
+**请求URL：** 
+- `/user/user/check-address-advert`
+  
+**请求方式：**
+- POST 
+
+**参数：** 
+
+|参数名|必选|类型|说明|
+|:----    |:---|:----- |-----   |
+|address |是  |string | 地址 |
+
+ **返回示例**
+
+``` 
+{
+ "code": "0",
+ "message": "success",
+ "data": "NO" //YES | NO ;如果YES说明该地址已添加过，反之。
+}
+```
+
+--
+
 
 
 
