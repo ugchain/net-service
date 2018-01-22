@@ -28,7 +28,6 @@ class EthLisenController extends Controller
 
         //写入执行状态status为1
         OutputHelper::writeLog(__DIR__ . '/ethListen.log',json_encode(["status" => Operating::LOG_LOCK_STATUS]));
-echo 111;die;
         //获取数据库中待确认信息
         $unsucc_info = Operating::getUnconfirmedList(CenterBridge::ETH_UG, Yii::$app->getRuntimePath() . '/ethListen.log');
         if (!$unsucc_info) {
