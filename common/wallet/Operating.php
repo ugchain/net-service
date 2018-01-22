@@ -32,7 +32,7 @@ class Operating
             //16进制 转换为10进制
             $trade_info["gasUsed"] = hexdec($trade_info["gasUsed"]);
         }
-        if($trade_info["result"]){
+        if(isset($trade_info["result"])){
             $trade_info["result"] = substr($trade_info["result"],self::SUB_BIT);
             $trade_info["result"] = hexdec($trade_info["result"]);
         }
