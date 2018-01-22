@@ -31,10 +31,13 @@ class EthLisenController extends Controller
 
         //获取数据库中待确认信息
         $unsucc_info = Operating::getUnconfirmedList(CenterBridge::ETH_UG, Yii::$app->getRuntimePath() . '/ethlisten.log');
+        if (!$unsucc_info) {
+            echo "暂无交易数据！";
+        }
 
         foreach ($unsucc_info as $list)
         {
-            $trade_info = Operating::txidByTransactionInfo(Yii::$app->params["eth_host"], "eth_getTransactionReceipt", [$list["app_txid"]]);
+            $trade_info = Operating::txidByTransactionInfo(Yii::$app->params["eth"]["eth_host"], "eth_getTransactionReceipt", [$list["app_txid"]]);
             if (!$trade_info) {
                 continue;
             }
@@ -79,16 +82,16 @@ class EthLisenController extends Controller
 
             //todo 1:签名服务器做签名api 2:去ug链上转账操作返回txid后(api) 3:ug网络确认(api)直接更新数据库状态为转账成功
             //获取nince且组装签名数据
-            $send_sign_data = Operating::getNonceAssembleData($v, Operating::UgGasPrice(), Yii::$app->params["ug_host"], "eth.getTransactionCount", [$v['address']]);
+            $send_sign_data = Operating::getNonceAssembleData($v, Yii::$app->params["ug"]["gas_price"], Yii::$app->params["ug"]["ug_host"], "eth.getTransactionCount", [$v['address']]);
 
             //根据组装数据获取签名且广播交易
-            $res_data = Operating::getSignatureAndBroadcast(Yii::$app->params["ug_sign_url"], $send_sign_data, Yii::$app->params["ug_host"], "eth_sendRawTransaction");
+            $res_data = Operating::getSignatureAndBroadcast(Yii::$app->params["ug"]["ug_sign_url"], $send_sign_data, Yii::$app->params["ug"]["ug_host"], "eth_sendRawTransaction");
             if (!$res_data) {
                 continue;
             }
 
             //根据txid去块上确认
-            $trade_info = Operating::txidByTransactionInfo(Yii::$app->params["ug_host"], "eth_getTransactionReceipt", [$res_data["result"]]);
+            $trade_info = Operating::txidByTransactionInfo(Yii::$app->params["ug"]["ug_host"], "eth_getTransactionReceipt", [$res_data["result"]]);
             if (!$trade_info) {
                 continue;
             }
@@ -125,7 +128,7 @@ class EthLisenController extends Controller
         foreach ($info as $owner){
             if ($owner['to_block'] == 0) {
                 //根据owner_txid获取交易详细信息
-                $trade_info = Operating::txidByTransactionInfo(Yii::$app->params["eth_host"], "eth_getTransactionByHash", [$owner["owner_txid"]]);
+                $trade_info = Operating::txidByTransactionInfo(Yii::$app->params["eth"]["eth_host"], "eth_getTransactionByHash", [$owner["owner_txid"]]);
                 if (!$trade_info) {
                     continue;
                 }
