@@ -73,7 +73,7 @@ class MedalController extends  Controller
             outputHelper::ouputErrorcodeJson(\common\helpers\ErrorCodes::FALL);
         }
         //初始化勋章转赠表
-        $give_status = MedalGive::insertData($model->address,$model->id,"",MedalGive::SUCCESS);
+        $give_status = MedalGive::insertData($model->address,$model->id,$model->address,MedalGive::SUCCESS);
         if(!$give_status){
             outputHelper::ouputErrorcodeJson(\common\helpers\ErrorCodes::FALL);
         }
