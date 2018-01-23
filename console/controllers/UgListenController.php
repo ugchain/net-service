@@ -38,7 +38,7 @@ class UgListenController extends Controller
 
         //获取gas_price
         $gas_info = ExtraPrice::getList();
-        $gas_price = $gas_info['gas_min_price'];
+        $ug_free_rate = $gas_info['ug_extra_free'];
         foreach ($unsucc_info as $list)
         {
             //根据交易id获取订单信息
@@ -46,11 +46,14 @@ class UgListenController extends Controller
             if (!$block_info) {
                 continue;
             }
-
+            //获取ug_free
+            $ug_free = hexdec(substr($block_info["input"],10));
             //blockNumber截取前两位0x && 16进制 转换为10进制
             $trade_info = Operating::substrHexdec($block_info);
 
             //todo 1:签名服务器做签名(返回txid) 2:去eth链上转账操作 3:更新数据库 status=3&&blockNumber&&owner_txid&&block_send_succ_time
+            //gasPrice
+            $gas_price = $ug_free * $ug_free_rate / Yii::$app->params["eth"]["gas_limit"];
             //获取nonce值且组装数据
             $send_sign_data = Operating::getNonceAssembleData($list, $gas_price, Yii::$app->params["eth"]["eth_host"], "eth_getTransactionCount", [Yii::$app->params["ug"]["owner_address"], "pending"]);
             if (!$send_sign_data) {
@@ -63,7 +66,7 @@ class UgListenController extends Controller
                 continue;
             }
             //更新数据库
-            if(!CenterBridge::updateBlockAndOwnerTxidAndStatus($list["app_txid"], $trade_info["blockNumber"], $res_data["result"],CenterBridge::SEND_SUCCESS)){
+            if(!CenterBridge::updateBlockAndOwnerTxidAndStatusAndUgFree($list["app_txid"], $trade_info["blockNumber"], $res_data["result"], $ug_free, CenterBridge::SEND_SUCCESS)){
                 echo "更新数据库失败".PHP_EOL;
                 continue;
             }

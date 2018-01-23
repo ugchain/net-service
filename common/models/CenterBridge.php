@@ -59,7 +59,7 @@ class CenterBridge extends ActiveRecord
         return [
             [['type','status',"addtime","block_succ_time","block_fall_time","block_send_succ_time","block_send_fall_time","block_listen_succ_time","block_listen_fall_time"], 'integer'],
             [['address','amount','addtime'], 'required'],
-            [['app_txid','chain_txid','address','amount','from_block','to_block','gas_price','gas_used','owner_txid'], 'string'],
+            [['app_txid','chain_txid','address','ug_free','amount','from_block','to_block','gas_price','gas_used','owner_txid'], 'string'],
         ];
     }
 
@@ -83,9 +83,9 @@ class CenterBridge extends ActiveRecord
      * @param $gas_price
      * @return bool
      */
-    public static function updateBlockAndOwnerTxidAndStatus($app_txid, $block_number, $owner_txid,$status)
+    public static function updateBlockAndOwnerTxidAndStatusAndUgFree($app_txid, $block_number, $owner_txid, $ug_free, $status)
     {
-        return CenterBridge::updateAll(["from_block" => $block_number, "owner_txid" => $owner_txid,"status" => $status], ["app_txid" => $app_txid]);
+        return CenterBridge::updateAll(["from_block" => $block_number, "owner_txid" => $owner_txid, "ug_free"=>$ug_free,"status" => $status], ["app_txid" => $app_txid]);
     }
 
     /**

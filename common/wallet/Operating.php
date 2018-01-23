@@ -95,7 +95,7 @@ class Operating
             "address" => $data["address"],
             "amount" => $data["amount"],
             "gasPrice" => $gas_price,
-            "gas" => "30000",
+            "gas" => Yii::$app->params["eth"]["gas_limit"],
             "nonce" => (string)$nonce_data["result"]
         ];
         return $send_sign_data;
