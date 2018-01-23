@@ -24,15 +24,15 @@ class UgListenController extends Controller
     {
         echo "UG转账ETH开始".time().PHP_EOL;
         //读取日志文件
-       OutputHelper::readLog(dirname(__DIR__). "/locklog/ugListen.log");
+        //OutputHelper::readLog(dirname(__DIR__). "/locklog/ugListen.log");
 
         //写入执行状态status为1
-        OutputHelper::writeLog(dirname(__DIR__). "/locklog/ugListen.log",json_encode(["status" => Operating::LOG_LOCK_STATUS]));
+        //OutputHelper::writeLog(dirname(__DIR__). "/locklog/ugListen.log",json_encode(["status" => Operating::LOG_LOCK_STATUS]));
 
         //获取数据库中待确认信息
         $unsucc_info = Operating::getUnconfirmedList(CenterBridge::UG_ETH, __DIR__ . '/ugListen.log');
         if (!$unsucc_info) {
-            OutputHelper::writeLog(dirname(__DIR__). "/locklog/ugListen.log",json_encode(["status" => Operating::LOG_UNLOCK_STATUS]));
+            //OutputHelper::writeLog(dirname(__DIR__). "/locklog/ugListen.log",json_encode(["status" => Operating::LOG_UNLOCK_STATUS]));
             echo "暂无交易数据！".PHP_EOL;die;
         }
 
@@ -72,7 +72,7 @@ class UgListenController extends Controller
             }
         }
 
-        OutputHelper::writeLog(dirname(__DIR__). "/locklog/ugListen.log",json_encode(["status" => Operating::LOG_UNLOCK_STATUS]));
+        //OutputHelper::writeLog(dirname(__DIR__). "/locklog/ugListen.log",json_encode(["status" => Operating::LOG_UNLOCK_STATUS]));
         echo "UG转账ETH结束".time().PHP_EOL;
     }
 
@@ -85,15 +85,15 @@ class UgListenController extends Controller
     {
         echo "UG内部转账开始".time().PHP_EOL;
         //读取日志文件
-        OutputHelper::readLog(dirname(__DIR__) . "/locklog/ugTradeListen.log");
+        //OutputHelper::readLog(dirname(__DIR__) . "/locklog/ugTradeListen.log");
 
         //写入执行状态status为1
-        OutputHelper::writeLog(dirname(__DIR__) . "/locklog/ugTradeListen.log",json_encode(["status" => Operating::LOG_LOCK_STATUS]));
+        //OutputHelper::writeLog(dirname(__DIR__) . "/locklog/ugTradeListen.log",json_encode(["status" => Operating::LOG_LOCK_STATUS]));
 
         //获取数据库中待确认信息
         $unsucc_info = Trade::getInfoByStatus(Trade::CONFIRMED);
         if (!$unsucc_info) {
-            OutputHelper::writeLog(dirname(__DIR__) . "/locklog/ugTradeListen.log",json_encode(["status" => Operating::LOG_UNLOCK_STATUS]));
+            //OutputHelper::writeLog(dirname(__DIR__) . "/locklog/ugTradeListen.log",json_encode(["status" => Operating::LOG_UNLOCK_STATUS]));
             echo "暂无交易数据！".PHP_EOL;die;
         }
 
@@ -115,7 +115,7 @@ class UgListenController extends Controller
             }
         }
 
-        OutputHelper::writeLog(dirname(__DIR__) . "/locklog/ugTradeListen.log",json_encode(["status" => Operating::LOG_UNLOCK_STATUS]));
+        //OutputHelper::writeLog(dirname(__DIR__) . "/locklog/ugTradeListen.log",json_encode(["status" => Operating::LOG_UNLOCK_STATUS]));
         echo "UG内部转账结束".time().PHP_EOL;
     }
 }
