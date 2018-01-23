@@ -64,7 +64,6 @@ class EthLisenController extends Controller
     public function actionListenBlocknumber()
     {
         echo "开始".time().PHP_EOL;
-        //echo __DIR__;die;
         //读取日志文件
         OutputHelper::readLog(dirname(__DIR__) . "/locklog/blockNumListen.log");
 
@@ -82,7 +81,7 @@ class EthLisenController extends Controller
             OutputHelper::writeLog(dirname(__DIR__) . "/locklog/blockNumListen.log",json_encode(["status" => Operating::LOG_UNLOCK_STATUS]));
             echo "暂无区块信息".PHP_EOL;die;
         }
-        //var_dump($trade_info);die;
+
         foreach ($trade_info as  $k=> $v) {
             //判断是否超过安全块
             if ($safetyBlock < $v["from_block"]) {
@@ -91,19 +90,19 @@ class EthLisenController extends Controller
 
             //todo 1:签名服务器做签名api 2:去ug链上转账操作返回txid后(api) 3:ug网络确认(api)直接更新数据库状态为转账成功
             //获取nince且组装签名数据
-            $send_sign_data = Operating::getNonceAssembleData($v, Yii::$app->params["ug"]["gas_price"], Yii::$app->params["ug"]["ug_host"], "eth_getTransactionCount", [$v['address'],"latest"]);
+            $send_sign_data = Operating::getNonceAssembleData($v, Yii::$app->params["ug"]["gas_price"], Yii::$app->params["ug"]["ug_host"], "eth_getTransactionCount", [Yii::$app->params["ug"]["owner_address"], "pending"]);
             if (!$send_sign_data) {
                 continue;
             }
 
             //根据组装数据获取签名且广播交易
             $res_data = Operating::getSignatureAndBroadcast(Yii::$app->params["ug"]["ug_sign_url"], $send_sign_data, Yii::$app->params["ug"]["ug_host"], "eth_sendRawTransaction");
-            if (!$res_data) {
+            if (isset($res_data['error'])) {
                 continue;
             }
 
             //根据txid去块上确认
-            $trade_info = Operating::txidByTransactionInfo(Yii::$app->params["ug"]["ug_host"], "eth_getTransactionReceipt", [$res_data["hash"]]);
+            $trade_info = Operating::txidByTransactionInfo(Yii::$app->params["ug"]["ug_host"], "eth_getTransactionReceipt", [$res_data["result"]]);
             if (!$trade_info) {
                 continue;
             }
@@ -112,7 +111,7 @@ class EthLisenController extends Controller
             $trade_info = Operating::substrHexdec($trade_info["result"]);
 
             //更新数据库
-            if(!CenterBridge::updateStatusAndTime($v["app_txid"], CenterBridge::LISTEN_CONFIRM_SUCCESS, $res_data["hash"], $trade_info["blockNumber"])){
+            if(!CenterBridge::updateStatusAndTime($v["app_txid"], CenterBridge::LISTEN_CONFIRM_SUCCESS, $res_data["result"], $trade_info["blockNumber"])){
                 echo "更新数据库失败".PHP_EOL;
                 continue;
             }
@@ -124,7 +123,7 @@ class EthLisenController extends Controller
 
     /**
      * console of eth-listen/Listen-owner-execution-status
-     * 1:获取数据库状态为:3的数据 类型为:ug-eth
+     * 1:获取数据库状态为: 3 的数据 类型为:ug-eth
      * 2:根据地址和金额扫eth块
      * 3:修改状态 && 时间 owner_txid
      * @return string

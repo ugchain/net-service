@@ -86,6 +86,7 @@ class Operating
         if(!$nonce){
             return false;
         }
+        //var_dump($nonce);die;
         $nonce_data = json_decode($nonce,true);
         $nonce_data = self::substrHexdec($nonce_data);
         //组装数据
@@ -95,9 +96,8 @@ class Operating
             "amount" => $data["amount"],
             "gasPrice" => $gas_price,
             "gas" => "30000",
-            "nonce" => $nonce_data["result"]
+            "nonce" => (string)$nonce_data["result"]
         ];
-
         return $send_sign_data;
     }
 
@@ -119,7 +119,7 @@ class Operating
         }
         $sign_res_data = json_decode($sign_res,true);
         //链上广播交易
-        $broadcasting = CurlRequest::ChainCurl($host, $function, ["data" => $sign_res_data["row_transaction"]]);
+        $broadcasting = CurlRequest::ChainCurl($host, $function, [$sign_res_data['data']["raw_transaction"]]);
         if(!$broadcasting){
             return false;
         }

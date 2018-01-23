@@ -29,7 +29,7 @@ class MedalGive extends \common\models\MedalGive
     {
         $query = MedalGive::find();
         $query->where(['medal_id' => $medal_id]);
-        $query->orderBy('addtime ASC');
+        $query->orderBy('addtime DESC');
         //分页
         $count = $query->count();
         $offset = ($page - 1) * $pageSize;

@@ -104,7 +104,6 @@ class UserController extends  Controller
             $result['is_applied'] = 'NO';
         }
 
-
         //返回值
         outputHelper::ouputErrorcodeJson(\common\helpers\ErrorCodes::SUCCESS, $result);
     }

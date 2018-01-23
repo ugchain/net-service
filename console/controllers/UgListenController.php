@@ -17,14 +17,14 @@ class UgListenController extends Controller
 {
 
     /**
-     * console of ug-listen/listen-txid 根据txid获取blocknumber and gas_price
+     * console of ug-listen/listen-txid 根据txid获取blocknumber and gas_price 状态改为3
      * @return string
      */
     public function actionListenTxid()
     {
         echo "UG转账ETH开始".time().PHP_EOL;
         //读取日志文件
-        OutputHelper::readLog(dirname(__DIR__). "/locklog/ugListen.log");
+       OutputHelper::readLog(dirname(__DIR__). "/locklog/ugListen.log");
 
         //写入执行状态status为1
         OutputHelper::writeLog(dirname(__DIR__). "/locklog/ugListen.log",json_encode(["status" => Operating::LOG_LOCK_STATUS]));
@@ -35,6 +35,7 @@ class UgListenController extends Controller
             OutputHelper::writeLog(dirname(__DIR__). "/locklog/ugListen.log",json_encode(["status" => Operating::LOG_UNLOCK_STATUS]));
             echo "暂无交易数据！".PHP_EOL;die;
         }
+
         //获取gas_price
         $gas_info = ExtraPrice::getList();
         $gas_price = $gas_info['gas_min_price'];
@@ -51,18 +52,18 @@ class UgListenController extends Controller
 
             //todo 1:签名服务器做签名(返回txid) 2:去eth链上转账操作 3:更新数据库 status=3&&blockNumber&&owner_txid&&block_send_succ_time
             //获取nonce值且组装数据
-            $send_sign_data = Operating::getNonceAssembleData($list, $gas_price, Yii::$app->params["eth"]["eth_host"], "eth_getTransactionCount", [$list['address'],"latest"]);
+            $send_sign_data = Operating::getNonceAssembleData($list, $gas_price, Yii::$app->params["eth"]["eth_host"], "eth_getTransactionCount", [Yii::$app->params["ug"]["owner_address"], "pending"]);
             if (!$send_sign_data) {
                 continue;
             }
 
             //根据组装数据获取签名且广播交易
             $res_data = Operating::getSignatureAndBroadcast(Yii::$app->params["eth"]["eth_sign_url"], $send_sign_data, Yii::$app->params["eth"]["eth_host"], "eth_sendRawTransaction");
-            if (!$res_data) {
+            if (isset($res_data['error'])) {
                 continue;
             }
             //更新数据库
-            if(!CenterBridge::updateBlockAndOwnerTxidAndStatus($list["app_txid"], $trade_info["blockNumber"], $res_data["hash"],CenterBridge::SEND_SUCCESS)){
+            if(!CenterBridge::updateBlockAndOwnerTxidAndStatus($list["app_txid"], $trade_info["blockNumber"], $res_data["result"],CenterBridge::SEND_SUCCESS)){
                 echo "更新数据库失败".PHP_EOL;
                 continue;
             }
