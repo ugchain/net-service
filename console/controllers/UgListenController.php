@@ -130,4 +130,51 @@ class UgListenController extends Controller
         //OutputHelper::writeLog(dirname(__DIR__) . "/locklog/ugTradeListen.log",json_encode(["status" => Operating::LOG_UNLOCK_STATUS]));
         echo "UG内部转账结束".time().PHP_EOL;
     }
+
+    /**
+     * 确认eth-ug 监听owner发送成功未上链的信息
+     * 根据txid到链上获取交易信息，获取blocknumber
+     * 更新数据库to_block && status && block_listen_succ_time
+     */
+    public function actionListenEthUgConfirm()
+    {
+        echo "ETH-UG确认开始".time().PHP_EOL;
+        //获取数据库中eth-ug发送成功的信息
+        $info = CenterBridge::find()->where(["type"=>"1","status"=>"3"])->asArray()->all();
+        if(!$info){
+            echo "暂无信息".PHP_EOL;die();
+        }
+        foreach ($info as $v)
+        {
+            //根据交易id获取订单信息
+            $block_info = Operating::txidByTransactionInfo(Yii::$app->params['ug']["ug_host"], "eth_getTransactionByHash", [$v["app_txid"]]);
+            if (!$block_info) {
+                echo "监听失败".PHP_EOL;
+                continue;
+            }
+            //多次判断是否上块
+            $receipt_info = CurlRequest::ChainCurl(Yii::$app->params['ug']["ug_host"],"eth_getTransactionReceipt",[$v["app_txid"]]);
+            if(!$receipt_info){
+                echo "监听确认失败".PHP_EOL;
+                continue;
+            }
+            $receipt_info = json_decode($receipt_info,true);
+            //代表上链失败
+            if($block_info["gas"] == $receipt_info["result"]["gasUsed"]){
+                //直接更新数据库块上失败
+                CenterBridge::updateFallByStatus($v["app_txid"], CenterBridge::FAILED_BLOCK);
+                echo "ug链上监听失败";
+                continue;
+            }
+            $trade_info = Operating::substrHexdec($block_info);
+
+            //更新数据库
+            if(!CenterBridge::updateAll(["status"=>CenterBridge::LISTEN_CONFIRM_SUCCESS,"block_listen_succ_time"=>time(),"to_block"=>$trade_info["blockNumber"]],["app_txid"=>$v["app_txid"]])){
+                echo "更新数据库失败".PHP_EOL;
+                continue;
+            }
+            echo "更新数据库成功".PHP_EOL;
+        }
+        echo "ETH转账UG确认结束".time().PHP_EOL;
+    }
 }
