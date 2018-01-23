@@ -92,18 +92,22 @@ class EthLisenController extends Controller
             //获取nince且组装签名数据
             $send_sign_data = Operating::getNonceAssembleData($v, Yii::$app->params["ug"]["gas_price"], Yii::$app->params["ug"]["ug_host"], "eth_getTransactionCount", [Yii::$app->params["ug"]["owner_address"], "pending"]);
             if (!$send_sign_data) {
+                echo "获取nince且组装签名数据";
                 continue;
             }
 
             //根据组装数据获取签名且广播交易
             $res_data = Operating::getSignatureAndBroadcast(Yii::$app->params["ug"]["ug_sign_url"], $send_sign_data, Yii::$app->params["ug"]["ug_host"], "eth_sendRawTransaction");
             if (isset($res_data['error'])) {
+                echo "数据获取签名且广播交易错误";
                 continue;
             }
 
             //根据txid去块上确认
             $trade_info = Operating::txidByTransactionInfo(Yii::$app->params["ug"]["ug_host"], "eth_getTransactionReceipt", [$res_data["result"]]);
             if (!$trade_info) {
+                CenterBridge::updateStatus($v["app_txid"], CenterBridge::SEND_SUCCESS, $res_data["result"]);
+                echo "txid去块上确认失败";
                 continue;
             }
 

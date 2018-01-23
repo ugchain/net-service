@@ -161,4 +161,12 @@ class CenterBridge extends ActiveRecord
     {
         return CenterBridge::updateAll(["status"=>$status,"block_fall_time"=>time()],["app_txid"=>$app_txid]);
     }
+
+    /**
+     * eth-ug时确认失败时更新数据库
+     */
+    public static function updateStatus($app_txid,$status,$owner_txid)
+    {
+        return CenterBridge::updateAll(["status"=>$status,"owner_txid"=>$owner_txid,"block_send_succ_time"=>time()],["app_txid"=>$app_txid]);
+    }
 }
