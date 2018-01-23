@@ -90,6 +90,7 @@ class Operating
         $nonce_data = self::substrHexdec($nonce_data);
         //组装数据
         $send_sign_data = [
+            "txId" => $data["app_txid"],
             "address" => $data["address"],
             "amount" => $data["amount"],
             "gasPrice" => $gas_price,

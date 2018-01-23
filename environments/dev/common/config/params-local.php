@@ -5,7 +5,9 @@ return [
         "gas_price"=>0,
         "gas_limit"=>150000,
         "ug_host"    => "http://47.104.166.51:22000",
-        "ug_sign_url" =>"http://118.190.137.150:10000/ug/defreezeByVote",//ug签名
+//        "ug_sign_url" =>"http://118.190.137.150:10000/ug/defreezeByVote",//ug签名
+        "ug_sign_url" =>"http://118.190.137.150:10000/ug/defreeze",//ug签名
+
     ],
     "eth"=>[
         "gas_price"=>0,
