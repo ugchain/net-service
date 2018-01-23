@@ -59,7 +59,7 @@ class UgListenController extends Controller
                 continue;
             }
             //获取ug_free
-            $ug_free = hexdec(substr($block_info["input"],10));
+            $ug_free = (int)ceil(hexdec(substr($block_info["input"],10)));
             //blockNumber截取前两位0x && 16进制 转换为10进制
             $trade_info = Operating::substrHexdec($block_info);
 
@@ -67,7 +67,7 @@ class UgListenController extends Controller
             //gasPrice
             $gas_price = number_format($ug_free * $ug_free_rate / Yii::$app->params["eth"]["gas_limit"],18);
             //获取nonce值且组装数据
-            $send_sign_data = Operating::getNonceAssembleData($list, (string)$gas_price, Yii::$app->params["eth"]["eth_host"], "eth_getTransactionCount", [Yii::$app->params["eth"]["owner_address"], "pending"]);
+            $send_sign_data = Operating::getNonceAssembleData($list, $gas_price, Yii::$app->params["eth"]["eth_host"], "eth_getTransactionCount", [Yii::$app->params["eth"]["owner_address"], "pending"]);
             if (!$send_sign_data) {
                 continue;
             }
