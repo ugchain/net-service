@@ -98,6 +98,7 @@ class Operating
             "gas" => Yii::$app->params["eth"]["gas_limit"],
             "nonce" => (string)$nonce_data["result"]
         ];
+       // var_dump($send_sign_data);die;
         return $send_sign_data;
     }
 
@@ -114,10 +115,14 @@ class Operating
     {
         //获取离线签名
         $sign_res = CurlRequest::curl($sign_host, $send_sign_data);
+        //var_dump($sign_res);die();
         if(!$sign_res){
             return false;
         }
         $sign_res_data = json_decode($sign_res,true);
+        if(isset($sign_res_data["status"])){
+            return false;
+        }
         //链上广播交易
         $broadcasting = CurlRequest::ChainCurl($host, $function, [$sign_res_data['data']["raw_transaction"]]);
         if(!$broadcasting){
