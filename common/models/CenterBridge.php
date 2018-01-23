@@ -1,6 +1,7 @@
 <?php
 namespace common\models;
 
+use common\helpers\CurlRequest;
 use Yii;
 use yii\db\ActiveRecord;
 use yii\data\ActiveDataProvider;
@@ -151,5 +152,13 @@ class CenterBridge extends ActiveRecord
     public static function updateListenSuccTimeByTxid($owner_txid)
     {
         return CenterBridge::updateAll(["status"=>self::LISTEN_CONFIRM_SUCCESS,"block_listen_succ_time"=>time()],["owner_txid"=>$owner_txid]);
+    }
+
+    /**
+     * 直接更新该笔交易失败
+     */
+    public static function updateFallByStatus($app_txid,$status)
+    {
+        return CenterBridge::updateAll(["status"=>$status,"block_fall_time"=>time()],["app_txid"=>$app_txid]);
     }
 }

@@ -132,12 +132,12 @@ class Operating
      * @param        $logFile
      * @return array|bool
      */
-    public static function getUnconfirmedList($type = CenterBridge::ETH_UG, $logFile)
+    public static function getUnconfirmedList($type = CenterBridge::UG_ETH, $logFile)
     {
         //查询数据信息待确认状态
         $unsucc_info = CenterBridge::getListByTypeAndStatus($type);
         if (!$unsucc_info) {
-            OutputHelper::writeLog($logFile, json_encode(["status" => self::LOG_UNLOCK_STATUS]));
+            //OutputHelper::writeLog($logFile, json_encode(["status" => self::LOG_UNLOCK_STATUS]));
             return false;
         }
         return $unsucc_info;
