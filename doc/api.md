@@ -268,6 +268,7 @@ doc/api.md
                 "amount": "30",                     //金额
                 "blocknumber": "0",                 //区块号
                 "type": "2",                        //1：eth->ug;2:ug->eth
+                "ug_free":"23"                      //type=2时（ug->eth）手续费直接读这个值
                 "gas_price": "0",                   //gas_price * gas_used = 手续费（去掉18个0）
                 "gas_used": "0",
                 "owner_txid": "",
