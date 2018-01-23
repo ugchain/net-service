@@ -147,13 +147,13 @@ class UgListenController extends Controller
         foreach ($info as $v)
         {
             //根据交易id获取订单信息
-            $block_info = Operating::txidByTransactionInfo(Yii::$app->params['ug']["ug_host"], "eth_getTransactionByHash", [$v["app_txid"]]);
+            $block_info = Operating::txidByTransactionInfo(Yii::$app->params['ug']["ug_host"], "eth_getTransactionByHash", [$v["owner_txid"]]);
             if (!$block_info) {
                 echo "监听失败".PHP_EOL;
                 continue;
             }
             //多次判断是否上块
-            $receipt_info = CurlRequest::ChainCurl(Yii::$app->params['ug']["ug_host"],"eth_getTransactionReceipt",[$v["app_txid"]]);
+            $receipt_info = CurlRequest::ChainCurl(Yii::$app->params['ug']["ug_host"],"eth_getTransactionReceipt",[$v["owner_txid"]]);
             if(!$receipt_info){
                 echo "监听确认失败".PHP_EOL;
                 continue;
@@ -162,14 +162,14 @@ class UgListenController extends Controller
             //代表上链失败
             if($block_info["gas"] == $receipt_info["result"]["gasUsed"]){
                 //直接更新数据库块上失败
-                CenterBridge::updateFallByStatus($v["app_txid"], CenterBridge::FAILED_BLOCK);
+                CenterBridge::updateFallByStatus($v["owner_txid"], CenterBridge::FAILED_BLOCK);
                 echo "ug链上监听失败";
                 continue;
             }
             $trade_info = Operating::substrHexdec($block_info);
 
             //更新数据库
-            if(!CenterBridge::updateAll(["status"=>CenterBridge::LISTEN_CONFIRM_SUCCESS,"block_listen_succ_time"=>time(),"to_block"=>$trade_info["blockNumber"]],["app_txid"=>$v["app_txid"]])){
+            if(!CenterBridge::updateAll(["status"=>CenterBridge::LISTEN_CONFIRM_SUCCESS,"block_listen_succ_time"=>time(),"to_block"=>$trade_info["blockNumber"]],["owner_txid"=>$v["owner_txid"]])){
                 echo "更新数据库失败".PHP_EOL;
                 continue;
             }
