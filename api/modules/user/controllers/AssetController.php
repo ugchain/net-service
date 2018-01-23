@@ -1,14 +1,15 @@
 <?php
 namespace api\modules\user\controllers;
 
-use common\wallet\Operating;
+
 use Yii;
 use yii\web\Controller;
 use common\helpers\OutputHelper;
 use common\helpers\CurlRequest;
-use api\modules\user\models\Address;
 use api\modules\user\models\Trade;
 use api\modules\user\models\CenterBridge;
+use common\wallet\Operating;
+use common\models\ExtraPrice;
 
 class AssetController extends  Controller
 {
@@ -136,4 +137,17 @@ class AssetController extends  Controller
         outputHelper::ouputErrorcodeJson(\common\helpers\ErrorCodes::SUCCESS,$trade_record);
     }
 
+    /**
+     * ug-eth时手续费汇率
+     */
+    public function actionUgFree()
+    {
+        $free_info = ExtraPrice::getList();
+        $data["ug_free"] = "6000";
+        if(!$free_info || !$free_info["ug_extra_free"]){
+            outputHelper::ouputErrorcodeJson(\common\helpers\ErrorCodes::SUCCESS,$data);
+        }
+        $data["ug_free"] = $free_info["ug_extra_free"];
+        outputHelper::ouputErrorcodeJson(\common\helpers\ErrorCodes::SUCCESS,$data);
+    }
 }
