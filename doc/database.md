@@ -109,3 +109,15 @@
       PRIMARY KEY (`id`),
       UNIQUE KEY `unique_address_phone` (`address`,`phone`)
     ) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8 COMMENT='广告申请表';
+    
+###手续费表
+    DROP TABLE IF EXISTS `ug_extra_prcie`;
+    
+    CREATE TABLE `ug_extra_prcie` (
+      `id` int(11) unsigned NOT NULL AUTO_INCREMENT COMMENT '自增ID',
+      `gas_min_price` varchar(100) NOT NULL DEFAULT '20' COMMENT '单价最小值',
+      `gas_max_price` varchar(100) NOT NULL DEFAULT '100' COMMENT '单价最大值',
+      `ug_extra_free` varchar(100) NOT NULL DEFAULT '6000' COMMENT 'ug手续费',
+      `addtime` int(11) NOT NULL COMMENT '添加时间',
+      PRIMARY KEY (`id`)
+    ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='gas设置表';

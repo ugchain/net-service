@@ -35,7 +35,7 @@ class ExtraPrice extends ActiveRecord
         return [
             [['addtime'], 'integer'],
             [['addtime'], 'required'],
-            [['gas_min_price','gas_max_price','ug_extra_price'], 'string'],
+            [['gas_min_price','gas_max_price','ug_extra_free'], 'string'],
         ];
     }
 
