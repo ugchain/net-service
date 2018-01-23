@@ -127,11 +127,7 @@ class MedalController extends  Controller
         if($medal_trade_info['list']){
             //转赠历史
             foreach ($medal_trade_info['list'] as $key=>$trade_info){
-                if($key==0){
-                    $give_data[$key]["address"] = $trade_info["from_address"];
-                }else{
-                    $give_data[$key]["address"] = $trade_info["to_address"];
-                }
+                $give_data[$key]["address"] = $trade_info["to_address"];
                 $give_data[$key]["addtime"] = $trade_info["addtime"];
             }
         }
