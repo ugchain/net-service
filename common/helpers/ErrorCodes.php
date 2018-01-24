@@ -17,8 +17,17 @@ class ErrorCodes
         //
         PARAM_NOT_EXIST                                             =   20101,//参数缺失
         SIGN_NOT_TRUE                                               =   20102,//签名错误
-        COIN_NOT_EIST                                               =   20103,//币名不能为空
-        GET_USERID_ERROR                                            =   20104;//获取用户id失败
+        ADDRESS_NOT_EXIST                                           =   20103,//地址缺失
+        NICKNAM_EOVERSIZE                                           =   20104,//昵称过长
+        ADDRESS_EXIST                                               =   20105,//地址存在
+        TXID_EXIST                                                  =   20106,//交易ID已存在
+        UPLOAD_FILE_FALL                                            =   20107,//上传图片失败
+        MEDAL_INFO_ERROR                                            =   20107,//勋章信息错误
+        MEDAL_UPDATE_ERROR                                          =   20108,//勋章地址更新错误
+        MEDAL_GIVE_ADD_FAILED                                       =   20109,//转增记录添加失败
+        PHONE_WRONGFOL                                              =   20110,//手机号不合法
+        ADVERTISE_EXIST                                             =   20111;//广告已申请
+
 
 
     /**
@@ -32,9 +41,15 @@ class ErrorCodes
         self::SYSTEM_NOT_POST                                       =>'当前请求方式有误',
         self::PARAM_NOT_EXIST                                       =>'参数缺失',
         self::SIGN_NOT_TRUE                                         =>'签名错误',
-        self::COIN_NOT_EIST                                         =>'币名不能为空',
-        self::GET_USERID_ERROR                                      =>'获取用户id失败',
-
+        self::ADDRESS_NOT_EXIST                                     =>'地址无效',
+        self::ADDRESS_EXIST                                         =>'地址存在',
+        self::TXID_EXIST                                            =>'交易ID已存在',
+        self::UPLOAD_FILE_FALL                                      =>'上传图片失败',
+        self::MEDAL_INFO_ERROR                                      =>'勋章信息错误',
+        self::MEDAL_UPDATE_ERROR                                    =>'勋章地址更新错误',
+        self::MEDAL_GIVE_ADD_FAILED                                 =>'转增记录添加失败',
+        self::PHONE_WRONGFOL                                        =>'手机号不合法',
+        self::ADVERTISE_EXIST                                       =>'广告已申请',
     ];
 
 }

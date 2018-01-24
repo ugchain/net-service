@@ -1,7 +1,11 @@
 <?php
 namespace common\helpers;
+use Yii;
+use common\models\CenterBridge;
+
 class OutputHelper
 {
+
     /**
      * 组装返回数据
      */
@@ -15,17 +19,31 @@ class OutputHelper
     }
 
     /**
-     * 数字转为字符串（包括科学计数法）
+     * 读取log
+     * @param $logFileName
+     * @return bool
      */
-    public static function NumToStr($num){
-        if(false !== stripos($num, "e")){
-            $num = number_format($num,10,'.','');
+    public static function readLog($logFileName)
+    {
+        $ethlisten = file_get_contents($logFileName);
+        $ethlistenlog = json_decode($ethlisten,true);
+        if($ethlistenlog["status"] != 0){
+            echo "正在执行中";die();
         }
-        if(false !== stripos($num, ".")){
-            while (eregi("0$", $num)){
-                $num = rtrim($num,'0');
-            };
-        }
-        return (string)$num;
+        return true;
     }
+
+    /**
+     * 写入log
+     * @param $logUrl
+     * @param $status
+     *
+     * @return bool
+     */
+    public static function writeLog($logUrl, $status)
+    {
+        file_put_contents($logUrl, $status);
+        return true;
+    }
+
 }
