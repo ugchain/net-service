@@ -31,7 +31,7 @@ pipeline {
         DEVELOP_S1='10.30.185.40'
         //生产环境
         MASTER_USER='root'
-        MASTER_S1='47.52.255.168'
+        MASTER_S1='10.29.165.44'
     }
 
     stages {
