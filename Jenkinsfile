@@ -31,7 +31,7 @@ pipeline {
         DEVELOP_S1='10.30.185.40'
         //生产环境
         MASTER_USER='root'
-        MASTER_S1='47.52.255.168'
+        MASTER_S1='10.29.165.44'
     }
 
     stages {
@@ -229,7 +229,7 @@ def updateLnJob(host, user='root') {
 
     //restart php-fpm server
     if (env.BRANCH_NAME == 'master') {
-        sh "ssh root@${MASTER_S1} 'systemctl restart php-fpm'"
+        sh "ssh root@${MASTER_S1} 'service php-fpm restart'"
     } else {
         sh "ssh root@${DEVELOP_S1} 'service php-fpm restart'"
     }
