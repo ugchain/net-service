@@ -334,6 +334,7 @@ doc/api.md
  "message": "success",
  "data": ""
 }
+<<<<<<< HEAD
 ```
 --
 
@@ -492,11 +493,3 @@ doc/api.md
 ```
 
 --
-
-
-
-
-
-
-
-
