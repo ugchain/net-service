@@ -229,7 +229,7 @@ def updateLnJob(host, user='root') {
 
     //restart php-fpm server
     if (env.BRANCH_NAME == 'master') {
-        sh "ssh root@${MASTER_S1} 'systemctl restart php-fpm'"
+        sh "ssh root@${MASTER_S1} 'service php-fpm restart'"
     } else {
         sh "ssh root@${DEVELOP_S1} 'service php-fpm restart'"
     }
