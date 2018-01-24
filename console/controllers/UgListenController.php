@@ -59,7 +59,7 @@ class UgListenController extends Controller
                 continue;
             }
             //获取ug_free
-            $ug_free = hexdec(substr($block_info["input"],10));
+            $ug_free = number_format(hexdec(substr($block_info["input"],10)),"0",",","");
             //blockNumber截取前两位0x && 16进制 转换为10进制
             $trade_info = Operating::substrHexdec($block_info);
 
