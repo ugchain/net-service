@@ -162,8 +162,8 @@ class UgListenController extends Controller
             //代表上链失败
             if($block_info["gas"] == $receipt_info["result"]["gasUsed"]){
                 //直接更新数据库块上失败
-                CenterBridge::updateFallByStatus($v["owner_txid"], CenterBridge::FAILED_BLOCK);
-                echo "ug链上监听失败";
+                CenterBridge::updateFallByStatus($v["app_txid"], CenterBridge::LISTEN_CONFIRM_FAILED);
+                echo "ug链上监听失败".PHP_EOL;
                 continue;
             }
             $trade_info = Operating::substrHexdec($block_info);
