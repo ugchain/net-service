@@ -1,5 +1,4 @@
 ##红包数据库表结构
-
 ###红包主题表
 ```
 DROP TABLE IF EXISTS `ug_red_packet_theme`;
@@ -42,6 +41,22 @@ DROP TABLE IF EXISTS `ug_red_packet_theme`;
 ```
 --
 
+###红包活动离线签名表
+```
+ DROP TABLE IF EXISTS `ug_packet_offline_signature`;
+
+ CREATE TABLE `ug_packet_offline_signature` (
+  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '自增ID',
+  `theme_id` int(11) NOT NULL DEFAULT '1' COMMENT '红包id',
+  `address` varchar(42) NOT NULL DEFAULT '' COMMENT '发红包账户',
+  `raw_transaction` varchar(255) NOT NULL DEFAULT '' COMMENT '离线签名',
+  `addtime` int(11) NOT NULL COMMENT '创建时间',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT "红包活动离线签名表"
+
+```
+--
+
 ###红包记录表
 ```
  DROP TABLE IF EXISTS `ug_red_packet_record`;
@@ -65,6 +80,8 @@ CREATE TABLE `ug_red_packet_record` (
  ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT "红包记录表"
 
 ```
+--
+
 ###ug_trade增加type字段
 ```
 `type` tinyint(1) DEFAULT '0' COMMENT '记录类型；0内部交易转账；1红包交易转账',

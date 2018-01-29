@@ -1,12 +1,136 @@
-doc/api.md
-[TOC]
-## 勋章&&虚拟资产接口文档
+# api接口：
 
-### 测试环境host
-- `http://t9-cname.ugchain.com`
+### 主题创建接口
+**请求URL：** 
+- `/red/theme/create-theme`
+  
+**请求方式：**
+- POST 
 
-### 生产环境host
-- `http://app.ugchain.com`
+**参数：** 
+
+|参数名|必选|类型|说明|
+|:----    |:---|:----- |-----   |
+|title |是  |string |主题标题 |
+|img |是  |string |主题图片地址 |
+|thumb_img |是  |string |主题缩略图地址 |
+|share_img |是  |string |分享缩略图地址 |
+
+ **返回示例**
+
+``` 
+{
+    "code": 0,
+    "message": "成功",
+    "data": []
+}
+
+```
+
+### 主题列表接口
+**请求URL：** 
+- `/red/theme/theme-list`
+  
+**请求方式：**
+- POST 
+
+**参数：** 
+
+|参数名|必选|类型|说明|
+|:----    |:---|:----- |-----   |
+
+ **返回示例**
+
+``` 
+{
+	"code": 0,
+	"message": "success",
+	"data": {
+		"list": [{
+			"id": "1",
+			"title": "名字",
+			"img": "/upload/test/image2.png",
+			"thumb_img": "/upload/test/image.png",
+			"share_img": "/upload/test/image1.png",
+			"addtime": "5234242"
+		}, {
+			"id": "2",
+			"title": "名字",
+			"img": "/upload/test/image2.png",
+			"thumb_img": "/upload/test/image.png",
+			"share_img": "/upload/test/image1.png",
+			"addtime": "5234242"
+		}],
+		"image_url":"http://t9-cname.ugchain.com"
+	}
+}
+
+```
+--
+
+### 中心化账户地址接口
+**请求URL：** 
+- `/red/red/center-address`
+  
+**请求方式：**
+- POST 
+
+**参数：** 
+
+|参数名|必选|类型|说明|
+|:----    |:---|:----- |-----   |
+
+ **返回示例**
+
+``` 
+{
+    "code": 0,
+    "message": "成功",
+    "data": [{
+        "address":"423424242"//签名地址
+    }]
+}
+
+```
+--
+
+
+### 创建红包接口
+**请求URL：** 
+- `/red/red/create-packet`
+  
+**请求方式：**
+- POST 
+
+**参数：** 
+
+|参数名|必选|类型|说明|
+|:----    |:---|:----- |-----   |
+|title |是  |string |红包标题 |
+|address |是  |string |发红包账户地址 |
+|amount |是  |string |金额 |
+|quantity |是  |string |个数 |
+|theme_id |是  |string |主题ID |
+|type |是  |string |类型 0等额红包；1随机红包 |
+|raw_transaction |是  |string |离线签名 |
+
+ **返回示例**
+
+``` 
+{
+    "code": 0,
+    "message": "成功",
+    "data": [{
+        "id":"1",//红包ID
+        "status":"0",//红包创建中;1创建失败;2创建成功
+        “share_url”:"",//分享主题
+    }]
+}
+
+```
+
+
+--
 
 ### 兑换接口
 **请求URL：** 
@@ -32,6 +156,7 @@ doc/api.md
 }
 
 ```
+--
 
 ### 红包详情
 **请求URL：** 
@@ -143,4 +268,3 @@ doc/api.md
 }
 
 
---
