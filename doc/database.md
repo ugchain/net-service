@@ -12,6 +12,7 @@
       `from_block` varchar(100) NOT NULL DEFAULT '0' COMMENT '发送区块号',
       `to_block` varchar(100) NOT NULL DEFAULT '0' COMMENT '通知区块号',
       `type` tinyint(1) NOT NULL DEFAULT '1' COMMENT '1:eth_ug 2:ug_eth',
+      `ug_free` varchar(100) NOT NULL DEFAULT '0' COMMENT ''ug手续费',
       `gas_price` varchar(100) NOT NULL DEFAULT '0' COMMENT 'gas_price',
       `gas_used` varchar(100) NOT NULL DEFAULT '0' COMMENT 'gas_used',
       `owner_txid` varchar(100) NOT NULL DEFAULT '' COMMENT '执行者txid',
