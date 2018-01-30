@@ -110,8 +110,10 @@ class RedpacketController extends  Controller
             outputHelper::ouputErrorcodeJson(\common\helpers\ErrorCodes::RED_PACKET_REDEMPTION);
         }
         $result['address'] = $result['to_address'];
-        $result['app_txid'] = $result['txid'];
+        $result['app_txid'] = $result['txid']; //空的
         //开始兑换红包
+        //redis获取随机红包金额
+        //redis销毁红包金额
         //获取nince且组装签名数据
         $send_sign_data = Operating::getNonceAssembleData($result, Yii::$app->params["ug"]["gas_price"], Yii::$app->params["ug"]["ug_host"], "eth_getTransactionCount", [Yii::$app->params["ug"]["owner_address"], "pending"]);
 
@@ -143,7 +145,7 @@ class RedpacketController extends  Controller
             $recordStatus = RedPacketRecord::EXCHANGE_SUCC;
         }
 
-        if (!RedPacketRecord::updateStatusByTxid($result['txid'], $recordStatus)) {
+        if (!RedPacketRecord::updateStatusAndTxidByid($result['id'], $recordStatus, $res_data["result"])) {
             outputHelper::ouputErrorcodeJson(\common\helpers\ErrorCodes::FALL);
         }
         if (!Trade::insertData($res_data["result"], $result["from_address"], $result["to_address"], $result["amount"], $tradeStatus, Trade::REDPACKET, $trade_info['blockNumber'])) {
@@ -160,8 +162,9 @@ class RedpacketController extends  Controller
     {
         //红包id
         $id = Yii::$app->request->post("id", "");
-        //账户地址
-        $address = Yii::$app->request->post("address", "");
+
+
+
     }
 
     /**

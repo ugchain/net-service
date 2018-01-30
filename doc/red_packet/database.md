@@ -89,6 +89,6 @@ CREATE TABLE `ug_red_packet_record` (
 ###ug_trade增加type字段
 ```
 `type` tinyint(1) DEFAULT '0' COMMENT '记录类型；0内部交易转账；1红包交易转账',
-alter table ug_trade add `type` tinyint(1) DEFAULT '0' COMMENT '记录类型；0内部交易转账；1红包交易转账'
+alter table ug_trade add `type` tinyint(1) DEFAULT '0' COMMENT '记录类型；0内部交易转账；1拆红包交易转账；2创建红包交易转账；3退还红包交易转账'
 ```
 
