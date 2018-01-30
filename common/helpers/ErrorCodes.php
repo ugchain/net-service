@@ -26,7 +26,10 @@ class ErrorCodes
         MEDAL_UPDATE_ERROR                                          =   20108,//勋章地址更新错误
         MEDAL_GIVE_ADD_FAILED                                       =   20109,//转增记录添加失败
         PHONE_WRONGFOL                                              =   20110,//手机号不合法
-        ADVERTISE_EXIST                                             =   20111;//广告已申请
+        ADVERTISE_EXIST                                             =   20111,//广告已申请
+        RED_PACKET_REDEMPTION                                       =   20112,//红包兑换中
+        GET_SIGNATURE_FAIL                                          =   20113;//获取签名失败
+
 
 
 
@@ -50,6 +53,8 @@ class ErrorCodes
         self::MEDAL_GIVE_ADD_FAILED                                 =>'转增记录添加失败',
         self::PHONE_WRONGFOL                                        =>'手机号不合法',
         self::ADVERTISE_EXIST                                       =>'广告已申请',
+        self::RED_PACKET_REDEMPTION                                 =>'红包兑换中',
+        self::GET_SIGNATURE_FAIL                                    =>'获取签名失败',
     ];
 
 }

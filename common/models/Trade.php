@@ -10,6 +10,8 @@ class Trade extends ActiveRecord
     const CONFIRMED = 0;
     const SUCCESS = 1;
     const FAILED = 2;
+    const INTERNAL = 0;
+    const REDPACKET = 1;
 
     /**
      * @inheritdoc
