@@ -1,10 +1,8 @@
 <?php
 namespace api\modules\redpacket\controllers;
 
-
-use api\modules\medal\models\Medal;
-use api\modules\medal\models\MedalGive;
-use api\modules\user\models\Address;
+use api\modules\redpacket\models\RedPacket;
+use api\modules\redpacket\models\RedPacketRecord;
 use Yii;
 use yii\web\Controller;
 use common\helpers\OutputHelper;
@@ -38,7 +36,7 @@ class RedpacketController extends  Controller
             $address = Yii::$app->request->post("address", "");
 
             //校验账户和兑换码
-    //        ($address, $code);
+            RedPacketRecord::checkCodeAndAddress($address, $code);
 
         }
 
