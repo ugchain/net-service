@@ -1,14 +1,15 @@
 <?php
+
 namespace api\modules\redpacket\controllers;
 
-use api\modules\redpacket\models\RedPacket;
-use api\modules\user\models\Trade;
-use api\modules\redpacket\models\RedPacketRecord;
+use api\modules\redpacket\models\PacketOfflineSign;
 use Yii;
 use yii\web\Controller;
 use common\helpers\OutputHelper;
-use common\wallet\Operating;
-use yii\web\UploadedFile;
+use api\modules\redpacket\models\RedPacket;
+use api\modules\user\models\Trade;
+use api\modules\redpacket\models\RedPacketRecord;
+use common\helpers\CurlRequest;
 
 class RedpacketController extends  Controller
 {
@@ -32,24 +33,64 @@ class RedpacketController extends  Controller
     public function actionCreatePacket()
     {
         //红包标题
-        $title = Yii::$app->request->post("title", "");
+        $data['title'] = Yii::$app->request->post("title", "");
         //主题ID
-        $theme_id = Yii::$app->request->post("theme_id", "");
+        $data['theme_id'] = Yii::$app->request->post("theme_id", "");
+        //主题ID
+        $data['theme_img'] = Yii::$app->request->post("theme_img", "");
+        //主题ID
+        $data['theme_thumb_img'] = Yii::$app->request->post("theme_thumb_img", "");
+        //主题ID
+        $data['theme_share_img'] = Yii::$app->request->post("theme_share_img", "");
         //地址
-        $address = Yii::$app->request->post("address", "");
+        $data['address'] = Yii::$app->request->post("address", "");
         //金额
-        $amount = Yii::$app->request->post("amount", "");
+        $data['amount'] = Yii::$app->request->post("amount", "");
         //个数
-        $quantity = Yii::$app->request->post("quantity", "");
+        $data['quantity'] = Yii::$app->request->post("quantity", "");
         //红包类型
-        $type = Yii::$app->request->post("type", "0");
+        $data['type'] = Yii::$app->request->post("type", "0");
         //离线签名
-        $raw_transaction = Yii::$app->request->post("raw_transaction", "");
+        $data['raw_transaction'] = Yii::$app->request->post("raw_transaction", "");
         //hash
-        $hash = Yii::$app->request->post("hash", "");
+        $data['hash'] = Yii::$app->request->post("hash", "");
 
-        //判断
+        //验证参数
+        if(!$data['title'] || !$data['theme_id'] || !$data['address'] || !$data['amount'] || !$data['quantity'] || ! $data['raw_transaction'] || $data['hash']){
+            outputHelper::ouputErrorcodeJson(\common\helpers\ErrorCodes::PARAM_NOT_EXIST);
+        }
+        //创建红包
+        $packet_id = RedPacket::saveRedPacket($data);
+        if(!$packet_id){
+            outputHelper::ouputErrorcodeJson(\common\helpers\ErrorCodes::FALL);
+        }
+        //发送离线签名数据
+        $res_data = CurlRequest::ChainCurl(Yii::$app->params["ug"]["ug_sign_url"], "eth_sendRawTransaction", [$data['raw_transaction']]);
+        if(!$res_data){
+            outputHelper::ouputErrorcodeJson(\common\helpers\ErrorCodes::FALL);
+        }
+        //组装创建红包的签名数据
+        $sign_data = [
+            "packet_id" => $packet_id,
+            "address" => $data["address"],
+            "raw_transaction" => $data["raw_transaction"],
+            "type" => "0",
+        ];
+        //保存创建红包的签名
+        $sign_save_status = PacketOfflineSign::saveOfflineSign($sign_data);
 
+        //保存交易历史记录
+        $trade_save_status = Trade::insertData($data["hash"],$data["address"],Yii::$app->params["ug"]["red_packet_address"],"0",Trade::REDPACKET);
+        if(!$sign_save_status || !$trade_save_status){
+            outputHelper::ouputErrorcodeJson(\common\helpers\ErrorCodes::FALL);
+        }
+        //组装返回数据
+        $return_data = [
+            "url"=>"",
+            "packet_id"=>$packet_id,
+            "title"=>$data["title"],
+        ];
+        outputHelper::ouputErrorcodeJson(\common\helpers\ErrorCodes::SUCCESS,$return_data);
     }
 
         /**
