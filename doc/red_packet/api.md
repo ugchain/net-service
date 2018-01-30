@@ -266,5 +266,74 @@
         "pageSize": "10"
     }
 }
+```
+
+### 微信红包分享接口
+**请求URL：** 
+- `red/red/share`
+  
+**请求方式：**
+- GET/POST
+
+**参数：** 
+
+|参数名|必选|类型|说明|
+|:----    |:---|:----- |-----   |
+|openId |是  |string | 微信用户openID  |
+|red_packet_id |是  |inter | 红包ID  |
 
 
+ **返回示例**
+
+``` 
+{
+    "code": 0,
+    "message": "成功",
+    "data": {
+        "txid": "0xasdasd123asdfasdfvbnghjc", //发起红包的钱包地址
+        "title": "冲破天际", //红包主题
+        "status": "1", //领取状态；1已领取；2兑换中；3兑换失败 4兑换成功 5已过期
+        "quantity": "100", //领取总个数
+        "already_received_quantity": "50", //已经领取的个数
+        "amount": "100", //红包总额
+        "already_received_amount": "100", //已经领取的红包额度
+        "code": "", //红包口令
+        "record_list": [
+            {
+                "wx_name": "gengxiankun", //微信昵称
+                "wx_avatar": "http://wc.com/gengxk.png", //微信头像
+                "amount": "2", //领取金额
+            }
+        ],
+        "qrcode_url": "http://xx.com/xx"
+    }
+}
+```
+
+### 微信红包领取接口
+**请求URL：** 
+- `red/red/receive`
+  
+**请求方式：**
+- POST/GET
+
+**参数：** 
+
+|参数名|必选|类型|说明|
+|:----    |:---|:----- |-----   |
+|openId |是  |string | 微信用户openID  |
+|nickname |是  |inter | 微信用户昵称  |
+|headimgurl |是  |inter | 微信用户头像url  |
+|red_packet_id |是  |inter | 红包ID  |
+
+ **返回示例**
+
+``` 
+{
+    "code": 0,
+    "message": "成功",
+    "data": {
+        "code": "EScdsqWXxx", //红包口令
+    }
+}
+```
