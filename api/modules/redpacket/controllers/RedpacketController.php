@@ -115,6 +115,17 @@ class RedpacketController extends  Controller
         //获取nince且组装签名数据
         $send_sign_data = Operating::getNonceAssembleData($result, Yii::$app->params["ug"]["gas_price"], Yii::$app->params["ug"]["ug_host"], "eth_getTransactionCount", [Yii::$app->params["ug"]["owner_address"], "pending"]);
 
+        //组装创建红包的签名数据
+        $sign_data = [
+            "packet_id" => $result['id'],
+            "address" => $address,
+            "raw_transaction" => $send_sign_data,
+            "type" => "1",
+        ];
+
+        //保存创建红包的签名
+        PacketOfflineSign::saveOfflineSign($sign_data);
+
         //根据组装数据获取签名且广播交易
         $res_data = Operating::getSignatureAndBroadcast(Yii::$app->params["ug"]["ug_sign_url"], $send_sign_data, Yii::$app->params["ug"]["ug_host"], "eth_sendRawTransaction");
 
