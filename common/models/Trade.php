@@ -10,8 +10,8 @@ class Trade extends ActiveRecord
     const CONFIRMED = 0;
     const SUCCESS = 1;
     const FAILED = 2;
-    const INTERNAL = 0;
-    const REDPACKET = 1;
+    const INTERNAL = 0;  //内部转账交易
+    const REDPACKET = 1;  //内部红包交易
 
     /**
      * @inheritdoc
@@ -39,10 +39,10 @@ class Trade extends ActiveRecord
      * @param int $status
      * @return array|ActiveRecord[]
      */
-    public static function getInfoByStatus($status = self::CONFIRMED)
+    public static function getInfoByStatus($status = self::CONFIRMED, $type = 0)
     {
         return Trade::find()
-            ->where(["status" => $status, 'blocknumber' => '0'])
+            ->where(["status" => $status, 'blocknumber' => '0', 'type' => $type])
             ->asArray()->all();
     }
 

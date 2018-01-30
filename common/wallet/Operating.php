@@ -123,6 +123,7 @@ class Operating
         if(isset($sign_res_data["status"])){
             return false;
         }
+        //返回txid
         //链上广播交易
         $broadcasting = CurlRequest::ChainCurl($host, $function, [$sign_res_data['data']["raw_transaction"]]);
         if(!$broadcasting){
