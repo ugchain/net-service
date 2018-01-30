@@ -60,14 +60,10 @@ class RedpacketController extends  Controller
         if(!$data['title'] || !$data['theme_id'] || !$data['address'] || !$data['amount'] || !$data['quantity'] || ! $data['raw_transaction'] || $data['hash']){
             outputHelper::ouputErrorcodeJson(\common\helpers\ErrorCodes::PARAM_NOT_EXIST);
         }
+        //开启事物
         //创建红包
         $packet_id = RedPacket::saveRedPacket($data);
         if(!$packet_id){
-            outputHelper::ouputErrorcodeJson(\common\helpers\ErrorCodes::FALL);
-        }
-        //发送离线签名数据
-        $res_data = CurlRequest::ChainCurl(Yii::$app->params["ug"]["ug_sign_url"], "eth_sendRawTransaction", [$data['raw_transaction']]);
-        if(!$res_data){
             outputHelper::ouputErrorcodeJson(\common\helpers\ErrorCodes::FALL);
         }
         //组装创建红包的签名数据
@@ -85,6 +81,16 @@ class RedpacketController extends  Controller
         if(!$sign_save_status || !$trade_save_status){
             outputHelper::ouputErrorcodeJson(\common\helpers\ErrorCodes::FALL);
         }
+        //红包计算公示(红包ID：{2,3,4,5})
+        //事物结束
+
+        //发送离线签名数据
+        $res_data = CurlRequest::ChainCurl(Yii::$app->params["ug"]["ug_sign_url"], "eth_sendRawTransaction", [$data['raw_transaction']]);
+        if(!$res_data){
+            outputHelper::ouputErrorcodeJson(\common\helpers\ErrorCodes::FALL);
+        }
+        //检测是否上链--成功5%
+
         //组装返回数据
         $return_data = [
             "url"=>"",
