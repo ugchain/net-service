@@ -2,7 +2,7 @@
 
 ### 主题创建接口
 **请求URL：** 
-- `/red/theme/create-theme`
+- `/redpacket/theme/create-theme`
   
 **请求方式：**
 - POST 
