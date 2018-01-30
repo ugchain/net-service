@@ -50,6 +50,7 @@ DROP TABLE IF EXISTS `ug_red_packet_theme`;
   `theme_id` int(11) NOT NULL DEFAULT '1' COMMENT '红包id',
   `address` varchar(42) NOT NULL DEFAULT '' COMMENT '发红包账户',
   `raw_transaction` varchar(255) NOT NULL DEFAULT '' COMMENT '离线签名',
+  `type` tinyint(1) DEFAULT '0' COMMENT '签名类型；0发红包；1拆红包',
   `addtime` int(11) NOT NULL COMMENT '创建时间',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT "红包活动离线签名表"
