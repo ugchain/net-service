@@ -12,7 +12,12 @@ class RedPacketRecord extends \common\models\RedPacketRecord
      */
     public static function checkCodeAndAddress($address, $code)
     {
-        $info = RedPacketRecord::find()->where(['code' => $code, 'to_address' => $address])->one();
+        //查询红包记录是否存在
+        $info = RedPacketRecord::find()->where(['code' => $code, 'to_address' => $address, 'status' => 1])->one()->attributes;
+        //查询是否已经兑换
+
+        //查询红包是否已过期
+
         var_dump($info);die;
     }
 }
