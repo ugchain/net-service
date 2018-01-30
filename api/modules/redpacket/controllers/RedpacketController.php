@@ -10,6 +10,7 @@ use api\modules\redpacket\models\RedPacket;
 use api\modules\user\models\Trade;
 use api\modules\redpacket\models\RedPacketRecord;
 use common\helpers\CurlRequest;
+use common\wallet\Operating;
 
 class RedpacketController extends  Controller
 {
