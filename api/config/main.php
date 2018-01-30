@@ -20,6 +20,9 @@ return [
         'user' => [
             'class' => 'api\modules\user\Module',
         ],
+        'redpacket' => [
+            'class' => 'api\modules\redpacket\Module',
+        ],
     ],
     //'defaultRoute'=>'user/user/test',
     'components' => [
