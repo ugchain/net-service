@@ -26,4 +26,5 @@ class RedPacketRecord extends \common\models\RedPacketRecord
     {
         return RedPacketRecord::updateAll(["status" => $status], ['txid' => $txid]);
     }
+
 }
