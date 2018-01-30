@@ -22,8 +22,8 @@ class RedPacketRecord extends \common\models\RedPacketRecord
        return false;
     }
 
-    public static function updateStatusByTxid($txid, $status)
+    public static function updateStatusAndTxidByid($id, $status, $txid)
     {
-        return RedPacketRecord::updateAll(["status" => $status], ['txid' => $txid]);
+        return RedPacketRecord::updateAll(["status" => $status, 'txid' => $txid], ['id' => $id]);
     }
 }

@@ -242,28 +242,71 @@
     "code": 0,
     "message": "成功",
     "data": {
-       "list": [
+        "list": [
             {
-                "id": "2",   //红包id
-                "theme_img": "images/wdwdwd.jpg", //主题缩略图
-                "title": "大吉大利",   //红包名称
-                "received_amount": "34.21", //领取红包金额
-                "addtime": "3123132",//创建时间
+                "id": "3",        //红包id
+                "title": "小韭菜", //红包名称
+                "address": "e3r32rr2r3e23e3e32e32", //红包创建账户
+                "amount": "150", //红包金额
+                "quantity": "6", //红包数量
+                "receive": "1"  //已领数量
+                "theme_id": "3", //红包主题
+                "txid": "32e322r42r43r4r43rdff43r43", //红包交易id
+                "type": "1",    //红包类型0等额红包；1随机红包
+                "back_amount": "0", //红包退还金额
+                "status": "2",  //红包状态；0创建红包;1创建失败;2创建成功;3:已领光;4:已过期',
+                "addtime": "1517723724", //红包创建时间
+                "fail_time": "0",   //创建失败时间
+                "create_succ_time": "0", //创建成功时间
+                "finish_time": "0", //领完时间
+                "expire_time": "0", //过期时间
+                "exchange_time": "1512131232" //兑换时间（我收到的）
             },
             {
-                "id": "3",   //红包id
-                "theme_img": "images/plpp", //主题缩略图
-                "title": "冲破天际",   //红包名称
-                "received_amount": "394.21", //领取红包金额
-                "addtime": "1518898833",//创建时间
+                "id": "2",
+                "title": "大吉大利",
+                "address": "e3r32rr2r3e23e3e32e32",
+                "amount": "200",
+                "quantity": "30",
+                "receive": "0"
+                "theme_id": "2",
+                "txid": "9i8r47ry74yr7y4y7ry7r4rr4",
+                "type": "0",
+                "back_amount": "0",
+                "status": "2",
+                "addtime": "1519888338",
+                "fail_time": "0",
+                "create_succ_time": "0",
+                "finish_time": "0",
+                "expire_time": "0",
+                "exchange_time": "1512131232" //兑换时间（我收到的）
+            },
+            {
+                "id": "1",
+                "title": "冲破天机",
+                "address": "e3r32rr2r3e23e3e32e32",
+                "amount": "100",
+                "quantity": "10",
+                "receive": "0"
+                "theme_id": "1",
+                "txid": "3ee2w2ww2w21e3e3",
+                "type": "1",
+                "back_amount": "0",
+                "status": "2",
+                "addtime": "1513243432",
+                "fail_time": "0",
+                "create_succ_time": "0",
+                "finish_time": "0",
+                "expire_time": "0",
+                "exchange_time": "1512131232" //兑换时间（我收到的）
             }
         ],
-        "received_quantity":"", //共收到的红包
-        "received_amount":"",  //共领取的金额
-        "is_next_page": "0", //是否有下一页
-        "count": "2",
-        "page": "1",
-        "pageSize": "10"
+        "is_next_page": "0",   //是否有下一页
+        "count": 3,         //总记录条数
+        "page": "1",        //当前页
+        "pageSize": "10",   //一页显示多少条
+        "received_amount": 450, //共发出(收到)多少UGC
+        "received_quantity": 3  //共发出(收到)多少红包
     }
 }
 ```
