@@ -13,7 +13,6 @@ class RedPacketRecord extends ActiveRecord
     const EXCHANGE_SUCC = 4;//兑换成功
     const EXPIRED = 5;//已过期
 
-
     /**
      * @inheritdoc
      */
