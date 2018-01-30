@@ -27,6 +27,9 @@ DROP TABLE IF EXISTS `ug_red_packet_theme`;
   `quantity` int(10) NOT NULL DEFAULT '1' COMMENT '红包总个数',
   `theme_id` int(11) NOT NULL DEFAULT '1' COMMENT '红包主题id',
   `txid` varchar(50) NOT NULL DEFAULT '' COMMENT 'txid',
+  `theme_img` varchar(255) NOT NULL DEFAULT '' COMMENT '主题图片地址',
+  `theme_thumb_img` varchar(255) NOT NULL DEFAULT '' COMMENT '主题缩略图地址',
+  `theme_share_img` varchar(255) NOT NULL DEFAULT '' COMMENT '分享缩略图地址',
   `type` tinyint(1) NOT NULL DEFAULT '0' COMMENT '红包类型；0等额红包；1随机红包',  
   `back_amount` varchar(100) NOT NULL DEFAULT '0' COMMENT '过期退还红包金额',
   `status` tinyint(1) NOT NULL DEFAULT '0' COMMENT '红包类型；0创建红包;1链上失败;2创建成功;3:已领光;4:已过期',
@@ -47,7 +50,7 @@ DROP TABLE IF EXISTS `ug_red_packet_theme`;
 
  CREATE TABLE `ug_packet_offline_signature` (
   `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '自增ID',
-  `theme_id` int(11) NOT NULL DEFAULT '1' COMMENT '红包id',
+  `packet_id` int(11) NOT NULL DEFAULT '1' COMMENT '红包id',
   `address` varchar(42) NOT NULL DEFAULT '' COMMENT '发红包账户',
   `raw_transaction` varchar(255) NOT NULL DEFAULT '' COMMENT '离线签名',
   `type` tinyint(1) DEFAULT '0' COMMENT '签名类型；0发红包；1拆红包',
