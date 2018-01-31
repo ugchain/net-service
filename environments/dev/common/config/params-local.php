@@ -1,6 +1,6 @@
 <?php
 return [
-    "image_url" => "http://wallet-pro.dev:8088",
+    "image_url" => "http://ugwallet.local",
     "ug"=>[
         "gas_price"=>0,
         "gas_limit"=>150000,

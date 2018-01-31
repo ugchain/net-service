@@ -39,25 +39,26 @@ class RedpacketController extends  Controller
     {
         //接收参数&&验证参数
         $data = self::getParams();
+
+        //创建红包
+        $packet_id = RedPacket::saveRedPacket($data);
+        if(!$packet_id){
+            outputHelper::ouputErrorcodeJson(\common\helpers\ErrorCodes::FALL);
+        }
         //开启事物
         $transaction = Yii::$app->db->beginTransaction();
         try{
-            //创建红包
-            $packet_id = RedPacket::saveRedPacket($data);
-            if(!$packet_id){
-                outputHelper::ouputErrorcodeJson(\common\helpers\ErrorCodes::FALL);
-            }
             //组装创建红包的签名数据
             $sign_data = [
                 "packet_id" => $packet_id,
-                "address" => $data["address"],
+                "address" => $data["from_address"],
                 "raw_transaction" => $data["raw_transaction"],
                 "type" => "0",
             ];
             //保存创建红包的签名
             $sign_save_status = PacketOfflineSign::saveOfflineSign($sign_data);
             //保存交易历史记录
-            $trade_save_status = Trade::insertData($data["hash"],$data["address"],Yii::$app->params["ug"]["red_packet_address"],$data["amount"],Trade::REDPACKET);
+            $trade_save_status = Trade::insertData($data["hash"],$data["from_address"],$data["to_address"],$data["amount"],Trade::CONFIRMED,Trade::CREATE_REDPACKET);
             $transaction->commit();
         }catch (Exception $e) {
             $transaction->rollBack();
@@ -77,25 +78,26 @@ class RedpacketController extends  Controller
             $min = $average_amount * self::MIN;
             $redis_data = self::random_red($data["amount"],$data["quantity"],$max,$min);
         }
+        //var_dump(json_encode($redis_data));die;
         //存放redis
         $redis = Yii::$app->redis;
-        $redis->set(json_encode($redis_data));
+        $redis->set($packet_id,json_encode($redis_data));
         //发送离线签名数据
-        $res_data = CurlRequest::ChainCurl(Yii::$app->params["ug"]["ug_sign_url"], "eth_sendRawTransaction", [$data['raw_transaction']]);
-        if(!$res_data){
-            outputHelper::ouputErrorcodeJson(\common\helpers\ErrorCodes::FALL);
-        }
-        //检测是否上链--成功5%
-        $block_info = CurlRequest::ChainCurl(Yii::$app->params["ug"]["ug_host"], "eth_getTransactionReceipt", [$txid]);
-        if($block_info){
-            $block_info = json_decode($block_info,true);
-            //blockNumber 不为空
-            if(!isset($block_info["error"]) || $block_info["result"]["blockNumber"] != null){
-                //检测上链成功,更新红包状态为status=2 && ug_trade 交易记录改为交易成功
-                RedPacket::updateStatus($packet_id,"2");
-                Trade::updateStatus($data["hash"],Trade::SUCCESS);
-            }
-        }
+//        $res_data = CurlRequest::ChainCurl(Yii::$app->params["ug"]["ug_sign_url"], "eth_sendRawTransaction", [$data['raw_transaction']]);
+//        if(!$res_data){
+//            outputHelper::ouputErrorcodeJson(\common\helpers\ErrorCodes::FALL);
+//        }
+//        //检测是否上链--成功5%
+//        $block_info = CurlRequest::ChainCurl(Yii::$app->params["ug"]["ug_host"], "eth_getTransactionReceipt", [$txid]);
+//        if($block_info){
+//            $block_info = json_decode($block_info,true);
+//            //blockNumber 不为空
+//            if(!isset($block_info["error"]) || $block_info["result"]["blockNumber"] != null){
+//                //检测上链成功,更新红包状态为status=2 && ug_trade 交易记录改为交易成功
+//                RedPacket::updateStatus($packet_id,"2");
+//                Trade::updateStatus($data["hash"],Trade::SUCCESS);
+//            }
+//        }
         //组装返回数据
         $return_data = [
             "url"=>"",
@@ -111,6 +113,7 @@ class RedpacketController extends  Controller
      */
     private function getParams()
     {
+        //var_dump(Yii::$app->request->post());die;
         //红包标题
         $data['title'] = Yii::$app->request->post("title", "");
         //主题ID
@@ -121,8 +124,10 @@ class RedpacketController extends  Controller
         $data['theme_thumb_img'] = Yii::$app->request->post("theme_thumb_img", "");
         //主题ID
         $data['theme_share_img'] = Yii::$app->request->post("theme_share_img", "");
-        //地址
-        $data['address'] = Yii::$app->request->post("address", "");
+        //发地址
+        $data['from_address'] = Yii::$app->request->post("from_address", "");
+        //接收地址
+        $data['to_address'] = Yii::$app->request->post("to_address", "");
         //金额
         $data['amount'] = Yii::$app->request->post("amount", "");
         //个数
@@ -134,7 +139,7 @@ class RedpacketController extends  Controller
         //hash
         $data['hash'] = Yii::$app->request->post("hash", "");
         //验证参数
-        if(!$data['title'] || !$data['theme_id'] || !$data['address'] || !$data['amount'] || !$data['quantity'] || ! $data['raw_transaction'] || $data['hash']){
+        if(!$data['title'] || !$data['theme_id'] || !$data['from_address'] ||!$data["to_address"] || !$data['amount'] || !$data['quantity'] || !$data['raw_transaction'] || !$data['hash']){
             outputHelper::ouputErrorcodeJson(\common\helpers\ErrorCodes::PARAM_NOT_EXIST);
         }
         return $data;

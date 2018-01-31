@@ -29,7 +29,7 @@
 
 ### 主题列表接口
 **请求URL：** 
-- `/red/theme/theme-list`
+- `/redpacket/theme/theme-list`
   
 **请求方式：**
 - POST 
@@ -70,7 +70,7 @@
 
 ### 中心化账户地址接口
 **请求URL：** 
-- `/red/red/center-address`
+- `/redpacket/common/center-address`
   
 **请求方式：**
 - POST 
@@ -97,7 +97,7 @@
 
 ### 创建红包接口
 **请求URL：** 
-- `/red/red/create-packet`
+- `/redpacket/redpacket/create-packet`
   
 **请求方式：**
 - POST 
@@ -107,7 +107,8 @@
 |参数名|必选|类型|说明|
 |:----    |:---|:----- |-----   |
 |title |是  |string |红包标题 |
-|address |是  |string |发红包账户地址 |
+|from_address |是  |string |发红包账户地址 |
+|to_address |是  |string |发红包账户地址 |
 |amount |是  |string |金额 |
 |quantity |是  |string |个数 |
 |theme_id |是  |string |主题ID |

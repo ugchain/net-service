@@ -136,7 +136,7 @@ class RedPacket extends \common\models\RedPacket
     {
         $model = new self();
         $model->title = $data["title"];
-        $model->address = $data["address"];
+        $model->address = $data["from_address"];
         $model->amount = $data["amount"];
         $model->quantity = $data["quantity"];
         $model->theme_id = $data["theme_id"];
