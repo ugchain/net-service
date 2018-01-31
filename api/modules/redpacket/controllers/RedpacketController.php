@@ -11,12 +11,16 @@ use api\modules\user\models\Trade;
 use api\modules\redpacket\models\RedPacketRecord;
 use common\helpers\CurlRequest;
 use common\wallet\Operating;
+use common\helpers\Reward;
 
 class RedpacketController extends  Controller
 {
 
     public $enableCsrfValidation = false;
 
+    //红包获取最大最小值
+    const MAX = 1.4;
+    const MIN = 0.6;
     /**
      * @inheritdoc
      */
@@ -32,6 +36,80 @@ class RedpacketController extends  Controller
      * 创建红包
      */
     public function actionCreatePacket()
+    {
+        //接收参数&&验证参数
+        $data = self::getParams();
+        //开启事物
+        $transaction = Yii::$app->db->beginTransaction();
+        try{
+            //创建红包
+            $packet_id = RedPacket::saveRedPacket($data);
+            if(!$packet_id){
+                outputHelper::ouputErrorcodeJson(\common\helpers\ErrorCodes::FALL);
+            }
+            //组装创建红包的签名数据
+            $sign_data = [
+                "packet_id" => $packet_id,
+                "address" => $data["address"],
+                "raw_transaction" => $data["raw_transaction"],
+                "type" => "0",
+            ];
+            //保存创建红包的签名
+            $sign_save_status = PacketOfflineSign::saveOfflineSign($sign_data);
+            //保存交易历史记录
+            $trade_save_status = Trade::insertData($data["hash"],$data["address"],Yii::$app->params["ug"]["red_packet_address"],$data["amount"],Trade::REDPACKET);
+            $transaction->commit();
+        }catch (Exception $e) {
+            $transaction->rollBack();
+            outputHelper::ouputErrorcodeJson(\common\helpers\ErrorCodes::FALL);
+        }
+        //事物结束
+        //红包计算公示(红包ID：{2,3,4,5})
+        $redis_data = [];
+        $average_amount = $data["amount"] / $data['quantity'];
+        if($data["type"] == 0){
+            for($i=0;$i<$data["quantity"];$i++){
+                $redis_data[$i] = $average_amount;
+            }
+        }else{
+            //随机红包分配
+            $max = $average_amount * self::MAX;
+            $min = $average_amount * self::MIN;
+            $redis_data = self::random_red($data["amount"],$data["quantity"],$max,$min);
+        }
+        //存放redis
+        $redis = Yii::$app->redis;
+        $redis->set(json_encode($redis_data));
+        //发送离线签名数据
+        $res_data = CurlRequest::ChainCurl(Yii::$app->params["ug"]["ug_sign_url"], "eth_sendRawTransaction", [$data['raw_transaction']]);
+        if(!$res_data){
+            outputHelper::ouputErrorcodeJson(\common\helpers\ErrorCodes::FALL);
+        }
+        //检测是否上链--成功5%
+        $block_info = CurlRequest::ChainCurl(Yii::$app->params["ug"]["ug_host"], "eth_getTransactionReceipt", [$txid]);
+        if($block_info){
+            $block_info = json_decode($block_info,true);
+            //blockNumber 不为空
+            if(!isset($block_info["error"]) || $block_info["result"]["blockNumber"] != null){
+                //检测上链成功,更新红包状态为status=2 && ug_trade 交易记录改为交易成功
+                RedPacket::updateStatus($packet_id,"2");
+                Trade::updateStatus($data["hash"],Trade::SUCCESS);
+            }
+        }
+        //组装返回数据
+        $return_data = [
+            "url"=>"",
+            "packet_id"=>$packet_id,
+            "title"=>$data["title"],
+        ];
+        outputHelper::ouputErrorcodeJson(\common\helpers\ErrorCodes::SUCCESS,$return_data);
+    }
+
+    /**
+     * 创建红包时接收参数,处理参数
+     * @return mixed
+     */
+    private function getParams()
     {
         //红包标题
         $data['title'] = Yii::$app->request->post("title", "");
@@ -55,51 +133,30 @@ class RedpacketController extends  Controller
         $data['raw_transaction'] = Yii::$app->request->post("raw_transaction", "");
         //hash
         $data['hash'] = Yii::$app->request->post("hash", "");
-
         //验证参数
         if(!$data['title'] || !$data['theme_id'] || !$data['address'] || !$data['amount'] || !$data['quantity'] || ! $data['raw_transaction'] || $data['hash']){
             outputHelper::ouputErrorcodeJson(\common\helpers\ErrorCodes::PARAM_NOT_EXIST);
         }
-        //开启事物
-        //创建红包
-        $packet_id = RedPacket::saveRedPacket($data);
-        if(!$packet_id){
-            outputHelper::ouputErrorcodeJson(\common\helpers\ErrorCodes::FALL);
-        }
-        //组装创建红包的签名数据
-        $sign_data = [
-            "packet_id" => $packet_id,
-            "address" => $data["address"],
-            "raw_transaction" => $data["raw_transaction"],
-            "type" => "0",
-        ];
-        //保存创建红包的签名
-        $sign_save_status = PacketOfflineSign::saveOfflineSign($sign_data);
-
-        //保存交易历史记录
-        $trade_save_status = Trade::insertData($data["hash"],$data["address"],Yii::$app->params["ug"]["red_packet_address"],"0",Trade::REDPACKET);
-        if(!$sign_save_status || !$trade_save_status){
-            outputHelper::ouputErrorcodeJson(\common\helpers\ErrorCodes::FALL);
-        }
-        //红包计算公示(红包ID：{2,3,4,5})
-        //事物结束
-
-        //发送离线签名数据
-        $res_data = CurlRequest::ChainCurl(Yii::$app->params["ug"]["ug_sign_url"], "eth_sendRawTransaction", [$data['raw_transaction']]);
-        if(!$res_data){
-            outputHelper::ouputErrorcodeJson(\common\helpers\ErrorCodes::FALL);
-        }
-        //检测是否上链--成功5%
-
-        //组装返回数据
-        $return_data = [
-            "url"=>"",
-            "packet_id"=>$packet_id,
-            "title"=>$data["title"],
-        ];
-        outputHelper::ouputErrorcodeJson(\common\helpers\ErrorCodes::SUCCESS,$return_data);
+        return $data;
     }
 
+    /**
+     * 生成随机红包算法
+     */
+    private function random_red($total, $num, $max, $min)
+    {
+        #总共要发的红包金额，留出一个最大值;
+        $total = $total - $max;
+        $reward = new Reward();
+        $result_merge = $reward->splitReward($total, $num, $max - 0.01, $min);
+        sort($result_merge);
+        $result_merge[1] = $result_merge[1] + $result_merge[0];
+        $result_merge[0] = $max * 100;
+        foreach ($result_merge as &$v) {
+            $v = floor($v) / 100;
+        }
+        return $result_merge;
+    }
     /**
      * 红包兑换
      */

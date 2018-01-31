@@ -48,4 +48,13 @@ class Trade extends \common\models\Trade
         return Trade::find()->select("*")->where(["app_txid" => $txid])->asArray()->one();
     }
 
+    /**
+     * 更新交易记录状态
+     */
+    public static function updateStatus($app_txid,$status = Trade::SUCCESS)
+    {
+        return Trade::updateAll(["status"=>$status],["app_txid"=>$app_txid]);
+    }
+
+
 }

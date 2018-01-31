@@ -68,4 +68,30 @@ class RedPacket extends \common\models\RedPacket
         $model->save();
         return $model->attributes['id'];
     }
+
+    /**
+     * 更新红包记录状态值
+     */
+    public static function updateStatus($id,$status = "1")
+    {
+        $updateData = ["status"=>$status];
+        switch ($id)
+        {
+            case 1:
+                $updateData["fail_time"] = time();
+                break;
+            case 2:
+                $updateData["create_succ_time"] = time();
+                break;
+            case 3:
+                $updateData["finish_time"] = time();
+                break;
+            case 4:
+                $updateData["expire_time"] = time();
+                break;
+            default:
+                break;
+        }
+        return RedPacket::updateAll($updateData,["id"=>$id]);
+    }
 }

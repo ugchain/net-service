@@ -37,3 +37,6 @@ phpunit.phar
 
 #phpstrom project file
 .idea
+
+# composer composer.lock
+/composer.lock
