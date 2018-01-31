@@ -3,14 +3,26 @@ namespace api\modules\redpacket\models;
 
 use Yii;
 use api\modules\redpacket\models\RedPacketRecord;
+use api\modules\redpacket\models\RedPacketTheme;
 
 class RedPacket extends \common\models\RedPacket
 {
     const I_RECEIVED = 0;
     const I_SENT = 1;
 
+    /**
+     * 根据红包ID获取此红包详情与此红包领取记录
+     *
+     * @param $id 红包ID
+     * @return array
+     */
     public static function getRedPacketInfoWithRecordList($id) {
         $result = self::findOne($id);
+
+        //初始化此红包领取记录列表
+        $redPacketRecordList = [];
+        //初始化兑换成功的金额
+        $alreadyReceivedAmount = 0;
 
         //红包详情
         $redpacketInfo = [
@@ -27,13 +39,9 @@ class RedPacket extends \common\models\RedPacket
             'current_time' => date('m-d h:i', time())
         ];
 
-        //初始化此红包领取记录列表
-        $redPacketRecordList = [];
-        //初始化兑换成功的金额
-        $alreadyReceivedQuantity = 0;
-        //获取数据库红包领取记录资源
-        $redPacketRecords = $result->redPacketRecords;
 
+        //获取数据库红包领取记录资源，循环获得需要的每个红包记录数据
+        $redPacketRecords = $result->redPacketRecords;
         foreach ($redPacketRecords as $redPacketRecord) {
             //根据状态动态获取微信用户红包时间，领取状态为已领取、兑换中、兑换失败、已过期则显示领取时间，领取状态为兑换成功则显示兑换时间
             //如果状态为兑换成功，则统计兑换总UGC
@@ -46,7 +54,7 @@ class RedPacket extends \common\models\RedPacket
                     break;
                 case RedPacketRecord::REDPACKET_RECORD_STATUS_EXCHANGESUCCESS:
                     $time = $redPacketRecord->exchange_time;
-                    $alreadyReceivedQuantity += $redPacketRecord->amount;
+                    $alreadyReceivedAmount += $redPacketRecord->amount;
                     break;
             }
             $redPacketRecordList[] = [
@@ -58,15 +66,28 @@ class RedPacket extends \common\models\RedPacket
             ];
         }
 
+        //获取数据库红包主题资源
+        $redPacketTheme = $result->redPacketTheme;
+
         //拼装回返
-        $redpacketInfo['already_received_quantity'] = $alreadyReceivedQuantity;
+        $redpacketInfo['already_received_amount'] = $alreadyReceivedAmount;
+        $redpacketInfo['theme_img'] = !empty($redPacketTheme->img) ? $redPacketTheme->img : '';
+        $redpacketInfo['theme_thumb_img'] = !empty($redPacketTheme->thumb_img) ? $redPacketTheme->thumb_img : '';
+        $redpacketInfo['theme_share_img'] = !empty($redPacketTheme->share_img) ? $redPacketTheme->share_img : '';
         $redpacketInfo['redPacketRecordList'] = $redPacketRecordList;
+
+        echo "<pre>";var_dump($redpacketInfo);exit;
         return $redpacketInfo;
     }
 
     public function getRedPacketRecords()
     {
         return $this->hasMany(RedPacketRecord::className(), ['rid' => 'id']);
+    }
+
+    public function getRedPacketTheme()
+    {
+        return $this->hasOne(RedPacketTheme::className(), ['id' => 'theme_id']);
     }
 
 
