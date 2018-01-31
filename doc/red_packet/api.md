@@ -113,6 +113,7 @@
 |theme_id |是  |string |主题ID |
 |type |是  |string |类型 0等额红包；1随机红包 |
 |raw_transaction |是  |string |离线签名 |
+|hash |是  |string |txid |
 
  **返回示例**
 
