@@ -61,7 +61,7 @@ class WeChatRedPacketController extends Controller
         if (empty($accessTokenData->openid)) {
             //TODO 获取openid失败
         }
-        $redpacketInfo = RedPacket::getRedPacketInfo($redpacketId);
+        $redpacketInfo = RedPacket::getRedPacketInfoWithRecordList($redpacketId);
 
         echo "<pre>";var_dump($redpacketInfo);exit;
     }

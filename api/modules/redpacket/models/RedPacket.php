@@ -9,9 +9,10 @@ class RedPacket extends \common\models\RedPacket
     const I_RECEIVED = 0;
     const I_SENT = 1;
 
-    public static function getRedPacketInfo($id) {
+    public static function getRedPacketInfoWithRecordList($id) {
         $result = self::findOne($id);
 
+        //红包详情
         $redpacketInfo = [
             'txid' => $result->txid,
             'title' => $result->title,
@@ -19,19 +20,48 @@ class RedPacket extends \common\models\RedPacket
             'quantity' => $result->quantity,
             'already_received_quantity' => count($result->redPacketRecords),
             'amount' => $result->amount,
-            'already_received_amount' => 'TODO'
+            'already_received_amount' => 'TODO',
+            'finish_time' => !empty($result->finish_time) ? date('m-d h:i', $result->finish_time) : '',
+            'expire_time' => !empty($result->expire_time) ? date('m-d h:i', $result->expire_time) : '',
+            'last_time' => date('H:i', $result->expire_time - time()),
+            'current_time' => date('m-d h:i', time())
         ];
+
+        //初始化此红包领取记录列表
         $redPacketRecordList = [];
+        //初始化兑换成功的金额
+        $alreadyReceivedQuantity = 0;
+        //获取数据库红包领取记录资源
         $redPacketRecords = $result->redPacketRecords;
+
         foreach ($redPacketRecords as $redPacketRecord) {
+            //根据状态动态获取微信用户红包时间，领取状态为已领取、兑换中、兑换失败、已过期则显示领取时间，领取状态为兑换成功则显示兑换时间
+            //如果状态为兑换成功，则统计兑换总UGC
+            switch ($redPacketRecord->status) {
+                case RedPacketRecord::REDPACKET_RECORD_STATUS_TORECEIVE:
+                case RedPacketRecord::REDPACKET_RECORD_STATUS_REDEMPTION:
+                case RedPacketRecord::REDPACKET_RECORD_STATUS_EXCHANGEFAILED:
+                case RedPacketRecord::REDPACKET_RECORD_STATUS_EXPIRED:
+                    $time = $redPacketRecord->addtime;
+                    break;
+                case RedPacketRecord::REDPACKET_RECORD_STATUS_EXCHANGESUCCESS:
+                    $time = $redPacketRecord->exchange_time;
+                    $alreadyReceivedQuantity += $redPacketRecord->amount;
+                    break;
+            }
             $redPacketRecordList[] = [
                 'wx_name' => $redPacketRecord->wx_name,
                 'wx_avatar' => $redPacketRecord->wx_avatar,
-                'amount' => $redPacketRecord->amount
+                'amount' => $redPacketRecord->amount,
+                'status' => $redPacketRecord->status,
+                'time' => !empty($time) ? date('m-d s:i', $time) : ''
             ];
         }
+
+        //拼装回返
+        $redpacketInfo['already_received_quantity'] = $alreadyReceivedQuantity;
         $redpacketInfo['redPacketRecordList'] = $redPacketRecordList;
-        echo "<pre>";var_dump($redpacketInfo);exit;
+        return $redpacketInfo;
     }
 
     public function getRedPacketRecords()
