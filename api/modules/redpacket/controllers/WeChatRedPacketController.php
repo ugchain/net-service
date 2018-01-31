@@ -43,6 +43,8 @@ class WeChatRedPacketController extends Controller
      */
     static public $_secret;
 
+    public $layout = false;
+
     public function actionShare() {
         //微信授权认证返回code码
         $code = Yii::$app->request->get("code", "011RsZ8l0zZsOk1u0s7l037I8l0RsZ8w");
@@ -62,8 +64,10 @@ class WeChatRedPacketController extends Controller
             //TODO 获取openid失败
         }
         $redpacketInfo = RedPacket::getRedPacketInfoWithRecordList($redpacketId);
-
-        echo "<pre>";var_dump($redpacketInfo);exit;
+echo "<pre>";var_dump($redpacketInfo);exit;
+        return $this->render('share', [
+            'redpacketInfo' => $redpacketInfo
+        ]);
     }
 
     /**
