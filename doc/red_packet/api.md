@@ -139,7 +139,7 @@
 
 ### 兑换接口
 **请求URL：** 
-- `/red/red/exchange`
+- `/redpacket/redpacket/exchange`
   
 **请求方式：**
 - POST 
@@ -165,7 +165,7 @@
 
 ### 红包详情
 **请求URL：** 
-- `/red/red/detail`
+- `/redpacket/redpacket/detail`
   
 **请求方式：**
 - POST 
@@ -214,7 +214,7 @@
 
 ### 红包列表
 **请求URL：** 
-- `/red/red/list`
+- `/redpacket/redpacket/list`
   
 **请求方式：**
 - POST 
@@ -348,7 +348,7 @@
 
 ### 微信红包领取接口
 **请求URL：** 
-- `red/red/receive`
+- `redpacket/we-chat-red-packet/receive`
   
 **请求方式：**
 - POST/GET
