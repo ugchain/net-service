@@ -11,7 +11,9 @@ class Trade extends ActiveRecord
     const SUCCESS = 1;
     const FAILED = 2;
     const INTERNAL = 0;  //内部转账交易
-    const REDPACKET = 1;  //内部红包交易
+    const CREATE_REDPACKET = 1;  //创建红包交易转账
+    const OPEN_REDPACKET = 2;  //拆红包交易转账
+    const BACK_REDPACKET = 3;  //退还红包交易转账
 
     /**
      * @inheritdoc

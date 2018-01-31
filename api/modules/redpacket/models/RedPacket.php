@@ -2,11 +2,93 @@
 namespace api\modules\redpacket\models;
 
 use Yii;
+use api\modules\redpacket\models\RedPacketRecord;
+use api\modules\redpacket\models\RedPacketTheme;
 
 class RedPacket extends \common\models\RedPacket
 {
     const I_RECEIVED = 0;
     const I_SENT = 1;
+
+    /**
+     * 根据红包ID获取此红包详情与此红包领取记录
+     *
+     * @param $id 红包ID
+     * @return array
+     */
+    public static function getRedPacketInfoWithRecordList($id) {
+        $result = self::findOne($id);
+
+        //初始化此红包领取记录列表
+        $redPacketRecordList = [];
+        //初始化兑换成功的金额
+        $alreadyReceivedAmount = 0;
+
+        //红包详情
+        $redpacketInfo = [
+            'txid' => $result->txid,
+            'title' => $result->title,
+            'status' => $result->status,
+            'quantity' => $result->quantity,
+            'already_received_quantity' => count($result->redPacketRecords),
+            'amount' => $result->amount,
+            'already_received_amount' => 'TODO',
+            'finish_time' => !empty($result->finish_time) ? date('m-d h:i', $result->finish_time) : '',
+            'expire_time' => !empty($result->expire_time) ? date('m-d h:i', $result->expire_time) : '',
+            'last_time' => date('H:i', $result->expire_time - time()),
+            'current_time' => date('m-d h:i', time())
+        ];
+
+
+        //获取数据库红包领取记录资源，循环获得需要的每个红包记录数据
+        $redPacketRecords = $result->redPacketRecords;
+        foreach ($redPacketRecords as $redPacketRecord) {
+            //根据状态动态获取微信用户红包时间，领取状态为已领取、兑换中、兑换失败、已过期则显示领取时间，领取状态为兑换成功则显示兑换时间
+            //如果状态为兑换成功，则统计兑换总UGC
+            switch ($redPacketRecord->status) {
+                case RedPacketRecord::REDPACKET_RECORD_STATUS_TORECEIVE:
+                case RedPacketRecord::REDPACKET_RECORD_STATUS_REDEMPTION:
+                case RedPacketRecord::REDPACKET_RECORD_STATUS_EXCHANGEFAILED:
+                case RedPacketRecord::REDPACKET_RECORD_STATUS_EXPIRED:
+                    $time = $redPacketRecord->addtime;
+                    break;
+                case RedPacketRecord::REDPACKET_RECORD_STATUS_EXCHANGESUCCESS:
+                    $time = $redPacketRecord->exchange_time;
+                    $alreadyReceivedAmount += $redPacketRecord->amount;
+                    break;
+            }
+            $redPacketRecordList[] = [
+                'wx_name' => $redPacketRecord->wx_name,
+                'wx_avatar' => $redPacketRecord->wx_avatar,
+                'amount' => $redPacketRecord->amount,
+                'status' => $redPacketRecord->status,
+                'time' => !empty($time) ? date('m-d s:i', $time) : ''
+            ];
+        }
+
+        //获取数据库红包主题资源
+        $redPacketTheme = $result->redPacketTheme;
+
+        //拼装回返
+        $redpacketInfo['already_received_amount'] = $alreadyReceivedAmount;
+        $redpacketInfo['theme_img'] = !empty($redPacketTheme->img) ? $redPacketTheme->img : '';
+        $redpacketInfo['theme_thumb_img'] = !empty($redPacketTheme->thumb_img) ? $redPacketTheme->thumb_img : '';
+        $redpacketInfo['theme_share_img'] = !empty($redPacketTheme->share_img) ? $redPacketTheme->share_img : '';
+        $redpacketInfo['redPacketRecordList'] = $redPacketRecordList;
+
+        return $redpacketInfo;
+    }
+
+    public function getRedPacketRecords()
+    {
+        return $this->hasMany(RedPacketRecord::className(), ['rid' => 'id']);
+    }
+
+    public function getRedPacketTheme()
+    {
+        return $this->hasOne(RedPacketTheme::className(), ['id' => 'theme_id']);
+    }
+
 
     /**
      * 获取红包列表（我收到、我发出）

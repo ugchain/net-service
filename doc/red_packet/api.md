@@ -181,38 +181,26 @@
     "code": 0,
     "message": "成功",
     "data": {
-       "info": {
-                "from_address": "e3r4rr3r34r43r34r43", //红包发起者
-                "title": "冲破天机", //红包名称
-                "theme_img": "images/dwdwdw.jpg", //红包主题地址
-                "receive_amount": "5.678"     //我的领取金额
-                "status": "0"     //红包状态；0创建红包;1创建失败;2创建成功;3:已领光;4:已过期',
-            }
-       "list": [
+        "txid": "3ee2w2ww2w21e3e3",      //交易id
+        "title": "冲破天机",              //红包标题
+        "status": 2,                    //红包状态0创建红包;1链上失败;2创建成功;3:已领光;4:已过期'
+        "quantity": 10,                 //红包个数
+        "already_received_quantity": 90,//已领红包个数
+        "amount": "100",                //红包金额
+        "already_received_amount": "TODO",//已领红包金额
+        "finish_time": "",              //领光时间
+        "expire_time": "",              //过期时间
+        "last_time": "17:04",           //剩余时间时间
+        "current_time": "01-31 06:55",  //当前时间
+        "redPacketRecordList": [        //领取记录
             {
-                "wx_avatar": "/images/sdsad3d3.jpg",
-                "wx_name": "碧海蓝天",
-                "received_amount": "394.21", //领取红包金额
-                "status": "1",//状态 0:待确认,1:成功 2:失败
-                "addtime": "3123132",//创建时间
-            },
-            {
-                "wx_avatar": "/images/sdsad3d3.jpg",
-                "wx_name": "碧海蓝天",
-                "received_amount": "394.21", //领取红包金额
-                "status": "1",//状态 0:待确认,1:成功 2:失败
-                "addtime": "3123132",//创建时间
+                "wx_name": "ddew",      //微信昵称
+                "wx_avatar": "2321w21", //微信头像
+                "amount": "90",         //领取金额
+                "status": 4,            //状态 领取状态；1已领取；2兑换中；3兑换失败 4兑换成功 5已过期
+                "time": "12-26 44:38"   //领取时间
             }
-        ],
-        "received_quantity":""//已领取红包个数
-        "quantity":""//红包总个数
-        "received_amount":""//已领取金额
-        "amount":""//红包总金额
-        "is_next_page": "0",//是否有下一页
-        "count": "2",
-        "page": "1",
-        "pageSize": "10"
-
+        ]
     }
 }
 
@@ -313,7 +301,7 @@
 
 ### 微信红包分享接口
 **请求URL：** 
-- `red/red/share`
+- `redpacket/we-chat-red-packet/share`
   
 **请求方式：**
 - GET/POST
@@ -336,7 +324,7 @@
         "txid": "0xasdasd123asdfasdfvbnghjc", //发起红包的钱包地址
         "title": "冲破天际", //红包主题
         "status": "1", //领取状态；1已领取；2兑换中；3兑换失败 4兑换成功 5已过期
-        "quantity": "100", //领取总个数
+        "quantity": "100", //红包总个数
         "already_received_quantity": "50", //已经领取的个数
         "amount": "100", //红包总额
         "already_received_amount": "100", //已经领取的红包额度
