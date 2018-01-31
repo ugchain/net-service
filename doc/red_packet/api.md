@@ -111,6 +111,9 @@
 |amount |是  |string |金额 |
 |quantity |是  |string |个数 |
 |theme_id |是  |string |主题ID |
+|theme_img |是  |string |主题图片 |
+|theme_thumb_img |是  |string |主题缩略图 |
+|theme_share_img |是  |string |主题分享图 |
 |type |是  |string |类型 0等额红包；1随机红包 |
 |raw_transaction |是  |string |离线签名 |
 |hash |是  |string |txid |
