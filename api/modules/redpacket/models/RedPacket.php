@@ -76,7 +76,6 @@ class RedPacket extends \common\models\RedPacket
         $redpacketInfo['theme_share_img'] = !empty($redPacketTheme->share_img) ? $redPacketTheme->share_img : '';
         $redpacketInfo['redPacketRecordList'] = $redPacketRecordList;
 
-        echo "<pre>";var_dump($redpacketInfo);exit;
         return $redpacketInfo;
     }
 
