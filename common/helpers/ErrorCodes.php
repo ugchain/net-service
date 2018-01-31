@@ -28,7 +28,9 @@ class ErrorCodes
         PHONE_WRONGFOL                                              =   20110,//手机号不合法
         ADVERTISE_EXIST                                             =   20111,//广告已申请
         RED_PACKET_REDEMPTION                                       =   20112,//红包兑换中
-        GET_SIGNATURE_FAIL                                          =   20113;//获取签名失败
+        TRANSACTION_FAIL                                            =   20113,//交易失败
+        RED_PACKET_NOT_EXIST                                        =   20114,//红包不存在
+        RED_PACKET_EXPIRED                                          =   20115;//红包已过期
 
 
 
@@ -54,7 +56,9 @@ class ErrorCodes
         self::PHONE_WRONGFOL                                        =>'手机号不合法',
         self::ADVERTISE_EXIST                                       =>'广告已申请',
         self::RED_PACKET_REDEMPTION                                 =>'红包兑换中',
-        self::GET_SIGNATURE_FAIL                                    =>'获取签名失败',
+        self::TRANSACTION_FAIL                                      =>'交易失败',
+        self::RED_PACKET_NOT_EXIST                                  =>'红包不存在',
+        self::RED_PACKET_EXPIRED                                    =>'红包已过期',
     ];
 
 }

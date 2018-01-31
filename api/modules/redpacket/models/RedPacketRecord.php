@@ -13,17 +13,28 @@ class RedPacketRecord extends \common\models\RedPacketRecord
     public static function checkCodeAndAddress($address, $code)
     {
         //查询红包记录
-        $info = RedPacketRecord::find()->where(['code' => $code, 'to_address' => $address])->one()->attributes;
-        //查询是否已经兑换
-        if ($info['status'] == self::RECEIVED) {
-            return $info;
+        $recordInfo = RedPacketRecord::find()->where(['code' => $code, 'to_address' => $address])->one()->attributes;
+        if (!$recordInfo) {
+            return false;
+        }
+        //查询是否为领取状态
+        if ($recordInfo['status'] == self::RECEIVED) {
+            return $recordInfo;
         }
 
        return false;
     }
 
-    public static function updateStatusAndTxidByid($id, $status, $txid)
+    /**
+     * @param $id
+     * @param $status
+     * @param $txid
+     * @param $amount
+     *
+     * @return int
+     */
+    public static function updateStatusAndTxidAndAmountByid($id, $status, $txid, $amount)
     {
-        return RedPacketRecord::updateAll(["status" => $status, 'txid' => $txid], ['id' => $id]);
+        return RedPacketRecord::updateAll(["status" => $status, "txid" => $txid, "amount" => $amount], ["id" => $id]);
     }
 }

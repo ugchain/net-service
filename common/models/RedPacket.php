@@ -28,6 +28,11 @@ use yii\data\ActiveDataProvider;
  */
 class RedPacket extends ActiveRecord
 {
+    const CREATE_REDPACKET = 0;//创建红包
+    const CREATE_REDPACKET_FAIL = 1;//创建红包失败
+    const CREATE_REDPACKET_SUCC = 2;//创建红包成功
+    const REDPACKET_FINISHED = 3;//红包已领完
+    const REDPACKET_EXPIRED = 4;//红包已过期
 
     /**
      * @inheritdoc

@@ -3,6 +3,8 @@ namespace console\controllers;
 
 use api\modules\user\models\Trade;
 use common\helpers\OutputHelper;
+use common\models\RedPacket;
+use common\models\RedPacketRecord;
 use common\wallet\Operating;
 use common\models\CenterBridge;
 use common\models\ExtraPrice;
@@ -89,7 +91,7 @@ class UgListenController extends Controller
     }
 
     /**
-     * 检查Ug内部转账
+     * 检查Ug内部交易转账（内部交易转账、创建红包、兑换红包、退还红包）
      * 根据txid到链上获取交易信息，获取blocknumber
      * 更新数据库blocknumber && status && trade_time
      */
@@ -123,6 +125,15 @@ class UgListenController extends Controller
             //更新数据库
             if(!Trade::updateBlockAndStatusBytxid($info["app_txid"], $trade_info["blockNumber"], Trade::SUCCESS)){
                 echo "更新数据库失败".PHP_EOL;
+                continue;
+            }
+
+            /**
+             * 根据type更新表，记录类型；0内部交易转账；1创建红包交易；2拆红包交易转账；3退换红包交易转账
+             * 根据txid，更新status、time
+             */
+            if (!Operating::updateDataBytxid($info['type'], $info["app_txid"])) {
+                echo "更新数据库失败2".PHP_EOL;
                 continue;
             }
         }
@@ -177,4 +188,15 @@ class UgListenController extends Controller
         }
         echo "ETH转账UG确认结束".time().PHP_EOL;
     }
+
+    /**
+     * 检查红包超过24小时后过期操作
+     * 1.查询数据库状态为创建成功的数据，获取create_succ_time
+     * 2.create_succ_time + 24小时 < time() 过期，修改红包表和记录表状态为已过期
+     */
+    public function actionListenRedPacketCreateSuccTime()
+    {
+
+    }
+
 }
