@@ -176,7 +176,9 @@ class RedpacketController extends  Controller
     {
         //红包id
         $id = Yii::$app->request->post("id", "");
+        $result = RedPacket::getRedPacketInfoWithRecordList($id);
 
+        outputHelper::ouputErrorcodeJson(\common\helpers\ErrorCodes::SUCCESS, $result);
     }
 
     /**
