@@ -71,7 +71,8 @@ CREATE TABLE `ug_red_packet_record` (
   `openid` varchar(100) DEFAULT '' COMMENT '微信唯一标识id',
   `wx_name` varchar(50) NOT NULL DEFAULT '' COMMENT '维信昵称',
   `wx_avatar` varchar(255) NOT NULL DEFAULT '' COMMENT '微信头像',
-  `amount` varchar(50) NOT NULL DEFAULT '0' COMMENT '领取金额',
+  `
+  ` varchar(50) NOT NULL DEFAULT '0' COMMENT '领取金额',
   `code` varchar(100) NOT NULL DEFAULT '' COMMENT '兑换码',
   `txid` varchar(50) NOT NULL DEFAULT '' COMMENT 'txid',
   `from_address` varchar(42) DEFAULT '' COMMENT '发放账户',

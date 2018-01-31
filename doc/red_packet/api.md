@@ -313,7 +313,7 @@
 
 ### 微信红包分享接口
 **请求URL：** 
-- `red/red/share`
+- `redpacket/we-chat-red-packet/share`
   
 **请求方式：**
 - GET/POST
@@ -336,7 +336,7 @@
         "txid": "0xasdasd123asdfasdfvbnghjc", //发起红包的钱包地址
         "title": "冲破天际", //红包主题
         "status": "1", //领取状态；1已领取；2兑换中；3兑换失败 4兑换成功 5已过期
-        "quantity": "100", //领取总个数
+        "quantity": "100", //红包总个数
         "already_received_quantity": "50", //已经领取的个数
         "amount": "100", //红包总额
         "already_received_amount": "100", //已经领取的红包额度
