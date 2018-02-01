@@ -69,9 +69,9 @@ class RedPacketRecord extends \common\models\RedPacketRecord
      *
      * @return int
      */
-    public static function updateStatusAndTxidAndAmountByid($id, $status, $txid, $amount)
+    public static function updateStatusAndTxidByid($id, $status, $txid)
     {
-        return RedPacketRecord::updateAll(["status" => $status, "txid" => $txid, "amount" => $amount], ["id" => $id]);
+        return RedPacketRecord::updateAll(["status" => $status, "txid" => $txid], ["id" => $id]);
     }
 
     /**

@@ -29,7 +29,7 @@
 
 ### 主题列表接口
 **请求URL：** 
-- `/red/theme/theme-list`
+- `/redpacket/theme/theme-list`
   
 **请求方式：**
 - POST 
@@ -70,7 +70,7 @@
 
 ### 中心化账户地址接口
 **请求URL：** 
-- `/red/red/center-address`
+- `/redpacket/common/center-address`
   
 **请求方式：**
 - POST 
@@ -86,9 +86,9 @@
 {
     "code": 0,
     "message": "成功",
-    "data": [{
-        "address":"423424242"//签名地址
-    }]
+    "data": {
+        "address": "0x3a96700a6cce699c8219332202eca67b1442fbe1"
+    }
 }
 
 ```
@@ -97,7 +97,7 @@
 
 ### 创建红包接口
 **请求URL：** 
-- `/red/red/create-packet`
+- `/redpacket/redpacket/create-packet`
   
 **请求方式：**
 - POST 
@@ -107,12 +107,17 @@
 |参数名|必选|类型|说明|
 |:----    |:---|:----- |-----   |
 |title |是  |string |红包标题 |
-|address |是  |string |发红包账户地址 |
+|from_address |是  |string |发红包账户地址 |
+|to_address |是  |string |发红包账户地址 |
 |amount |是  |string |金额 |
 |quantity |是  |string |个数 |
 |theme_id |是  |string |主题ID |
+|theme_img |是  |string |主题图片 |
+|theme_thumb_img |是  |string |主题缩略图 |
+|theme_share_img |是  |string |主题分享图 |
 |type |是  |string |类型 0等额红包；1随机红包 |
 |raw_transaction |是  |string |离线签名 |
+|hash |是  |string |txid |
 
  **返回示例**
 
@@ -134,7 +139,7 @@
 
 ### 兑换接口
 **请求URL：** 
-- `/red/red/exchange`
+- `/redpacket/redpacket/exchange`
   
 **请求方式：**
 - POST 
@@ -160,7 +165,7 @@
 
 ### 红包详情
 **请求URL：** 
-- `/red/red/detail`
+- `/redpacket/redpacket/detail`
   
 **请求方式：**
 - POST 
@@ -209,7 +214,7 @@
 
 ### 红包列表
 **请求URL：** 
-- `/red/red/list`
+- `/redpacket/redpacket/list`
   
 **请求方式：**
 - POST 
@@ -343,7 +348,7 @@
 
 ### 微信红包领取接口
 **请求URL：** 
-- `red/red/receive`
+- `redpacket/we-chat-red-packet/receive`
   
 **请求方式：**
 - POST/GET
