@@ -1,6 +1,7 @@
 <?php
 return [
     "image_url" => "http://t9-cname.ugchain.com",
+    "host"=>"http://t9-cname.ugchain.com",
     "ug"=>[
         "gas_price"=>0,
         "gas_limit"=>150000,
