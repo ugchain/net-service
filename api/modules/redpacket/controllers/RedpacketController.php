@@ -3,6 +3,7 @@
 namespace api\modules\redpacket\controllers;
 
 use api\modules\redpacket\models\PacketOfflineSign;
+use common\helpers\RewardData;
 use Yii;
 use yii\web\Controller;
 use common\helpers\OutputHelper;
@@ -39,13 +40,12 @@ class RedpacketController extends  Controller
     {
         //接收参数&&验证参数
         $data = self::getParams();
-
         //创建红包
         $packet_id = RedPacket::saveRedPacket($data);
         if(!$packet_id){
             outputHelper::ouputErrorcodeJson(\common\helpers\ErrorCodes::FALL);
         }
-        //开启事物
+        //开启事务
         $transaction = Yii::$app->db->beginTransaction();
         try{
             //组装创建红包的签名数据
@@ -58,13 +58,17 @@ class RedpacketController extends  Controller
             //保存创建红包的签名
             $sign_save_status = PacketOfflineSign::saveOfflineSign($sign_data);
             //保存交易历史记录
-            $trade_save_status = Trade::insertData($data["hash"],$data["from_address"],$data["to_address"],$data["amount"],Trade::CONFIRMED,Trade::CREATE_REDPACKET);
+            $trade_save_status = Trade::insertData($data["hash"], $data["from_address"], $data["to_address"], $data["amount"],Trade::CONFIRMED,Trade::CREATE_REDPACKET);
+            if(!$sign_save_status || !$trade_save_status){
+                $transaction->rollBack();
+            }
+            //提交事务
             $transaction->commit();
-        }catch (Exception $e) {
+        }catch (\Exception $e) {
             $transaction->rollBack();
             outputHelper::ouputErrorcodeJson(\common\helpers\ErrorCodes::FALL);
         }
-        //事物结束
+        //事务结束
         //红包计算公示(红包ID：{2,3,4,5})
         $redis_data = [];
         $average_amount = $data["amount"] / $data['quantity'];
@@ -78,31 +82,30 @@ class RedpacketController extends  Controller
             $min = $average_amount * self::MIN;
             $redis_data = self::random_red($data["amount"],$data["quantity"],$max,$min);
         }
-        //var_dump(json_encode($redis_data));die;
         //存放redis
-        $redis = Yii::$app->redis;
-        $redis->set($packet_id,json_encode($redis_data));
+        $rewardData = new RewardData();
+        $rewardData->set($packet_id,$redis_data);
         //发送离线签名数据
-//        $res_data = CurlRequest::ChainCurl(Yii::$app->params["ug"]["ug_sign_url"], "eth_sendRawTransaction", [$data['raw_transaction']]);
-//        if(!$res_data){
-//            outputHelper::ouputErrorcodeJson(\common\helpers\ErrorCodes::FALL);
-//        }
-//        //检测是否上链--成功5%
-//        $block_info = CurlRequest::ChainCurl(Yii::$app->params["ug"]["ug_host"], "eth_getTransactionReceipt", [$txid]);
-//        if($block_info){
-//            $block_info = json_decode($block_info,true);
-//            //blockNumber 不为空
-//            if(!isset($block_info["error"]) || $block_info["result"]["blockNumber"] != null){
-//                //检测上链成功,更新红包状态为status=2 && ug_trade 交易记录改为交易成功
-//                RedPacket::updateStatus($packet_id,"2");
-//                Trade::updateStatus($data["hash"],Trade::SUCCESS);
-//            }
-//        }
+        $res_data = CurlRequest::ChainCurl(Yii::$app->params["ug"]["ug_sign_url"], "eth_sendRawTransaction", [$data['raw_transaction']]);
+        if(!$res_data){
+            outputHelper::ouputErrorcodeJson(\common\helpers\ErrorCodes::FALL);
+        }
+        //检测是否上链--成功5%
+        $block_info = CurlRequest::ChainCurl(Yii::$app->params["ug"]["ug_host"], "eth_getTransactionReceipt", [$data["hash"]]);
+        if($block_info){
+            $block_info = json_decode($block_info,true);
+            //blockNumber 不为空
+            if(!isset($block_info["error"]) || $block_info["result"]["blockNumber"] != null){
+                //检测上链成功,更新红包状态为status=2 && ug_trade 交易记录改为交易成功
+                RedPacket::updateStatus($packet_id,"2");
+                Trade::updateStatus($data["hash"],Trade::SUCCESS);
+            }
+        }
         //组装返回数据
         $return_data = [
             "url"=>"",
             "packet_id"=>$packet_id,
-            "title"=>$data["title"],
+            "status"=>Trade::SUCCESS,
         ];
         outputHelper::ouputErrorcodeJson(\common\helpers\ErrorCodes::SUCCESS,$return_data);
     }

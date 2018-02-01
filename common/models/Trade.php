@@ -27,14 +27,14 @@ class Trade extends ActiveRecord
      * 参数规则
      * @inheritdoc
      */
-    public function rules()
-    {
-        return [
-            [['status', 'addtime','trade_time'], 'integer'],
-            [['from_address','to_address','amount','addtime'], 'required'],
-            [['app_txid','ug_txid','from_address','to_address','amount','blocknumber'], 'string'],
-        ];
-    }
+//    public function rules()
+//    {
+//        return [
+//            [['type', 'status', 'addtime', 'trade_time'], 'integer'],
+//            [['from_address', 'to_address', 'amount', 'addtime'], 'required'],
+//            [['app_txid', 'ug_txid', 'from_address', 'to_address', 'amount', 'blocknumber'], 'string'],
+//        ];
+//    }
 
     /**
      * 获取交易详细信息

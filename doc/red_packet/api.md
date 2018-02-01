@@ -86,9 +86,9 @@
 {
     "code": 0,
     "message": "成功",
-    "data": [{
-        "address":"423424242"//签名地址
-    }]
+    "data": {
+        "address": "0x3a96700a6cce699c8219332202eca67b1442fbe1"
+    }
 }
 
 ```
