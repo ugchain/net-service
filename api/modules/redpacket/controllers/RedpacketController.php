@@ -266,6 +266,7 @@ class RedpacketController extends  Controller
         $result = RedPacket::getRedList($address, $type, $page, $pageSize);
 
         $result['received_quantity'] = $result['count'];
+        $result['image_url'] = Yii::$app->params['image_url'];
         outputHelper::ouputErrorcodeJson(\common\helpers\ErrorCodes::SUCCESS, $result);
     }
 

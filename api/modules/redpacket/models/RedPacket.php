@@ -77,6 +77,7 @@ class RedPacket extends \common\models\RedPacket
         $redpacketInfo['theme_thumb_img'] = !empty($redPacketTheme->thumb_img) ? $redPacketTheme->thumb_img : '';
         $redpacketInfo['theme_share_img'] = !empty($redPacketTheme->share_img) ? $redPacketTheme->share_img : '';
         $redpacketInfo['redPacketRecordList'] = $redPacketRecordList;
+        $redpacketInfo['image_url'] = Yii::$app->params['image_url'];
 
         return $redpacketInfo;
     }
@@ -106,7 +107,7 @@ class RedPacket extends \common\models\RedPacket
         $query = Yii::$app->db;
         $offset = ($page - 1) * $pageSize;
         if ($type == self::I_RECEIVED) {
-            $sql = "SELECT `rr`.exchange_time, `rr`.rid, `rr`.amount, `rp`.theme_id, `rp`.title, `rp`.id FROM `ug_red_packet_record` as rr LEFT JOIN `ug_red_packet` as rp on rr.rid = rp.id 
+            $sql = "SELECT `rr`.status, `rr`.exchange_time, `rr`.expire_time, `rr`.rid, `rr`.amount, `rp`.theme_id, `rp`.title, `rp`.id FROM `ug_red_packet_record` as rr LEFT JOIN `ug_red_packet` as rp on rr.rid = rp.id 
                   where rr.to_address = '" . $address . "' and rr.status = '" . RedPacketRecord::EXCHANGE_SUCC . "' order by id desc limit " . $pageSize . " offset " . $offset;
         } else {
             $sql = "SELECT * FROM `ug_red_packet` where address = '" . $address . "' order by id desc limit " . $pageSize . " offset " . $offset;
@@ -124,6 +125,10 @@ class RedPacket extends \common\models\RedPacket
        foreach ($list as $k => $v) {
            //获取已领人数
            $receive_count = RedPacketRecord::find()->where(['rid' => $v['id']])->count();
+           $theme = RedPacketTheme::find()->where(['id' => $v['theme_id']])->one();
+           $list[$k]['theme_img'] = $theme['img'];
+           $list[$k]['theme_thumb_img'] = $theme['thumb_img'];
+           $list[$k]['theme_share_img'] = $theme['share_img'];
            $sum += $v['amount'];
            $list[$k]['receive'] = $receive_count;
        }

@@ -209,6 +209,7 @@
                 "time": "12-26 44:38"   //领取时间
             }
         ]
+        "image_url": "http://wallet-pro.dev:8088" //拼接url
     }
 }
 
@@ -259,7 +260,7 @@
                 "fail_time": "0",   //创建失败时间
                 "create_succ_time": "0", //创建成功时间
                 "finish_time": "0", //领完时间
-                "expire_time": "0", //过期时间
+                "expire_time": "0", //过期时间(我收到和我发出共用)
                 "exchange_time": "1512131232" //兑换时间（我收到的）
             },
             {
@@ -313,6 +314,7 @@
         "pageSize": "10",   //一页显示多少条
         "received_amount": 450, //共发出(收到)多少UGC
         "received_quantity": 3  //共发出(收到)多少红包
+        "image_url": "http://wallet-pro.dev:8088" //拼接url
     }
 }
 ```
