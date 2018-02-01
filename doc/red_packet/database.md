@@ -92,3 +92,10 @@ CREATE TABLE `ug_red_packet_record` (
 alter table ug_trade add `type` tinyint(1) DEFAULT '0' COMMENT '记录类型；0内部交易转账；1创建红包交易转账；2拆红包交易转账；3退还红包交易转账'
 ```
 
+--
+
+###ug_red_packet冗余红包以领取次数
+```angular2html
+alter table ug_red_packet add `already_received_quantity` int(11) DEFAULT '0' COMMENT '红包以领取次数'
+```
+

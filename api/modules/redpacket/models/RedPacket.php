@@ -20,11 +20,6 @@ class RedPacket extends \common\models\RedPacket
     {
         $result = self::findOne($id);
 
-        //初始化此红包领取记录列表
-        $redPacketRecordList = [];
-        //初始化兑换成功的金额
-        $alreadyReceivedAmount = 0;
-
         //红包详情
         $redpacketInfo = [
             'id' => $result->id,
@@ -41,7 +36,10 @@ class RedPacket extends \common\models\RedPacket
             'current_time' => date('m-d h:i', time())
         ];
 
-
+        //初始化此红包领取记录列表
+        $redPacketRecordList = [];
+        //初始化兑换成功的金额
+        $alreadyReceivedAmount = 0;
         //获取数据库红包领取记录资源，循环获得需要的每个红包记录数据
         $redPacketRecords = $result->redPacketRecords;
         foreach ($redPacketRecords as $redPacketRecord) {
@@ -108,7 +106,7 @@ class RedPacket extends \common\models\RedPacket
         $offset = ($page - 1) * $pageSize;
         if ($type == self::I_RECEIVED) {
             $sql = "SELECT `rr`.status, `rr`.exchange_time, `rr`.expire_time, `rr`.rid, `rr`.amount, `rp`.theme_id, `rp`.title, `rp`.id FROM `ug_red_packet_record` as rr LEFT JOIN `ug_red_packet` as rp on rr.rid = rp.id 
-                  where rr.to_address = '" . $address . "' and rr.status = '" . RedPacketRecord::EXCHANGE_SUCC . "' order by id desc limit " . $pageSize . " offset " . $offset;
+                  where rr.to_address = '" . $address . "' and `rr`.status in ('" . RedPacketRecord::EXCHANGE_SUCC . "','". RedPacketRecord::REDEMPTION . "') order by id desc limit " . $pageSize . " offset " . $offset;
         } else {
             $sql = "SELECT * FROM `ug_red_packet` where address = '" . $address . "' order by id desc limit " . $pageSize . " offset " . $offset;
         }

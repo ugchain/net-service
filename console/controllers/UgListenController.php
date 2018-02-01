@@ -215,15 +215,44 @@ class UgListenController extends Controller
 //                }
 
                 //检索该红包是否存在记录
-                if ($count = RedPacketRecord::find()->where(['rid' => $info['id']])->andWhere(['!=', 'status', RedPacketRecord::EXCHANGE_SUCC])->count()) {
+                $list = RedPacketRecord::find()->where(['rid' => $info['id']])->andWhere(['!=', 'status', RedPacketRecord::EXCHANGE_SUCC])->asArray()->all();
+                if (count($list) > 0) {
+                    echo "222";die;
                     //根据红包id，更新红包记录表状态为已过期
-                    if (!RedPacketRecord::updateAll(["status" => RedPacketRecord::EXPIRED], "rid = " . $info['id'] . " and status != " . RedPacketRecord::EXCHANGE_SUCC)) {
-                        echo "更新数据库记录表失败".PHP_EOL;
-                        continue;
-                    }
-                }
+//                    if (!RedPacketRecord::updateAll(["status" => RedPacketRecord::EXPIRED], "rid = " . $info['id'] . " and status != " . RedPacketRecord::EXCHANGE_SUCC)) {
+//                        echo "更新数据库记录表失败".PHP_EOL;
+//                        continue;
+//                    }
 
-                //退还过期红包金额
+                    //退还过期红包金额给发红包账户
+                    foreach ($list as $k => $v) {
+
+                    }
+                        //获取nince且组装签名数据
+                }
+                    var_dump($list);die;
+
+
+
+
+
+
+                $info['address'] = $info['to_address'];
+                $info['app_txid'] = ''; //空的
+                $send_sign_data = Operating::getNonceAssembleData($info, Yii::$app->params["ug"]["gas_price"], Yii::$app->params["ug"]["ug_host"], "eth_getTransactionCount", [Yii::$app->params["ug"]["owner_address"], "pending"]);
+
+                //组装创建红包的签名数据
+                $sign_data = [
+                    "packet_id" => $info['id'],
+                    "address" => $address,
+                    "raw_transaction" => $send_sign_data,
+                    "type" => "1",
+                ];
+
+                //保存创建红包的签名
+                PacketOfflineSign::saveOfflineSign($sign_data);
+
+
 
             }
         }

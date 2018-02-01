@@ -7,6 +7,7 @@
 
 namespace api\modules\redpacket\controllers;
 
+use common\helpers\RewardData;
 use Yii;
 use yii\web\Controller;
 use yii\base\InvalidParamException;
@@ -75,12 +76,11 @@ class WeChatRedPacketController extends Controller
     public function actionRedirectUrl()
     {
         $wechatRedirectUrl = sprintf(self::WECHAT_REDIRECT_URL, $this->appid, $this->redirect_uri);
-        return $wechatRedirectUrl;
+        header("Location: $wechatRedirectUrl");
     }
 
     /**
      * 微信红包分享
-     * @return string
      */
     public function actionShare()
     {
@@ -110,15 +110,22 @@ class WeChatRedPacketController extends Controller
         //获取当前红包的详细信息
         $redpacketInfo = RedPacket::getRedPacketInfoWithRecordList($redpacketId);
 
+        //获取当前用户的红包状态
+        $state = RedPacketRecord::getRedPacketRecordState($redpacketInfo['id'], $userInfoData->openid);
+
         //渲染页面
         return $this->render('share', [
             'redpacketInfo' => $redpacketInfo,
+            'state' => $state,
             'openid' => $userInfoData->openid,
             'nickname' => $userInfoData->nickname,
             'headimgurl' => $userInfoData->headimgurl
         ]);
     }
 
+    /**
+     * 领取一个红包
+     */
     public function actionGradARedpacket()
     {
         $model = new RedPacketRecord();
@@ -126,20 +133,23 @@ class WeChatRedPacketController extends Controller
         $model->rid = Yii::$app->request->post('rid', '1');
         $model->wx_name = Yii::$app->request->post('nickname', 'aa');
         $model->wx_avatar = Yii::$app->request->post('headimgurl', 'ccc');
+        $model->expire_time = Yii::$app->request->post( 'expire_time', '123221123');
 
         //验证参数
         if(!($model->openid && $model->rid && $model->wx_name && $model->wx_avatar)){
             outputHelper::ouputErrorcodeJson(\common\helpers\ErrorCodes::PARAM_NOT_EXIST);
         }
 
-        //一个红包一个微信用户职能领取一次
-        $redPacketRecordCountForCurrentOpenid = RedPacketRecord::find()
-            ->where("rid=".$model->rid." and openid='".$model->openid."'")
-            ->count();
-        if ($redPacketRecordCountForCurrentOpenid != 0) {
-            outputHelper::ouputErrorcodeJson(\common\helpers\ErrorCodes::RED_PACKET_EXIST);
+        //获得红包金额并累加领取次数
+        $model->setRedpacketAmountWithAddQuantity();
+        //生成红包口令
+        $model->grenerateRedpacketCode();
+
+        if (!$model->save()) {
+            outputHelper::ouputErrorcodeJson(\common\helpers\ErrorCodes::RED_PACKET_GRAD_FAIL);
         }
-        $model->code = $model->grenerateRedpacketCode();
+
+        outputHelper::ouputErrorcodeJson(\common\helpers\ErrorCodes::SUCCESS,['code' => $model->code]);
     }
 
     /**

@@ -1,6 +1,7 @@
 <?php
 namespace api\modules\redpacket\models;
 
+use common\helpers\RewardData;
 use Yii;
 
 class RedPacketRecord extends \common\models\RedPacketRecord
@@ -39,7 +40,7 @@ class RedPacketRecord extends \common\models\RedPacketRecord
      * @var string
      * 生成红包口令需要的slat
      */
-    const REDPACKET_CODE_SLAT = "h23o4n4fdgbvzxa31ond3al12ai";
+    public $_salt;
 
     /**
      * 检查红包code和address是否存在
@@ -80,6 +81,83 @@ class RedPacketRecord extends \common\models\RedPacketRecord
      */
     public function grenerateRedpacketCode()
     {
-        return substr(md5($this->openid.$this->rid.self::REDPACKET_CODE_SLAT), 1, 9);
+        $this->code = substr(md5($this->openid.$this->rid.$this->salt), 1, 9);
+    }
+
+    /**
+     * 领取一个红包金额，并累加领取次数
+     * @return string
+     */
+    public function setRedpacketAmountWithAddQuantity()
+    {
+        //一个红包一个微信用户职能领取一次
+        $redPacketRecordCountForCurrentOpenid = self::find()
+            ->where("rid=".$this->rid." and openid='".$this->openid."'")
+            ->count();
+        if ($redPacketRecordCountForCurrentOpenid != 0) {
+            outputHelper::ouputErrorcodeJson(\common\helpers\ErrorCodes::RED_PACKET_EXIST);
+        }
+
+        //红包是否以被领光
+        $redPacket = RedPacket::findOne($this->rid);
+        if ($redPacket->already_received_quantity >= $redPacket->quantity) {
+            outputHelper::ouputErrorcodeJson(\common\helpers\ErrorCodes::RED_PACKET_LED_LIGHT);
+        }
+
+        //去redis获取红包金额
+        $rewardData = new RewardData();
+        $this->amount = $rewardData->get($this->rid);
+
+        //累加领取次数
+        $redPacket->quantity = $redPacket->quantity+1;
+        $redPacket->save();
+    }
+
+    /**
+     * 获取当前用户的红包状态
+     *
+     * @param $rid
+     * @param $openid
+     * @return int
+     */
+    public static function getRedPacketRecordState($rid, $openid)
+    {
+        $record = self::find()->where("rid=$rid and $openid='$openid'")->one();
+        if (empty($record)) {
+            $redPacket = RedPacket::findOne($rid);
+            if ($redPacket->already_received_quantity >= $redPacket->quantity) {
+                return 4; //以领光
+            }
+            return 0; //未领取
+        }
+
+        switch ($record->status) {
+            case self::REDPACKET_RECORD_STATUS_TORECEIVE:
+            case self::REDPACKET_RECORD_STATUS_REDEMPTION:
+            case self::REDPACKET_RECORD_STATUS_EXCHANGEFAILED:
+                return 1; //以领取、未兑换
+                break;
+            case self::REDPACKET_RECORD_STATUS_EXCHANGESUCCESS:
+                return 2; //以兑换
+                break;
+            case self::REDPACKET_RECORD_STATUS_EXPIRED:
+                return 3; //已结束
+                break;
+        }
+    }
+
+    /**
+     * [getter]获取微信红包微信口令的盐
+     *
+     * @return string
+     */
+    public function getSalt()
+    {
+        if (empty(self::$_salt)) {
+            if (($salt = Yii::$app->params['wecat_redpacket_config']['salt']) == false) throw new InvalidParamException("redpacket salt does not exist.");
+            self::$_salt = urlencode($salt);
+        }
+
+        return self::$_salt;
     }
 }
