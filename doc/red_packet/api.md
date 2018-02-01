@@ -197,6 +197,9 @@
         "expire_time": "",              //过期时间
         "last_time": "17:04",           //剩余时间时间
         "current_time": "01-31 06:55",  //当前时间
+        "theme_img": "",                //主题图片
+        "theme_thumb_img": "",          //主题缩略图
+        "theme_share_img": "",          //主题分享图
         "redPacketRecordList": [        //领取记录
             {
                 "wx_name": "ddew",      //微信昵称
@@ -206,6 +209,7 @@
                 "time": "12-26 44:38"   //领取时间
             }
         ]
+        "image_url": "http://wallet-pro.dev:8088" //拼接url
     }
 }
 
@@ -244,15 +248,19 @@
                 "quantity": "6", //红包数量
                 "receive": "1"  //已领数量
                 "theme_id": "3", //红包主题
+                "theme_img": "",                //主题图片
+                "theme_thumb_img": "",          //主题缩略图
+                "theme_share_img": "",          //主题分享图
                 "txid": "32e322r42r43r4r43rdff43r43", //红包交易id
                 "type": "1",    //红包类型0等额红包；1随机红包
                 "back_amount": "0", //红包退还金额
-                "status": "2",  //红包状态；0创建红包;1创建失败;2创建成功;3:已领光;4:已过期',
+                "status": "2",  //(发出状态)红包状态；0创建红包;1创建失败;2创建成功;3:已领光;4:已过期',
+                                //（收到状态)领取状态；1已领取；2兑换中；3兑换失败 4兑换成功 5已过期
                 "addtime": "1517723724", //红包创建时间
                 "fail_time": "0",   //创建失败时间
                 "create_succ_time": "0", //创建成功时间
                 "finish_time": "0", //领完时间
-                "expire_time": "0", //过期时间
+                "expire_time": "0", //过期时间(我收到和我发出共用)
                 "exchange_time": "1512131232" //兑换时间（我收到的）
             },
             {
@@ -263,6 +271,9 @@
                 "quantity": "30",
                 "receive": "0"
                 "theme_id": "2",
+                "theme_img": "",                //主题图片
+                "theme_thumb_img": "",          //主题缩略图
+                "theme_share_img": "",          //主题分享图
                 "txid": "9i8r47ry74yr7y4y7ry7r4rr4",
                 "type": "0",
                 "back_amount": "0",
@@ -282,6 +293,9 @@
                 "quantity": "10",
                 "receive": "0"
                 "theme_id": "1",
+                "theme_img": "",                //主题图片
+                "theme_thumb_img": "",          //主题缩略图
+                "theme_share_img": "",          //主题分享图
                 "txid": "3ee2w2ww2w21e3e3",
                 "type": "1",
                 "back_amount": "0",
@@ -300,6 +314,7 @@
         "pageSize": "10",   //一页显示多少条
         "received_amount": 450, //共发出(收到)多少UGC
         "received_quantity": 3  //共发出(收到)多少红包
+        "image_url": "http://wallet-pro.dev:8088" //拼接url
     }
 }
 ```

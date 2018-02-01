@@ -36,6 +36,12 @@ class RedPacketRecord extends \common\models\RedPacketRecord
     const REDPACKET_RECORD_STATUS_EXPIRED = 5;
 
     /**
+     * @var string
+     * 生成红包口令需要的slat
+     */
+    const REDPACKET_CODE_SLAT = "h23o4n4fdgbvzxa31ond3al12ai";
+
+    /**
      * 检查红包code和address是否存在
      * @param $code
      * @param $address
@@ -63,9 +69,17 @@ class RedPacketRecord extends \common\models\RedPacketRecord
      *
      * @return int
      */
-    public static function updateStatusAndTxidAndAmountByid($id, $status, $txid, $amount)
+    public static function updateStatusAndTxidByid($id, $status, $txid)
     {
-        return RedPacketRecord::updateAll(["status" => $status, "txid" => $txid, "amount" => $amount], ["id" => $id]);
+        return RedPacketRecord::updateAll(["status" => $status, "txid" => $txid], ["id" => $id]);
     }
 
+    /**
+     * 生成微信红包兑换码，根据微信用户openid、红包id和salt组合的md5值再截取前9位生成
+     * @return bool|string
+     */
+    public function grenerateRedpacketCode()
+    {
+        return substr(md5($this->openid.$this->rid.self::REDPACKET_CODE_SLAT), 1, 9);
+    }
 }

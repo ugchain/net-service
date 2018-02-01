@@ -16,7 +16,8 @@ class RedPacket extends \common\models\RedPacket
      * @param $id 红包ID
      * @return array
      */
-    public static function getRedPacketInfoWithRecordList($id) {
+    public static function getRedPacketInfoWithRecordList($id)
+    {
         $result = self::findOne($id);
 
         //初始化此红包领取记录列表
@@ -26,6 +27,7 @@ class RedPacket extends \common\models\RedPacket
 
         //红包详情
         $redpacketInfo = [
+            'id' => $result->id,
             'txid' => $result->txid,
             'title' => $result->title,
             'status' => $result->status,
@@ -35,7 +37,7 @@ class RedPacket extends \common\models\RedPacket
             'already_received_amount' => 'TODO',
             'finish_time' => !empty($result->finish_time) ? date('m-d h:i', $result->finish_time) : '',
             'expire_time' => !empty($result->expire_time) ? date('m-d h:i', $result->expire_time) : '',
-            'last_time' => date('H:i', $result->expire_time - time()),
+            'last_time' => date('H时i分', $result->expire_time - time()),
             'current_time' => date('m-d h:i', time())
         ];
 
@@ -75,6 +77,7 @@ class RedPacket extends \common\models\RedPacket
         $redpacketInfo['theme_thumb_img'] = !empty($redPacketTheme->thumb_img) ? $redPacketTheme->thumb_img : '';
         $redpacketInfo['theme_share_img'] = !empty($redPacketTheme->share_img) ? $redPacketTheme->share_img : '';
         $redpacketInfo['redPacketRecordList'] = $redPacketRecordList;
+        $redpacketInfo['image_url'] = Yii::$app->params['image_url'];
 
         return $redpacketInfo;
     }
@@ -104,7 +107,7 @@ class RedPacket extends \common\models\RedPacket
         $query = Yii::$app->db;
         $offset = ($page - 1) * $pageSize;
         if ($type == self::I_RECEIVED) {
-            $sql = "SELECT `rr`.exchange_time, `rr`.rid, `rr`.amount, `rp`.theme_id, `rp`.title, `rp`.id FROM `ug_red_packet_record` as rr LEFT JOIN `ug_red_packet` as rp on rr.rid = rp.id 
+            $sql = "SELECT `rr`.status, `rr`.exchange_time, `rr`.expire_time, `rr`.rid, `rr`.amount, `rp`.theme_id, `rp`.title, `rp`.id FROM `ug_red_packet_record` as rr LEFT JOIN `ug_red_packet` as rp on rr.rid = rp.id 
                   where rr.to_address = '" . $address . "' and rr.status = '" . RedPacketRecord::EXCHANGE_SUCC . "' order by id desc limit " . $pageSize . " offset " . $offset;
         } else {
             $sql = "SELECT * FROM `ug_red_packet` where address = '" . $address . "' order by id desc limit " . $pageSize . " offset " . $offset;
@@ -122,6 +125,10 @@ class RedPacket extends \common\models\RedPacket
        foreach ($list as $k => $v) {
            //获取已领人数
            $receive_count = RedPacketRecord::find()->where(['rid' => $v['id']])->count();
+           $theme = RedPacketTheme::find()->where(['id' => $v['theme_id']])->one();
+           $list[$k]['theme_img'] = $theme['img'];
+           $list[$k]['theme_thumb_img'] = $theme['thumb_img'];
+           $list[$k]['theme_share_img'] = $theme['share_img'];
            $sum += $v['amount'];
            $list[$k]['receive'] = $receive_count;
        }
@@ -149,6 +156,17 @@ class RedPacket extends \common\models\RedPacket
         $model->addtime = time();
         $model->save();
         return $model->attributes['id'];
+    }
+
+    /**
+     * 根据状态获取红包列表
+     * @param $status
+     *
+     * @return array|\yii\db\ActiveRecord[]
+     */
+    public static function getRedPacketList($status)
+    {
+        return RedPacket::find()->where(['status' => $status])->asArray()->all();
     }
 
     /**

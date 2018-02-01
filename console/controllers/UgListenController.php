@@ -3,8 +3,8 @@ namespace console\controllers;
 
 use api\modules\user\models\Trade;
 use common\helpers\OutputHelper;
-use common\models\RedPacket;
-use common\models\RedPacketRecord;
+use api\modules\redpacket\models\RedPacket;
+use api\modules\redpacket\models\RedPacketRecord;
 use common\wallet\Operating;
 use common\models\CenterBridge;
 use common\models\ExtraPrice;
@@ -191,12 +191,44 @@ class UgListenController extends Controller
 
     /**
      * 检查红包超过24小时后过期操作
-     * 1.查询数据库状态为创建成功的数据，获取create_succ_time
-     * 2.create_succ_time + 24小时 < time() 过期，修改红包表和记录表状态为已过期
+     * 1.查询数据库状态为(2)创建成功的数据，获取create_succ_time
+     * 2.create_succ_time + 24小时 < time() 过期，修改红包表和红包记录表状态为已过期
      */
     public function actionListenRedPacketCreateSuccTime()
     {
+        echo "红包监听过期开始".time().PHP_EOL;
 
+        //获取数据库中创建成功的数据
+        $unsucc_info = RedPacket::getRedPacketList(RedPacket::CREATE_REDPACKET_SUCC);
+        if (!$unsucc_info) {
+            //OutputHelper::writeLog(dirname(__DIR__) . "/locklog/ugTradeListen.log",json_encode(["status" => Operating::LOG_UNLOCK_STATUS]));
+            echo "暂无红包数据！".PHP_EOL;die;
+        }
+
+        foreach ($unsucc_info as $info) {
+            //create_succ_time + 24小时 < time() 过期
+            if (date('Y-m-d H:i:s', $info['create_succ_time'] + 86400) < time()) {
+                //根据红包id，更新红包表状态为过期
+//                if (!RedPacket::updateAll(["status" => RedPacket::REDPACKET_EXPIRED], ["id" => $info['id']])) {
+//                    echo "更新数据库红包表失败".PHP_EOL;
+//                    continue;
+//                }
+
+                //检索该红包是否存在记录
+                if ($count = RedPacketRecord::find()->where(['rid' => $info['id']])->andWhere(['!=', 'status', RedPacketRecord::EXCHANGE_SUCC])->count()) {
+                    //根据红包id，更新红包记录表状态为已过期
+                    if (!RedPacketRecord::updateAll(["status" => RedPacketRecord::EXPIRED], "rid = " . $info['id'] . " and status != " . RedPacketRecord::EXCHANGE_SUCC)) {
+                        echo "更新数据库记录表失败".PHP_EOL;
+                        continue;
+                    }
+                }
+
+                //退还过期红包金额
+
+            }
+        }
+
+        echo "红包监听过期结束".time().PHP_EOL;
     }
 
 }

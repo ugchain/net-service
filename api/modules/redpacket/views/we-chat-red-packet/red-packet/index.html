@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1, user-scalable=no">
+	<title>红包领取</title>
+	<link rel="stylesheet" href="./css/weui.min.css">
+	<link rel="stylesheet" href="./css/jquery-weui.min.css">
+	<link rel="stylesheet" type="text/css" href="./css/index.css">
+	<link >
+</head>
+<body>
+	<!-- 头部红包 -->
+	<div class="top">
+		<h1 class="packet-title">"2018 我的冲破天际"</h1>
+		<div class="red-img" >
+			<div class="get-ugc">
+				<p id="getugc-num">6.43</p>
+				<p>UGC</p>
+			</div>
+			<img src="./img/packet.png" class="packet-pic">
+			<img src="./img/packet-open.png" class="packet-pic-open">
+			<p class="state-info">
+				<span class="state-tips">
+					恭喜您抢到
+				</span>
+				<span class="state-getugc">
+					6.43
+				</span>
+				<span class="ugc-unit">
+					UGC
+				</span>
+				<span class="state-time">
+					
+				</span>
+			</p>
+
+			
+		</div>
+		<!-- 未领取 -->
+		<div class="unreceived">
+			<a href="javascript:;" class="weui-btn weui-btn_default" id="get-packet-btn">
+				抢红包
+			</a>
+			<p class="runtime">
+				有效期剩余：
+				<span>20</span>时<span>20</span>分
+			</p>
+		</div>
+
+		<!-- 已领取 -->
+		<div class="received">
+			<p class="kl-title">
+				红包口令	
+			</p>
+			<img src="img/kl-bg.png" class="kl-bg">
+			<img src="img/kl-title.png" class="kl-title-bg">
+			<div class="kl">
+				<input id="kl-txt" type="text" value="sfas444" readonly="true">
+				<button class="btn" data-clipboard-action="copy" data-clipboard-target="#kl-txt">点击复制</button>
+			</div>
+			<div class="kl-tips">
+				请在 20h38m 内使用“UGC”应用进入“红包”输入红包口令拆开红包，获得UGC
+			</div>	
+		</div>
+
+		<!-- 已兑换 -->
+		<div class="exchanged">
+	
+		</div>
+
+		<!-- 已结束 已领光 -->
+		<div class="finished">
+			<img src="img/kl-bg.png" class="kl-bg">
+			<p>	
+				发出红包
+				<span>154</span>
+				<span>/</span>
+				<span>100</span>
+				个	
+			</p>
+			<p>	
+				发出UGC
+				<span>152.00</span>
+				<span>/</span>
+				<span>100.00</span>	
+			</p>
+		</div>
+	</div>
+	<!-- 领带背景 -->
+	<img src="img/tie.png" class="tie">
+	<!-- 领取记录 -->
+	<div class="content">
+			<div class="weui-panel weui-panel_access">
+			  	<div class="weui-panel__hd">
+			  		<span>已领取</span>
+			  		<span>0/100</span>	
+					<span>共</span>
+					<span>0/550 ugc</span>
+			  	</div>
+
+			  	<p class="no-one">
+			  		 还没有人抢到过这个红包
+			  	</p>
+			  	<!-- 领取记录 -->
+			  	<div class="weui-panel__bd">
+				    <a href="javascript:void(0);" class="weui-media-box weui-media-box_appmsg">
+					    <div class="weui-media-box__hd">
+					        <img class="weui-media-box__thumb" src="img/user-img.png">
+					    </div>
+					    <div class="weui-media-box__bd">
+					      	<div class="info-l">
+					      		<p id="username">nickname</p>
+					       		<p class="time">
+					       			1-25 
+					       			12:43
+					       		</p>
+					      	</div>
+				      		<div class="info-r" >
+					      		<p class="get-ugc">
+					      			得到
+					      			<span>24.3</span>
+					      			个ugc
+					      		</p>
+					      	</div>
+					    </div>
+				    </a>
+
+				    <a href="javascript:void(0);" class="weui-media-box weui-media-box_appmsg">
+					    <div class="weui-media-box__hd">
+					        <img class="weui-media-box__thumb" src="img/user-img.png">
+					    </div>
+					    <div class="weui-media-box__bd">
+					      	<div class="info-l">
+					      		<p id="username">nickname</p>
+					       		<p class="time">
+					       			1-25 
+					       			12:43
+					       		</p>
+					      	</div>
+				      		<div class="info-r" >
+					      		<p class="get-ugc">
+					      			得到
+					      			<span>24.3</span>
+					      			个ugc
+					      		</p>
+					      	</div>
+					    </div>
+				    </a>
+
+				  	<a href="javascript:void(0);" class="weui-media-box weui-media-box_appmsg">
+					    <div class="weui-media-box__hd">
+					        <img class="weui-media-box__thumb" src="img/user-img.png">
+					    </div>
+					    <div class="weui-media-box__bd">
+					      	<div class="info-l">
+					      		<p id="username">nickname</p>
+					       		<p class="time">
+					       			1-25 
+					       			12:43
+					       		</p>
+					      	</div>
+				      		<div class="info-r" >
+					      		<p class="get-ugc">
+					      			得到
+					      			<span>24.3</span>
+					      			个ugc
+					      		</p>
+					      	</div>
+					    </div>
+				    </a>
+
+				    <a href="javascript:void(0);" class="weui-media-box weui-media-box_appmsg">
+					    <div class="weui-media-box__hd">
+					        <img class="weui-media-box__thumb" src="img/user-img.png">
+					    </div>
+					    <div class="weui-media-box__bd">
+					      	<div class="info-l">
+					      		<p id="username">nickname</p>
+					       		<p class="time">
+					       			1-25 
+					       			12:43
+					       		</p>
+					      	</div>
+				      		<div class="info-r" >
+					      		<p class="get-ugc">
+					      			<span>领取了一个ugc红包</span>	
+
+					      		</p>
+					      	</div>
+					    </div>
+				    </a>
+
+
+
+			  	</div>
+			  <!-- <div class="weui-panel__ft"></div> -->
+			</div>
+			<!-- 滚动加载 -->
+			<div class="weui-loadmore">
+			  <i class="weui-loading"></i>
+			  <span class="weui-loadmore__tips">加载更多</span>
+			</div>	
+	</div>
+	<!-- 底部二维码 -->
+	<div class="foot">
+		<div class="qr-code">
+			<img src="img/qr-code.png">
+		</div>
+		<a href="javascript:;" class="download-btn weui-btn weui-btn_default">
+			下载“UGC”应用
+		</a>
+		<p class="download-info">
+			进入“红包”输入兑换码拆开红包获得UGC
+		</p>
+	</div>
+	<!-- 弹层 -->
+	<div class="mask">
+		<p><img src="img/mask.png" class="mask-img"></p>
+		<p><img src="img/close.png" class="close"></p>
+	</div>
+</body>
+	<script src="./js/jquery-3.3.1.min.js"></script>
+	<script src="./js/jquery-weui.min.js"></script>
+	<script src="./js/clipboard.min.js"></script>
+	<script src="./js/index.js"></script>
+</html>
