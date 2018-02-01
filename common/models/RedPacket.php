@@ -8,7 +8,7 @@ use yii\data\ActiveDataProvider;
 /**
  * This is the model class for table "ug_red_packet".
  *
- * @property integer $packet_id
+ * @property integer $id
  * @property string $title
  * @property string $address
  * @property string $amount
@@ -49,7 +49,7 @@ class RedPacket extends ActiveRecord
     public function rules()
     {
         return [
-            [['packet_id',"theme_id", 'status',"addtime","fail_time","create_succ_time","expire_time"], 'integer'],
+            [['id',"theme_id", 'status',"addtime","fail_time","create_succ_time","expire_time"], 'integer'],
             [["title","address","amount",'addtime'], 'required'],
             [['title','amount',"quantity","txid","theme_img","theme_thumb_img","theme_share_img","back_amount"], 'string'],
         ];

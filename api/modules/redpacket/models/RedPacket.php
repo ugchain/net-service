@@ -136,7 +136,7 @@ class RedPacket extends \common\models\RedPacket
     {
         $model = new self();
         $model->title = $data["title"];
-        $model->address = $data["address"];
+        $model->address = $data["from_address"];
         $model->amount = $data["amount"];
         $model->quantity = $data["quantity"];
         $model->theme_id = $data["theme_id"];
@@ -151,8 +151,40 @@ class RedPacket extends \common\models\RedPacket
         return $model->attributes['id'];
     }
 
+    /**
+     * 根据状态获取红包列表
+     * @param $status
+     *
+     * @return array|\yii\db\ActiveRecord[]
+     */
     public static function getRedPacketInfo($status)
     {
         return RedPacket::find()->where(['status' => $status])->all();
+    }
+
+    /**
+     * 更新红包记录状态值
+     */
+    public static function updateStatus($id,$status = "1")
+    {
+        $updateData = ["status"=>$status];
+        switch ($id)
+        {
+            case 1:
+                $updateData["fail_time"] = time();
+                break;
+            case 2:
+                $updateData["create_succ_time"] = time();
+                break;
+            case 3:
+                $updateData["finish_time"] = time();
+                break;
+            case 4:
+                $updateData["expire_time"] = time();
+                break;
+            default:
+                break;
+        }
+        return RedPacket::updateAll($updateData,["id"=>$id]);
     }
 }
