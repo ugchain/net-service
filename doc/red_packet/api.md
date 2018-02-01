@@ -197,6 +197,9 @@
         "expire_time": "",              //过期时间
         "last_time": "17:04",           //剩余时间时间
         "current_time": "01-31 06:55",  //当前时间
+        "theme_img": "",                //主题图片
+        "theme_thumb_img": "",          //主题缩略图
+        "theme_share_img": "",          //主题分享图
         "redPacketRecordList": [        //领取记录
             {
                 "wx_name": "ddew",      //微信昵称
@@ -244,6 +247,9 @@
                 "quantity": "6", //红包数量
                 "receive": "1"  //已领数量
                 "theme_id": "3", //红包主题
+                "theme_img": "",                //主题图片
+                "theme_thumb_img": "",          //主题缩略图
+                "theme_share_img": "",          //主题分享图
                 "txid": "32e322r42r43r4r43rdff43r43", //红包交易id
                 "type": "1",    //红包类型0等额红包；1随机红包
                 "back_amount": "0", //红包退还金额
@@ -263,6 +269,9 @@
                 "quantity": "30",
                 "receive": "0"
                 "theme_id": "2",
+                "theme_img": "",                //主题图片
+                "theme_thumb_img": "",          //主题缩略图
+                "theme_share_img": "",          //主题分享图
                 "txid": "9i8r47ry74yr7y4y7ry7r4rr4",
                 "type": "0",
                 "back_amount": "0",
@@ -282,6 +291,9 @@
                 "quantity": "10",
                 "receive": "0"
                 "theme_id": "1",
+                "theme_img": "",                //主题图片
+                "theme_thumb_img": "",          //主题缩略图
+                "theme_share_img": "",          //主题分享图
                 "txid": "3ee2w2ww2w21e3e3",
                 "type": "1",
                 "back_amount": "0",

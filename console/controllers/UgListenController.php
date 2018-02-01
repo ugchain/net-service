@@ -209,19 +209,22 @@ class UgListenController extends Controller
             //create_succ_time + 24小时 < time() 过期
             if (date('Y-m-d H:i:s', $info['create_succ_time'] + 86400) < time()) {
                 //根据红包id，更新红包表状态为过期
-                if (!RedPacket::updateAll(["status" => RedPacket::REDPACKET_EXPIRED], ["id" => $info['id']])) {
-                    echo "更新数据库红包表失败".PHP_EOL;
-                    continue;
-                }
+//                if (!RedPacket::updateAll(["status" => RedPacket::REDPACKET_EXPIRED], ["id" => $info['id']])) {
+//                    echo "更新数据库红包表失败".PHP_EOL;
+//                    continue;
+//                }
 
                 //检索该红包是否存在记录
-                if (RedPacketRecord::find()->where(['rid' => $info['id']])->count() > 0) {
+                if ($count = RedPacketRecord::find()->where(['rid' => $info['id']])->andWhere(['!=', 'status', RedPacketRecord::EXCHANGE_SUCC])->count()) {
                     //根据红包id，更新红包记录表状态为已过期
-                    if (!RedPacketRecord::updateAll(["status" => RedPacketRecord::EXPIRED], ["rid" => $info['id']])) {
+                    if (!RedPacketRecord::updateAll(["status" => RedPacketRecord::EXPIRED], "rid = " . $info['id'] . " and status != " . RedPacketRecord::EXCHANGE_SUCC)) {
                         echo "更新数据库记录表失败".PHP_EOL;
                         continue;
                     }
                 }
+
+                //退还过期红包金额
+
             }
         }
 
