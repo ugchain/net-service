@@ -3,8 +3,8 @@ namespace console\controllers;
 
 use api\modules\user\models\Trade;
 use common\helpers\OutputHelper;
-use common\models\RedPacket;
-use common\models\RedPacketRecord;
+use api\modules\redpacket\models\RedPacket;
+use api\modules\redpacket\models\RedPacketRecord;
 use common\wallet\Operating;
 use common\models\CenterBridge;
 use common\models\ExtraPrice;
@@ -199,37 +199,29 @@ class UgListenController extends Controller
         echo "红包监听过期开始".time().PHP_EOL;
 
         //获取数据库中创建成功的数据
-        $unsucc_info = RedPacket::getRedPacketInfo(RedPacket::CREATE_REDPACKET_SUCC);
+        $unsucc_info = RedPacket::getRedPacketList(RedPacket::CREATE_REDPACKET_SUCC);
         if (!$unsucc_info) {
             //OutputHelper::writeLog(dirname(__DIR__) . "/locklog/ugTradeListen.log",json_encode(["status" => Operating::LOG_UNLOCK_STATUS]));
             echo "暂无红包数据！".PHP_EOL;die;
         }
 
         foreach ($unsucc_info as $info) {
-            var_dump($info['create_succ_time'] + strtotime("+24 hours"));die;
-            //根据交易id获取订单信息
-            $block_info = Operating::txidByTransactionInfo(Yii::$app->params['ug']["ug_host"],
-                "eth_getTransactionReceipt", [$info["app_txid"]]);
-            if (!$block_info) {
-                continue;
-            }
+            //create_succ_time + 24小时 < time() 过期
+            if (date('Y-m-d H:i:s', $info['create_succ_time'] + 86400) < time()) {
+                //根据红包id，更新红包表状态为过期
+                if (!RedPacket::updateAll(["status" => RedPacket::REDPACKET_EXPIRED], ["id" => $info['id']])) {
+                    echo "更新数据库红包表失败".PHP_EOL;
+                    continue;
+                }
 
-            //blockNumber截取前两位0x && 16进制 转换为10进制
-            $trade_info = Operating::substrHexdec($block_info);
-
-            //更新数据库
-            if(!Trade::updateBlockAndStatusBytxid($info["app_txid"], $trade_info["blockNumber"], Trade::SUCCESS)){
-                echo "更新数据库失败".PHP_EOL;
-                continue;
-            }
-
-            /**
-             * 根据type更新表，记录类型；0内部交易转账；1创建红包交易；2拆红包交易转账；3退换红包交易转账
-             * 根据txid，更新status、time
-             */
-            if (!Operating::updateDataBytxid($info['type'], $info["app_txid"])) {
-                echo "更新数据库失败2".PHP_EOL;
-                continue;
+                //检索该红包是否存在记录
+                if (RedPacketRecord::find()->where(['rid' => $info['id']])->count() > 0) {
+                    //根据红包id，更新红包记录表状态为已过期
+                    if (!RedPacketRecord::updateAll(["status" => RedPacketRecord::EXPIRED], ["rid" => $info['id']])) {
+                        echo "更新数据库记录表失败".PHP_EOL;
+                        continue;
+                    }
+                }
             }
         }
 
