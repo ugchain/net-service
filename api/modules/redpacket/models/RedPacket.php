@@ -157,9 +157,9 @@ class RedPacket extends \common\models\RedPacket
      *
      * @return array|\yii\db\ActiveRecord[]
      */
-    public static function getRedPacketInfo($status)
+    public static function getRedPacketList($status)
     {
-        return RedPacket::find()->where(['status' => $status])->all();
+        return RedPacket::find()->where(['status' => $status])->asArray()->all();
     }
 
     /**
