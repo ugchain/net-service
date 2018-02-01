@@ -182,6 +182,7 @@ class RedPacket extends \common\models\RedPacket
                 break;
             case 2:
                 $updateData["create_succ_time"] = time();
+                $updateData["expire_time"] = time() + 24 * 60 * 60;
                 break;
             case 3:
                 $updateData["finish_time"] = time();

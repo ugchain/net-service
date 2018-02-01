@@ -55,4 +55,11 @@ class RedPacket extends ActiveRecord
         ];
     }
 
+    /**
+     * 获取一条红包记录
+     */
+    public static function getPacketInfoById($id)
+    {
+        return RedPacket::find()->where(["id"=>$id])->asArray()->one();
+    }
 }
