@@ -108,7 +108,7 @@ class RedPacket extends \common\models\RedPacket
         $offset = ($page - 1) * $pageSize;
         if ($type == self::I_RECEIVED) {
             $sql = "SELECT `rr`.status, `rr`.exchange_time, `rr`.expire_time, `rr`.rid, `rr`.amount, `rp`.theme_id, `rp`.title, `rp`.id FROM `ug_red_packet_record` as rr LEFT JOIN `ug_red_packet` as rp on rr.rid = rp.id 
-                  where rr.to_address = '" . $address . "' and rr.status = '" . RedPacketRecord::EXCHANGE_SUCC . "' order by id desc limit " . $pageSize . " offset " . $offset;
+                  where rr.to_address = '" . $address . "' and `rr`.status in ('" . RedPacketRecord::EXCHANGE_SUCC . "','". RedPacketRecord::REDEMPTION . "') order by id desc limit " . $pageSize . " offset " . $offset;
         } else {
             $sql = "SELECT * FROM `ug_red_packet` where address = '" . $address . "' order by id desc limit " . $pageSize . " offset " . $offset;
         }
