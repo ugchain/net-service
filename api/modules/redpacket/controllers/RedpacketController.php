@@ -217,11 +217,10 @@ class RedpacketController extends  Controller
             outputHelper::ouputErrorcodeJson(\common\helpers\ErrorCodes::TRANSACTION_FAIL);
         }
 
+        $trade_info['blockNumber'] = 0;
         //根据txid去块上确认
         $trade_info = Operating::txidByTransactionInfo(Yii::$app->params["ug"]["ug_host"], "eth_getTransactionReceipt", [$res_data["result"]]);
-
         //上链成功,插入内部交易表同时修改红包记录表状态
-        $trade_info['blockNumber'] = 0;
         $recordStatus = RedPacketRecord::REDEMPTION;
         $tradeStatus = Trade::CONFIRMED;
         if ($trade_info) {
