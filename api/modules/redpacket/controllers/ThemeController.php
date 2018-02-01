@@ -3,10 +3,13 @@
 namespace api\modules\redpacket\controllers;
 
 use api\modules\redpacket\models\RedPacketTheme;
+use common\helpers\Rsa;
 use Yii;
 use yii\web\Controller;
 use common\helpers\OutputHelper;
 use yii\web\UploadedFile;
+use \ParagonIE\EasyRSA\EasyRSA;
+use \ParagonIE\EasyRSA\KeyPair;
 
 class ThemeController extends  Controller
 {
@@ -30,7 +33,7 @@ class ThemeController extends  Controller
     */
     public function actionCreateTheme()
     {
-       //实例化
+        //实例化
        $model = new RedPacketTheme();
        //主题标题
        $model->title = Yii::$app->request->post("title","1");

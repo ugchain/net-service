@@ -1,6 +1,7 @@
 <?php
 return [
     "image_url" => "http://ugc.ugchain.com",
+    "host" => "http://ugc.ugchain.com",
     "ug"=>[
         "gas_price"=>0,
         "gas_limit"=>150000,

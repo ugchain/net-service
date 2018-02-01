@@ -20,11 +20,6 @@ class RedPacket extends \common\models\RedPacket
     {
         $result = self::findOne($id);
 
-        //初始化此红包领取记录列表
-        $redPacketRecordList = [];
-        //初始化兑换成功的金额
-        $alreadyReceivedAmount = 0;
-
         //红包详情
         $redpacketInfo = [
             'id' => $result->id,
@@ -41,7 +36,10 @@ class RedPacket extends \common\models\RedPacket
             'current_time' => date('m-d h:i', time())
         ];
 
-
+        //初始化此红包领取记录列表
+        $redPacketRecordList = [];
+        //初始化兑换成功的金额
+        $alreadyReceivedAmount = 0;
         //获取数据库红包领取记录资源，循环获得需要的每个红包记录数据
         $redPacketRecords = $result->redPacketRecords;
         foreach ($redPacketRecords as $redPacketRecord) {
