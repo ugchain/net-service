@@ -82,6 +82,8 @@ class RedpacketController extends  Controller
             $min = $average_amount * self::MIN;
             $redis_data = self::random_red($data["amount"],$data["quantity"],$max,$min);
         }
+        //定义当前状态
+        $status = "0";
         //存放redis
         $rewardData = new RewardData();
         $rewardData->set($packet_id,$redis_data);
@@ -99,13 +101,14 @@ class RedpacketController extends  Controller
                 //检测上链成功,更新红包状态为status=2 && ug_trade 交易记录改为交易成功
                 RedPacket::updateStatus($packet_id,"2");
                 Trade::updateStatus($data["hash"],Trade::SUCCESS);
+                $status = "2";
             }
         }
         //组装返回数据
         $return_data = [
-            "url"=>"",
-            "packet_id"=>$packet_id,
-            "status"=>Trade::SUCCESS,
+            "share_url"=>"/wechat/",
+            "id"=>$packet_id,
+            "status"=>$status,
         ];
         outputHelper::ouputErrorcodeJson(\common\helpers\ErrorCodes::SUCCESS,$return_data);
     }
@@ -266,6 +269,7 @@ class RedpacketController extends  Controller
         $result = RedPacket::getRedList($address, $type, $page, $pageSize);
 
         $result['received_quantity'] = $result['count'];
+        $result['image_url'] = Yii::$app->params['image_url'];
         outputHelper::ouputErrorcodeJson(\common\helpers\ErrorCodes::SUCCESS, $result);
     }
 
