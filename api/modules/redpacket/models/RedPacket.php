@@ -16,7 +16,8 @@ class RedPacket extends \common\models\RedPacket
      * @param $id 红包ID
      * @return array
      */
-    public static function getRedPacketInfoWithRecordList($id) {
+    public static function getRedPacketInfoWithRecordList($id)
+    {
         $result = self::findOne($id);
 
         //初始化此红包领取记录列表
@@ -26,6 +27,7 @@ class RedPacket extends \common\models\RedPacket
 
         //红包详情
         $redpacketInfo = [
+            'id' => $result->id,
             'txid' => $result->txid,
             'title' => $result->title,
             'status' => $result->status,
@@ -35,7 +37,7 @@ class RedPacket extends \common\models\RedPacket
             'already_received_amount' => 'TODO',
             'finish_time' => !empty($result->finish_time) ? date('m-d h:i', $result->finish_time) : '',
             'expire_time' => !empty($result->expire_time) ? date('m-d h:i', $result->expire_time) : '',
-            'last_time' => date('H:i', $result->expire_time - time()),
+            'last_time' => date('H时i分', $result->expire_time - time()),
             'current_time' => date('m-d h:i', time())
         ];
 

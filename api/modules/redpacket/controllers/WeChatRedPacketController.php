@@ -10,10 +10,19 @@ namespace api\modules\redpacket\controllers;
 use Yii;
 use yii\web\Controller;
 use yii\base\InvalidParamException;
+use common\helpers\OutputHelper;
 use api\modules\redpacket\models\RedPacket;
+use api\modules\redpacket\models\RedPacketRecord;
 
 class WeChatRedPacketController extends Controller
 {
+    /**
+     * @var string
+     * 在确保微信公众账号拥有授权作用域（scope参数）的权限的前提下（服务号获得高级接口后，默认拥有scope参数中的snsapi_base和snsapi_userinfo），引导关注者打开如下页面：
+     * https://open.weixin.qq.com/connect/oauth2/authorize?appid=APPID&redirect_uri=REDIRECT_URI&response_type=code&scope=SCOPE&state=STATE#wechat_redirect 若提示“该链接无法访问”，请检查参数是否填写错误，是否拥有scope参数对应的授权作用域权限。
+     */
+    const WECHAT_REDIRECT_URL = "https://open.weixin.qq.com/connect/oauth2/authorize?appid=%s&redirect_uri=%s&response_type=code&scope=snsapi_userinfo&state=STATE#wechat_redirect";
+
     /**
      * @var string
      * 通过code换取的是一个特殊的网页授权access_token,与基础支持中的access_token（该access_token用于调用其他接口）不同
@@ -29,8 +38,6 @@ class WeChatRedPacketController extends Controller
      */
     const WECHAT_USER_INFO_URL = "https://api.weixin.qq.com/sns/userinfo?access_token=%s&openid=%s&lang=zh_CN";
 
-    public $enableCsrfValidation = false;
-
     /**
      * @var string
      * 微信公众号的唯一标识
@@ -43,11 +50,42 @@ class WeChatRedPacketController extends Controller
      */
     static public $_secret;
 
+    /**
+     * @var string
+     * 微信引导关注调转回的路由
+     */
+    static public $_redirect_uri;
+
+    /**
+     * @var bool
+     * 取代页面原来的头部和尾部
+     */
     public $layout = false;
 
-    public function actionShare() {
+    /**
+     * @var bool
+     * 关闭csrf验证
+     */
+    public $enableCsrfValidation = false;
+
+    /**
+     * 分享微信红包的url
+     * @return string
+     */
+    public function actionRedirectUrl()
+    {
+        $wechatRedirectUrl = sprintf(self::WECHAT_REDIRECT_URL, $this->appid, $this->redirect_uri);
+        return $wechatRedirectUrl;
+    }
+
+    /**
+     * 微信红包分享
+     * @return string
+     */
+    public function actionShare()
+    {
         //微信授权认证返回code码
-        $code = Yii::$app->request->get("code", "011RsZ8l0zZsOk1u0s7l037I8l0RsZ8w");
+        $code = Yii::$app->request->get("code", "");
         $redpacketId = Yii::$app->request->get("redpacket_id", "1");
 
         if (empty($code)) {
@@ -58,16 +96,50 @@ class WeChatRedPacketController extends Controller
             //TODO 未获取到redpacketId
         }
 
+        //获取当前微信用户的access token和openid
         $wechatAccessTokenUrl = sprintf(self::WECHAT_ACCESS_TOKE_URL, $this->appid, $this->secret, $code);
         $accessTokenData = $this->useGetRequestUrl($wechatAccessTokenUrl);
         if (empty($accessTokenData->openid)) {
             //TODO 获取openid失败
         }
+
+        //获取当前微信用户的头像、昵称
+        $wechatUserInfoUrl = sprintf(self::WECHAT_USER_INFO_URL, $accessTokenData->access_token, $accessTokenData->openid);
+        $userInfoData = $this->useGetRequestUrl($wechatUserInfoUrl);
+
+        //获取当前红包的详细信息
         $redpacketInfo = RedPacket::getRedPacketInfoWithRecordList($redpacketId);
-echo "<pre>";var_dump($redpacketInfo);exit;
+
+        //渲染页面
         return $this->render('share', [
-            'redpacketInfo' => $redpacketInfo
+            'redpacketInfo' => $redpacketInfo,
+            'openid' => $userInfoData->openid,
+            'nickname' => $userInfoData->nickname,
+            'headimgurl' => $userInfoData->headimgurl
         ]);
+    }
+
+    public function actionGradARedpacket()
+    {
+        $model = new RedPacketRecord();
+        $model->openid = Yii::$app->request->post('id', '1');
+        $model->rid = Yii::$app->request->post('rid', '1');
+        $model->wx_name = Yii::$app->request->post('nickname', 'aa');
+        $model->wx_avatar = Yii::$app->request->post('headimgurl', 'ccc');
+
+        //验证参数
+        if(!($model->openid && $model->rid && $model->wx_name && $model->wx_avatar)){
+            outputHelper::ouputErrorcodeJson(\common\helpers\ErrorCodes::PARAM_NOT_EXIST);
+        }
+
+        //一个红包一个微信用户职能领取一次
+        $redPacketRecordCountForCurrentOpenid = RedPacketRecord::find()
+            ->where("rid=".$model->rid." and openid='".$model->openid."'")
+            ->count();
+        if ($redPacketRecordCountForCurrentOpenid != 0) {
+            outputHelper::ouputErrorcodeJson(\common\helpers\ErrorCodes::RED_PACKET_EXIST);
+        }
+        $model->code = $model->grenerateRedpacketCode();
     }
 
     /**
@@ -78,7 +150,8 @@ echo "<pre>";var_dump($redpacketInfo);exit;
      * @param string $timeOut 超时时间，单位秒，默认20s
      * @return mixed 返回转换响应格式的响应资源
      */
-    private function useGetRequestUrl($url, $responseFormat = 'json', $timeOut = '20') {
+    private function useGetRequestUrl($url, $responseFormat = 'json', $timeOut = '20')
+    {
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, $url);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
@@ -107,7 +180,8 @@ echo "<pre>";var_dump($redpacketInfo);exit;
      * @return string
      */
     public function getAppid() {
-        if (empty(self::$_appid)) {
+        if (empty(self::$_appid))
+        {
             if (($appid = Yii::$app->params['wecat_redpacket_config']['appid']) == false) throw new InvalidParamException("wechat appid does not exist.");
             self::$_appid = $appid;
         }
@@ -120,13 +194,29 @@ echo "<pre>";var_dump($redpacketInfo);exit;
      *
      * @return string
      */
-    public function getSecret() {
+    public function getSecret()
+    {
         if (empty(self::$_secret)) {
             if (($secret = Yii::$app->params['wecat_redpacket_config']['secret']) == false) throw new InvalidParamException("wechat secret does not exist.");
             self::$_secret = $secret;
         }
 
         return self::$_secret;
+    }
+
+    /**
+     * [getter]获取微信引导关注页面回跳的uri
+     *
+     * @return string
+     */
+    public function getRedirect_uri()
+    {
+        if (empty(self::$_redirect_uri)) {
+            if (($redirect_uri = Yii::$app->params['wecat_redpacket_config']['redirect_uri']) == false) throw new InvalidParamException("wechat redirect_uri does not exist.");
+            self::$_redirect_uri = urlencode($redirect_uri);
+        }
+
+        return self::$_redirect_uri;
     }
 }
 /* end of file for WeChatRedPacketController */
