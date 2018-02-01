@@ -1,7 +1,7 @@
 <?php
 return [
     "image_url" => "http://ugwallet.local/",
-    "host"=>"http://ugwallet.local/",
+    "host"=>"http://ugwallet.local",
     "ug"=>[
         "gas_price"=>0,
         "gas_limit"=>150000,
