@@ -191,12 +191,49 @@ class UgListenController extends Controller
 
     /**
      * 检查红包超过24小时后过期操作
-     * 1.查询数据库状态为创建成功的数据，获取create_succ_time
-     * 2.create_succ_time + 24小时 < time() 过期，修改红包表和记录表状态为已过期
+     * 1.查询数据库状态为(2)创建成功的数据，获取create_succ_time
+     * 2.create_succ_time + 24小时 < time() 过期，修改红包表和红包记录表状态为已过期
      */
     public function actionListenRedPacketCreateSuccTime()
     {
+        echo "红包监听过期开始".time().PHP_EOL;
 
+        //获取数据库中创建成功的数据
+        $unsucc_info = RedPacket::getRedPacketInfo(RedPacket::CREATE_REDPACKET_SUCC);
+        if (!$unsucc_info) {
+            //OutputHelper::writeLog(dirname(__DIR__) . "/locklog/ugTradeListen.log",json_encode(["status" => Operating::LOG_UNLOCK_STATUS]));
+            echo "暂无红包数据！".PHP_EOL;die;
+        }
+
+        foreach ($unsucc_info as $info) {
+            var_dump($info['create_succ_time'] + strtotime("+24 hours"));die;
+            //根据交易id获取订单信息
+            $block_info = Operating::txidByTransactionInfo(Yii::$app->params['ug']["ug_host"],
+                "eth_getTransactionReceipt", [$info["app_txid"]]);
+            if (!$block_info) {
+                continue;
+            }
+
+            //blockNumber截取前两位0x && 16进制 转换为10进制
+            $trade_info = Operating::substrHexdec($block_info);
+
+            //更新数据库
+            if(!Trade::updateBlockAndStatusBytxid($info["app_txid"], $trade_info["blockNumber"], Trade::SUCCESS)){
+                echo "更新数据库失败".PHP_EOL;
+                continue;
+            }
+
+            /**
+             * 根据type更新表，记录类型；0内部交易转账；1创建红包交易；2拆红包交易转账；3退换红包交易转账
+             * 根据txid，更新status、time
+             */
+            if (!Operating::updateDataBytxid($info['type'], $info["app_txid"])) {
+                echo "更新数据库失败2".PHP_EOL;
+                continue;
+            }
+        }
+
+        echo "红包监听过期结束".time().PHP_EOL;
     }
 
 }

@@ -150,4 +150,9 @@ class RedPacket extends \common\models\RedPacket
         $model->save();
         return $model->attributes['id'];
     }
+
+    public static function getRedPacketInfo($status)
+    {
+        return RedPacket::find()->where(['status' => $status])->all();
+    }
 }
