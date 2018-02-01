@@ -30,7 +30,8 @@ class ErrorCodes
         RED_PACKET_REDEMPTION                                       =   20112,//红包兑换中
         TRANSACTION_FAIL                                            =   20113,//交易失败
         RED_PACKET_NOT_EXIST                                        =   20114,//红包不存在
-        RED_PACKET_EXPIRED                                          =   20115;//红包已过期
+        RED_PACKET_EXPIRED                                          =   20115,//红包已过期
+        RED_PACKET_EXIST                                            =   20116;//红包以领取
 
 
 
@@ -59,6 +60,7 @@ class ErrorCodes
         self::TRANSACTION_FAIL                                      =>'交易失败',
         self::RED_PACKET_NOT_EXIST                                  =>'红包不存在',
         self::RED_PACKET_EXPIRED                                    =>'红包已过期',
+        self::RED_PACKET_EXIST                                      =>'红包以领取',
     ];
 
 }
