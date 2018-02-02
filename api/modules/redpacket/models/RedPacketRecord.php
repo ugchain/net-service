@@ -105,12 +105,21 @@ class RedPacketRecord extends \common\models\RedPacketRecord
             output::ouputErrorcodeJson(\common\helpers\ErrorCodes::RED_PACKET_LED_LIGHT);
         }
 
+        //如果红包状态为0创建红包和1链上失败则不能领取
+        if ($redPacket->status == 0 || $redPacket->status == 1) {
+            outputHelper::ouputErrorcodeJson(\common\helpers\ErrorCodes::RED_PACKET_GRAD_FAIL);
+        }
+
         //去redis获取红包金额
         //$rewardData = new RewardData();
         //$this->amount = $rewardData->get($this->rid);
         $this->amount = 2;
 
+        //增加一次领取次数，如果正好领取完更改红包状态为已完成
         $redPacket->already_received_quantity = $redPacket->already_received_quantity+1;
+        if ($redPacket->already_received_quantity >= $redPacket->quantity && $redPacket->status != 3 && $redPacket->status != 4) {
+            $redPacket->status = 3;
+        }
         $redPacket->save();
 
         //判断是否获取到红包金额
@@ -134,10 +143,11 @@ class RedPacketRecord extends \common\models\RedPacketRecord
         $info['amount'] = !empty($record->amount) ? $record->amount : '';
         if (empty($record)) {
             $redPacket = RedPacket::findOne($rid);
-            if ($redPacket->already_received_quantity >= $redPacket->quantity) {
-                $info['state'] = 4; //以领光
+            if ($redPacket->status == 3) {
+                $info['state'] = 3; //以领光
+            } elseif ($redPacket->status == 4) {
+                $info['state'] = 4; //已过期
             }
-            return 0; //未领取
         } else {
             switch ($record->status) {
                 case self::REDPACKET_RECORD_STATUS_TORECEIVE:
@@ -149,7 +159,7 @@ class RedPacketRecord extends \common\models\RedPacketRecord
                     $info['state'] = 2; //以兑换
                     break;
                 case self::REDPACKET_RECORD_STATUS_EXPIRED:
-                    $info['state'] = 3; //已结束
+                    $info['state'] = 4; //已结束
                     break;
             }
         }
