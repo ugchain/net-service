@@ -13,7 +13,7 @@ use Yii;
  * @property integer $status
  * @property integer $addtime
  */
-class RoseGive extends \common\models\MedalGive
+class RoseGive extends \common\models\RoseGive
 {
     public function getMedal()
     {
@@ -25,10 +25,10 @@ class RoseGive extends \common\models\MedalGive
      * @param $medal_id 勋章ID
      * @return  array
      */
-    public static function getMedalGiveInfoByMedalId($medal_id, $page = "1", $pageSize = "10")
+    public static function getMedalGiveInfoByRoseId($rose_id, $page = "1", $pageSize = "10")
     {
         $query = RoseGive::find();
-        $query->where(['medal_id' => $medal_id]);
+        $query->where(['rose_id' => $rose_id]);
         $query->orderBy('addtime DESC');
         //分页
         $count = $query->count();
@@ -47,7 +47,7 @@ class RoseGive extends \common\models\MedalGive
     public static function insertData($address, $medal_id, $recipient_address, $status)
     {
         $model = new self();
-        $model->medal_id = $medal_id;
+        $model->rose_id = $medal_id;
         $model->from_address = $address;
         $model->to_address = $recipient_address;
         $model->status = $status;

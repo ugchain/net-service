@@ -174,7 +174,7 @@ class RedPacket extends \common\models\RedPacket
     public static function updateStatus($id,$status = "1")
     {
         $updateData = ["status"=>$status];
-        switch ($id)
+        switch ($status)
         {
             case 1:
                 $updateData["fail_time"] = time();

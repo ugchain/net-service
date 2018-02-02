@@ -47,6 +47,21 @@ class OutputHelper
     }
 
     /**
+     * 生成唯一ID
+     */
+    public static function guid()
+    {
+        $charid = strtoupper(md5(uniqid(mt_rand(), true) . time()));
+        $uuid =
+            substr($charid, 0, 12) .
+            substr($charid, 8, 12) .
+            substr($charid, 12, 12) .
+            substr($charid, 16, 12) .
+            substr($charid, 20, 12) .
+            substr($charid, 24, 4);
+        return $uuid;
+    }
+    /**
      * 科学计数法数字转为字符串
      */
     public static function NumToString($num){
