@@ -59,6 +59,8 @@ if(state == 0){
             	$.toast("您的网络有问题", "text");
             }
         })
+
+        $('.received').show().css('opacity','1')
 	})
 
 }
