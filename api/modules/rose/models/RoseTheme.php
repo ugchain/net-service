@@ -25,6 +25,8 @@ class RoseTheme extends \common\models\RoseTheme
         $this->img = $object;
         $object = self::uploadFile($this->thumb_img);
         $this->thumb_img = $object;
+        $object = self::uploadFile($this->banner_img);
+        $this->banner_img = $object;
     }
 
     /**

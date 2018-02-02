@@ -43,8 +43,9 @@ class ThemeController extends  Controller
        //实例化文件
        $model->img = UploadedFile::getInstanceByName('img');
        $model->thumb_img = UploadedFile::getInstanceByName('thumb_img');
+       $model->banner_img = UploadedFile::getInstanceByName('banner_img');
        //判断是否有图片上传
-       if(!$model->img || !$model->thumb_img){
+       if(!$model->img || !$model->thumb_img || !$model->banner_img){
            outputHelper::ouputErrorcodeJson(\common\helpers\ErrorCodes::UPLOAD_FILE_FALL);
        }
        //上传文件到服务器
