@@ -7,7 +7,10 @@
     <link rel="stylesheet" href="/css/weui.min.css">
     <link rel="stylesheet" href="/css/jquery-weui.min.css">
     <link rel="stylesheet" type="text/css" href="/css/index.css">
-    <link >
+    <script src="/js/vconsole.min.js"></script>
+    <script>
+    var vConsole = new VConsole();
+  </script>
 </head>
 <body>
 <!-- 头部红包 -->
@@ -139,7 +142,7 @@
     </div>
     <!-- 滚动加载 -->
     <div class="weui-loadmore">
-        <i class="weui-loading"></i>
+        <i class="weui-loading"></i> 
         <span class="weui-loadmore__tips">加载更多</span>
     </div>
 </div>
@@ -159,7 +162,7 @@
 <div class="mask">
     <p><img src="/img/mask.png" class="mask-img"></p>
     <p><img src="/img/close.png" class="close"></p>
-    <button class="btn2" style="opacity: 0">Copy</button>
+    <button class="btn2" style="opacity: 0"></button>
 </div>
 </body>
 <script>
@@ -173,5 +176,6 @@
 <script src="/js/jquery-3.3.1.min.js"></script>
 <script src="/js/jquery-weui.min.js"></script>
 <script src="/js/clipboard.min.js"></script>
+
 <script src="/js/index.js"></script>
 </html>
