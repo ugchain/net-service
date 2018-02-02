@@ -260,7 +260,7 @@ class UgListenController extends Controller
                     $trade_info = Operating::txidByTransactionInfo(Yii::$app->params["ug"]["ug_host"], "eth_getTransactionReceipt", [$res_data["result"]]);
                     if ($trade_info) {
                         //截取blockNumber
-                        $trade_info = Operating::substrHexdec($trade_info["result"]);
+                        $trade_info = Operating::substrHexdec($trade_info["blockNumber"]);
                         $tradeStatus = Trade::SUCCESS;
                     }
                     //插入交易记录表
