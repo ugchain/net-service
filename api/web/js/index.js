@@ -2,6 +2,7 @@
 var clipboard = new Clipboard('.btn');
 clipboard.on('success', function(e) {
     $.toast("复制成功", "text");
+    console.log('s')
 });
 
 clipboard.on('error', function(e) {
@@ -17,6 +18,8 @@ function mask(){
 			window.location.reload()
 		})
 }
+
+console.log(state)
 
 // 未领取
 if(state == 0){
@@ -50,7 +53,7 @@ if(state == 0){
             success: function(data){
                 if(data.code == 0){
                 	mask()
-					$('.received').show().css('opacity','0')
+					// $('.received').show().css('opacity','0')
 					$('#kl-txt').val(data.data.code)
 					$('.btn').click()
                 }

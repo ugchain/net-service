@@ -97,7 +97,7 @@ class WeChatRedPacketController extends Controller
         $wechatAccessTokenUrl = sprintf(self::WECHAT_ACCESS_TOKE_URL, $this->appid, $this->secret, $code);
         $accessTokenData = $this->useGetRequestUrl($wechatAccessTokenUrl);
         if (empty($accessTokenData->openid)) {
-            if ($accessTokenData->errcode == '40163') {
+            if ($accessTokenData->errcode) {
                 return $this->redirect("redirect-url?redpacket_id=$redpacketId");
             }
         }
@@ -146,7 +146,7 @@ class WeChatRedPacketController extends Controller
         $model->grenerateRedpacketCode();
         //红包获得时间
         $model->addtime = time();
-        //过滤emoji和燕尾紫
+        //过滤emoji
         $model->wx_name = $this->filterEmoji($model->wx_name);
 
         if (!$model->save()) {
