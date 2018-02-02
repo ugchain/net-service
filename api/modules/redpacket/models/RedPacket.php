@@ -215,6 +215,6 @@ class RedPacket extends \common\models\RedPacket
             return false;
         }
 
-        return true;
+        return $redPacketInfo;
     }
 }
