@@ -159,6 +159,7 @@
 <div class="mask">
     <p><img src="/img/mask.png" class="mask-img"></p>
     <p><img src="/img/close.png" class="close"></p>
+    <button class="btn2" style="opacity: 0">Copy</button>
 </div>
 </body>
 <script>
