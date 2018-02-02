@@ -2,6 +2,7 @@
 
 namespace api\modules\rose\controllers;
 
+use api\modules\rose\models\RoseTheme;
 use Yii;
 use yii\web\Controller;
 use common\helpers\OutputHelper;
@@ -45,18 +46,16 @@ class RoseController extends  Controller
         //地址
         $Rose->address = Yii::$app->request->post("address");
         //判断参数
-        if(!$Rose->rose_name || !$Rose->amount || !$Rose->address){
+        if(!$Rose->theme_id || !$Rose->rose_name || !$Rose->amount || !$Rose->address){
             outputHelper::ouputErrorcodeJson(\common\helpers\ErrorCodes::PARAM_NOT_EXIST);
         }
-        //实例化文件
-        $Rose->theme_img = UploadedFile::getInstanceByName('theme_img');
-        $Rose->theme_thumb_img = UploadedFile::getInstanceByName('theme_thumb_img');
-        //判断是否有图片上传
-        if(!$Rose->theme_img || !$Rose->theme_thumb_img){
-            outputHelper::ouputErrorcodeJson(\common\helpers\ErrorCodes::UPLOAD_FILE_FALL);
+        //获取主题图片
+        $theme_info = RoseTheme::getInfoById($Rose->theme_id);
+        if(!$theme_info){
+            outputHelper::ouputErrorcodeJson(\common\helpers\ErrorCodes::ROSE_THEME_NOT_EXISTS);
         }
-        //上传文件到服务器
-        $Rose->upload();
+        $Rose->theme_img = $theme_info["img"];
+        $Rose->theme_thumb_img = $theme_info["thumb_img"];
         $Rose->addtime = time();
         $Rose->status = RoseGive::SUCCESS;
         $Rose->token_id = OutputHelper::guid();

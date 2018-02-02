@@ -2,14 +2,12 @@
 
 namespace api\modules\rose\controllers;
 
-use api\modules\redpacket\models\RedPacketTheme;
-use common\helpers\Rsa;
+
 use Yii;
 use yii\web\Controller;
 use common\helpers\OutputHelper;
 use yii\web\UploadedFile;
-use \ParagonIE\EasyRSA\EasyRSA;
-use \ParagonIE\EasyRSA\KeyPair;
+use api\modules\rose\models\RoseTheme;
 
 class ThemeController extends  Controller
 {
@@ -34,19 +32,19 @@ class ThemeController extends  Controller
     public function actionCreateTheme()
     {
         //实例化
-       $model = new RedPacketTheme();
+       $model = new RoseTheme();
        //主题标题
-       $model->title = Yii::$app->request->post("title","1");
+       $model->title = Yii::$app->request->post("title","");
+       $model->content = Yii::$app->request->post("content","");
        //判断参数
-       if(!$model->title){
+       if(!$model->title || !$model->content){
            outputHelper::ouputErrorcodeJson(\common\helpers\ErrorCodes::PARAM_NOT_EXIST);
        }
        //实例化文件
        $model->img = UploadedFile::getInstanceByName('img');
        $model->thumb_img = UploadedFile::getInstanceByName('thumb_img');
-       $model->share_img = UploadedFile::getInstanceByName('share_img');
        //判断是否有图片上传
-       if(!$model->img || !$model->thumb_img || !$model->share_img){
+       if(!$model->img || !$model->thumb_img){
            outputHelper::ouputErrorcodeJson(\common\helpers\ErrorCodes::UPLOAD_FILE_FALL);
        }
        //上传文件到服务器
@@ -67,7 +65,7 @@ class ThemeController extends  Controller
      public function actionThemeList()
      {
         //获取主题列表数据
-         $theme_list = RedPacketTheme::getList();
+         $theme_list = RoseTheme::getList();
          //组装数据
          $data = [
              "list"=>$theme_list,

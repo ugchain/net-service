@@ -8,6 +8,79 @@ doc/api.md
 ### 生产环境host
 - `http://app.ugchain.com`
 
+### 主题创建接口
+**请求URL：** 
+- `/rose/theme/create-theme`
+  
+**请求方式：**
+- POST 
+
+**参数：** 
+
+|参数名|必选|类型|说明|
+|:----    |:---|:----- |-----   |
+|title |是  |string |主题标题 |
+|img |是  |string |主题图片地址 |
+|thumb_img |是  |string |主题缩略图地址 |
+|content |是  |string |内容 |
+
+ **返回示例**
+
+``` 
+{
+    "code": 0,
+    "message": "成功",
+    "data": []
+}
+
+```
+
+----
+
+### 主题创建接口
+**请求URL：** 
+- `/rose/theme/theme-list`
+  
+**请求方式：**
+- POST 
+
+**参数：** 
+
+|参数名|必选|类型|说明|
+|:----    |:---|:----- |-----   |
+
+
+ **返回示例**
+
+``` 
+{
+	"code": 0,
+	"message": "success",
+	"data": {
+		"list": [{
+			"id": "1",
+			"title": "名字",
+			"content":"大四淡定啦",
+			"img": "/upload/test/image2.png",
+			"thumb_img": "/upload/test/image.png",
+			"share_img": "/upload/test/image1.png",
+			"addtime": "5234242"
+		}, {
+			"id": "2",
+			"title": "名字",
+			"content":"大四淡定啦",
+			"img": "/upload/test/image2.png",
+			"thumb_img": "/upload/test/image.png",
+			"share_img": "/upload/test/image1.png",
+			"addtime": "5234242"
+		}],
+		"image_url":"http://t9-cname.ugchain.com"
+	}
+}
+
+```
+
+----
 
 ### 创建玫瑰
 **请求URL：** 
@@ -22,8 +95,6 @@ doc/api.md
 |:----    |:---|:----- |-----   |
 |theme_id |是  |string |  主题id (1-7)|
 |medal_name |是  |string | 勋章名称  |
-|theme_img |是  |string | 主题图片  |
-|theme_thumb_img |是  |string | 主题缩略图片  |
 |theme_name |是  |string | 刻字内容  |
 |material_type |是  |string | 勋章材质（1:钻石2:水晶3:金质4:银质5:铜质）  |
 |amount |是  |string | 价格 |
@@ -36,7 +107,7 @@ doc/api.md
   "code": 0,
   "message": "success",
   "data": {
-    "medal_id": 1  //勋章id
+    "rose_id": 1  //勋章id
   }
 }
 ```
@@ -70,7 +141,7 @@ doc/api.md
                "id": "1",
                "address":"y7y7y7y7y7u8u8u8i9i9io0",
                "icon": "/inamge/aadasd.jpg",
-               "medal_name": "阿瓦隆大狗币",
+               "rose_name": "阿瓦隆大狗币",
                "theme_name": "刻字内容",
                "material_type": "勋章材质",
                "amount":"勋章价格",               
@@ -81,7 +152,7 @@ doc/api.md
                "id": "2",
                "address":"y7y7y7y7y7u8u8u8i9i9io0",
                "icon": "/inamge/aadasd.jpg",
-               "medal_name": "阿瓦隆大狗币2",
+               "rose_name": "阿瓦隆大狗币2",
                "theme_name": "刻字内容",
                "material_type":"勋章材质",
                "amount":"勋章价格",               
@@ -166,14 +237,14 @@ doc/api.md
                 "token_id": "MTUxNjM2NjMxMDU=",
                 "theme_img": "uploads/1516366310696.jpg",
                 "theme_thumb_img": "uploads/1516366310875.jpg",
-                "medal_name": "周康勋章",
+                "rose_name": "周康勋章",
                 "theme_name": "新年快乐",
                 "material_type": "5",
                 "amount": "2000",
                 "address": "0x03afebB4Fa17051a6F2f1306d732161d85E4A6b9",
                 "status": "1",   //0转增中；1成功；2失败
                 "addtime": "1516366310",
-                "medal_id": "2",
+                "rose_id": "2",
                 "from_address": "0x03afebB4Fa17051a6F2f1306d732161d85E4A6b9",
                 "to_address": ""
             }
