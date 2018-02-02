@@ -22,6 +22,7 @@ class RedpacketController extends  Controller
     //红包获取最大最小值
     const MAX = 1.4;
     const MIN = 0.6;
+    public $REPACK_STATUS;
     /**
      * @inheritdoc
      */
@@ -82,8 +83,7 @@ class RedpacketController extends  Controller
             $min = $average_amount * self::MIN;
             $redis_data = self::random_red($data["amount"],$data["quantity"],$max,$min);
         }
-        //定义当前状态
-        $status = "0";
+        $this->REPACK_STATUS = 0;
         //存放redis
         $rewardData = new RewardData();
         $rewardData->set($packet_id,$redis_data);
@@ -101,14 +101,17 @@ class RedpacketController extends  Controller
                 //检测上链成功,更新红包状态为status=2 && ug_trade 交易记录改为交易成功
                 RedPacket::updateStatus($packet_id,"2");
                 Trade::updateStatus($data["hash"],Trade::SUCCESS);
-                $status = "2";
+                $this->REPACK_STATUS = 1;
             }
         }
+        $repack_info = RedPacket::getPacketInfoById($packet_id);
         //组装返回数据
         $return_data = [
-            "share_url"=>"/wechat/",
+            "share_url"=>Yii::$app->params["host"]."/redpacket/we-chat-red-packet/redirect-url?packet_id=".$packet_id,
             "id"=>$packet_id,
-            "status"=>$status,
+            "status"=>$this->REPACK_STATUS,
+            "expire_time"=>$repack_info["expire_time"],
+            "create_succ_time"=>$repack_info["create_succ_time"],
         ];
         outputHelper::ouputErrorcodeJson(\common\helpers\ErrorCodes::SUCCESS,$return_data);
     }
@@ -217,11 +220,10 @@ class RedpacketController extends  Controller
             outputHelper::ouputErrorcodeJson(\common\helpers\ErrorCodes::TRANSACTION_FAIL);
         }
 
+        $trade_info['blockNumber'] = 0;
         //根据txid去块上确认
         $trade_info = Operating::txidByTransactionInfo(Yii::$app->params["ug"]["ug_host"], "eth_getTransactionReceipt", [$res_data["result"]]);
-
         //上链成功,插入内部交易表同时修改红包记录表状态
-        $trade_info['blockNumber'] = 0;
         $recordStatus = RedPacketRecord::REDEMPTION;
         $tradeStatus = Trade::CONFIRMED;
         if ($trade_info) {

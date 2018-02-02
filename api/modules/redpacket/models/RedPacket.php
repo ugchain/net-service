@@ -29,6 +29,7 @@ class RedPacket extends \common\models\RedPacket
             'quantity' => $result->quantity,
             'already_received_quantity' => count($result->redPacketRecords),
             'amount' => $result->amount,
+            'back_amount' => $result->back_amount,
             'already_received_amount' => 'TODO',
             'finish_time' => !empty($result->finish_time) ? date('m-d h:i', $result->finish_time) : '',
             'expire_time' => !empty($result->expire_time) ? date('m-d h:i', $result->expire_time) : '',
@@ -106,7 +107,7 @@ class RedPacket extends \common\models\RedPacket
         $offset = ($page - 1) * $pageSize;
         if ($type == self::I_RECEIVED) {
             $sql = "SELECT `rr`.status, `rr`.exchange_time, `rr`.expire_time, `rr`.rid, `rr`.amount, `rp`.theme_id, `rp`.title, `rp`.id FROM `ug_red_packet_record` as rr LEFT JOIN `ug_red_packet` as rp on rr.rid = rp.id 
-                  where rr.to_address = '" . $address . "' and rr.status = '" . RedPacketRecord::EXCHANGE_SUCC . "' order by id desc limit " . $pageSize . " offset " . $offset;
+                  where rr.to_address = '" . $address . "' and `rr`.status in ('" . RedPacketRecord::EXCHANGE_SUCC . "','". RedPacketRecord::REDEMPTION . "') order by id desc limit " . $pageSize . " offset " . $offset;
         } else {
             $sql = "SELECT * FROM `ug_red_packet` where address = '" . $address . "' order by id desc limit " . $pageSize . " offset " . $offset;
         }
@@ -180,6 +181,7 @@ class RedPacket extends \common\models\RedPacket
                 break;
             case 2:
                 $updateData["create_succ_time"] = time();
+                $updateData["expire_time"] = time() + 24 * 60 * 60;
                 break;
             case 3:
                 $updateData["finish_time"] = time();
