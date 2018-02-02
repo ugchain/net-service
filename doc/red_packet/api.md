@@ -214,6 +214,7 @@
             }
         ]
         "image_url": "http://wallet-pro.dev:8088" //拼接url
+        "share_url": "http://ugwallet.local/redpacket/we-chat-red-packet/redirect-url?redpacket_id=1"//微信分享连接
     }
 }
 
