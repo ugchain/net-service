@@ -59,7 +59,7 @@ class ErrorCodes
         self::MEDAL_GIVE_ADD_FAILED                                 =>'转增记录添加失败',
         self::PHONE_WRONGFOL                                        =>'手机号不合法',
         self::ADVERTISE_EXIST                                       =>'广告已申请',
-        self::RED_PACKET_REDEMPTION                                 =>'红包兑换中',
+        self::RED_PACKET_REDEMPTION                                 =>'兑换码无效',
         self::TRANSACTION_FAIL                                      =>'交易失败',
         self::RED_PACKET_NOT_EXIST                                  =>'红包不存在',
         self::RED_PACKET_EXPIRED                                    =>'红包已过期',

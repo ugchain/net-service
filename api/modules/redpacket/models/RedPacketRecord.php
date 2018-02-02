@@ -51,10 +51,11 @@ class RedPacketRecord extends \common\models\RedPacketRecord
     public static function checkCodeAndAddress($address, $code)
     {
         //查询红包记录
-        $recordInfo = RedPacketRecord::find()->where(['code' => $code, 'to_address' => $address])->one()->attributes;
+        $recordInfo = RedPacketRecord::find()->where(['code' => $code, 'to_address' => $address])->one();
         if (!$recordInfo) {
             return false;
         }
+        $recordInfo = $recordInfo->attributes;
         //查询是否为领取状态
         if ($recordInfo['status'] == self::RECEIVED) {
             return $recordInfo;

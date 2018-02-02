@@ -206,10 +206,11 @@ class RedPacket extends \common\models\RedPacket
     public static function checkRedPacketExistAndExpired($packet_id)
     {
         //查询红包是否存在
-        $redPacketInfo = RedPacket::find()->where(['id' => $packet_id])->one()->attributes;
+        $redPacketInfo = RedPacket::find()->where(['id' => $packet_id])->one();
         if (!$redPacketInfo) {
             return false;
         }
+        $redPacketInfo = $redPacketInfo->attributes;
         //红包是否过期
         if ($redPacketInfo['status'] == RedPacket::REDPACKET_EXPIRED) {
             return false;
