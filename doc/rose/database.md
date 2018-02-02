@@ -6,7 +6,7 @@
     CREATE TABLE `ug_rose` (
       `id` int(11) unsigned NOT NULL AUTO_INCREMENT COMMENT '自增ID',
       `theme_id` int(11) NOT NULL DEFAULT '1' COMMENT '主题ID,跟app端定义',
-      `token_id` varchar(256) NOT NULL DEFAULT '' COMMENT '唯一ID',
+      `token_id` varchar(255) NOT NULL DEFAULT '' COMMENT '唯一ID',
       `theme_img` varchar(255) NOT NULL DEFAULT '' COMMENT '主题图片',
       `theme_thumb_img` varchar(255) NOT NULL DEFAULT '' COMMENT '主题缩略图片',
       `rose_name` varchar(50) NOT NULL COMMENT '玫瑰名称',
