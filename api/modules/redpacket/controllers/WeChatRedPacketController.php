@@ -114,7 +114,7 @@ class WeChatRedPacketController extends Controller
         //渲染页面
         return $this->render('share', [
             'redpacketInfo' => $redpacketInfo,
-            'state' => $recordInfo['state'],
+            'state' => !empty($recordInfo['state']) ? $recordInfo['state'] : 0,
             'record_code' => $recordInfo['code'],
             'record_amount' => $recordInfo['amount'],
             'openid' => $userInfoData->openid,
@@ -133,7 +133,7 @@ class WeChatRedPacketController extends Controller
         $model->rid = Yii::$app->request->post('rid', '');
         $model->wx_name = Yii::$app->request->post('nickname', '');
         $model->wx_avatar = Yii::$app->request->post('headimgurl', '');
-        $model->expire_time = Yii::$app->request->post( 'expire_time', '');
+        $model->expire_time = Yii::$app->request->post( 'expire_time', '0');
 
         //验证参数
         if(!($model->openid && $model->rid && $model->wx_name && $model->wx_avatar)){
@@ -153,9 +153,6 @@ class WeChatRedPacketController extends Controller
             outputHelper::ouputErrorcodeJson(\common\helpers\ErrorCodes::RED_PACKET_GRAD_FAIL);
         }
 
-        $data = [
-            'code' => $model->code
-        ];
         outputHelper::ouputErrorcodeJson(\common\helpers\ErrorCodes::SUCCESS, ['code' => $model->code]);
     }
 

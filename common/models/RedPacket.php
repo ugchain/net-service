@@ -51,7 +51,7 @@ class RedPacket extends ActiveRecord
         return [
             [['id',"theme_id", 'status',"addtime","fail_time","create_succ_time","expire_time"], 'integer'],
             [["title","address","amount",'addtime'], 'required'],
-            [['title','amount',"quantity","txid","theme_img","theme_thumb_img","theme_share_img","back_amount"], 'string'],
+            [['title',"txid"], 'string'],
         ];
     }
 

@@ -16,6 +16,7 @@ function mask(){
 		.find('.close')
 		.on('click', function() {
 			$('.mask').hide()
+			window.location.reload()
 		})
 }
 
@@ -45,7 +46,8 @@ if(state == 0){
                 rid: rid,
                 openid: openid,
                 nickname: nickname,
-                headimgurl: headimgurl
+                headimgurl: headimgurl,
+                expire_time: expire_time
             },
             success: function(data){
                 if(data.code == 0){
