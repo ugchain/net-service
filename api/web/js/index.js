@@ -5,11 +5,9 @@ clipboard.on('success', function(e) {
 });
 
 clipboard.on('error', function(e) {
-    $.toast("失败", "text");
+    $.toast("复制失败", "text");
 });
 
-// 红包状态
-console.log(state)
 // mask
 function mask(){
 	$('.mask').show()
@@ -99,8 +97,18 @@ if(state == 3){
 		.show()
 		.text('红包已结束')
 }
-
-
+// 已结束
+if(state == 4){
+	$('.finished').show()
+	$('.packet-pic-open').hide()
+		.siblings('.get-ugc').hide()
+		.siblings('.packet-pic').show()
+	$('.state-info').show()
+	$('.state-info').find('.state-tips')
+		.show()
+		.text('红包已领光')
+		.siblings('').hide()
+}
 
 
 // 滚动加载
