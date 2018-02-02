@@ -78,8 +78,8 @@ CREATE TABLE `ug_red_packet_record` (
   `to_address` varchar(42) DEFAULT '' COMMENT '领取账户',
   `status` tinyint(1) NOT NULL DEFAULT '1' COMMENT '领取状态；1已领取；2兑换中；3兑换失败 4兑换成功 5已过期',
   `addtime` int(11) NOT NULL COMMENT '领取时间',
-  `exchange_time` int(11) NOT NULL COMMENT '兑换时间',
-  `expire_time` int(11) NOT NULL COMMENT '过期时间',
+  `exchange_time` int(11) NOT NULL DEFAULT '0' COMMENT '兑换时间',
+  `expire_time` int(11) NOT NULL DEFAULT '0' COMMENT '过期时间',
   PRIMARY KEY (`id`)
  ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT "红包记录表"
 
@@ -98,4 +98,3 @@ alter table ug_trade add `type` tinyint(1) DEFAULT '0' COMMENT '记录类型；0
 ```angular2html
 alter table ug_red_packet add `already_received_quantity` int(11) DEFAULT '0' COMMENT '红包以领取次数'
 ```
-

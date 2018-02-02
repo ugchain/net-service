@@ -23,6 +23,9 @@ return [
         'redpacket' => [
             'class' => 'api\modules\redpacket\Module',
         ],
+        'rose' => [
+            'class' => 'api\modules\rose\Module',
+        ],
     ],
     //'defaultRoute'=>'user/user/test',
     'components' => [
