@@ -39,6 +39,10 @@ class RedpacketController extends  Controller
      */
     public function actionCreatePacket()
     {
+        $redis = Yii::$app->redis;
+        $rewardData = new RewardData();
+        $amount = $rewardData->get("1");
+        echo $amount;
         //接收参数&&验证参数
         $data = self::getParams();
         //创建红包

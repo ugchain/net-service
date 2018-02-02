@@ -50,12 +50,17 @@ class RewardData
             return false;
         }
         $data = $this->redis->get($id);
+        var_dump($data);die;
         if(!$data){
             return false;
         }
         $data = json_decode($data,true);
         //获取第一个元素值
         //todo 这里暂时没有处理随机获取数据
+        var_dump($data);die;
+        if(!$data){
+            return false;
+        }
         $amount = $data[0];
         //删除元素key
         unset($data[0]);
