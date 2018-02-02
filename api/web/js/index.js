@@ -2,7 +2,6 @@
 var clipboard = new Clipboard('.btn');
 clipboard.on('success', function(e) {
     $.toast("复制成功", "text");
-    console.log('sf')
 });
 
 clipboard.on('error', function(e) {
@@ -49,9 +48,15 @@ if(state == 0){
                 headimgurl: headimgurl
             },
             success: function(data){
-                alert(data)
+                if(data.code == 0){
+                	mask()
+					$('.received').show().css('opacity','0')
+					$('#kl-txt').val(data.data.code)
+					$('.btn').click()
+                }
             },
             error: function() {
+            	$.toast("您的网络有问题", "text");
             }
         })
 	})
