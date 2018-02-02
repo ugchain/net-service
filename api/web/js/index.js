@@ -80,8 +80,21 @@ if(state == 2){
 	$('.exchanged').show()
 }
 
-// 已结束
+// 已领光
 if(state == 3){
+	$('.finished').show()
+	$('.packet-pic-open').hide()
+		.siblings('.get-ugc').hide()
+		.siblings('.packet-pic').show()
+	$('.state-info').show()
+	$('.state-info').find('.state-tips')
+		.show()
+		.text('红包已领光')
+		.siblings('').hide()
+}
+
+// 已结束
+if(state == 4){
 	$('.finished').show()
 	$('.packet-pic-open').hide()
 		.siblings('.get-ugc').hide()
@@ -95,19 +108,6 @@ if(state == 3){
 		.show()
 		.text('红包已结束')
 }
-// 已结束
-if(state == 4){
-	$('.finished').show()
-	$('.packet-pic-open').hide()
-		.siblings('.get-ugc').hide()
-		.siblings('.packet-pic').show()
-	$('.state-info').show()
-	$('.state-info').find('.state-tips')
-		.show()
-		.text('红包已领光')
-		.siblings('').hide()
-}
-
 
 // 滚动加载
 var loading = false;  
