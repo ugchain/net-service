@@ -134,7 +134,7 @@ class UgListenController extends Controller
              * 根据txid，更新status、time
              */
             if (!Operating::updateDataBytxid($info['type'], $info["app_txid"])) {
-                echo "更新数据库失败2".PHP_EOL;
+                echo "更新数据库失败".PHP_EOL;
                 continue;
             }
         }
@@ -199,7 +199,7 @@ class UgListenController extends Controller
     {
         echo "红包监听过期开始".time().PHP_EOL;
 
-        //获取数据库中创建成功的数据
+        //获取数据库中红包创建成功的数据
         $unsucc_info = RedPacket::getRedPacketList(RedPacket::CREATE_REDPACKET_SUCC);
         if (!$unsucc_info) {
             //OutputHelper::writeLog(dirname(__DIR__) . "/locklog/ugTradeListen.log",json_encode(["status" => Operating::LOG_UNLOCK_STATUS]));
@@ -235,17 +235,6 @@ class UgListenController extends Controller
 
                     //组装签名所需数据
                     $send_sign_data = Operating::getNonceAssembleData($result, Yii::$app->params["ug"]["gas_price"], Yii::$app->params["ug"]["ug_host"], "eth_getTransactionCount", [Yii::$app->params["ug"]["red_packet_address"], "pending"]);
-
-                    //组装创建红包的签名数据
-                    $sign_data = [
-                        "packet_id" => $result['id'],
-                        "address" => $result['address'],
-                        "raw_transaction" => $send_sign_data,
-                        "type" => "1",
-                    ];
-
-                    //保存创建红包的签名
-                    PacketOfflineSign::saveOfflineSign($sign_data);
 
                     //根据组装数据获取签名且广播交易
                     $res_data = Operating::getSignatureAndBroadcast(Yii::$app->params["ug"]["ug_sign_url"], $send_sign_data, Yii::$app->params["ug"]["ug_host"], "eth_sendRawTransaction");
