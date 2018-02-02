@@ -25,7 +25,7 @@
 					恭喜您抢到
 				</span>
             <span class="state-getugc">
-					<?= $redpacketInfo['amount'];?>
+					<?= $record_amount;?>
 				</span>
             <span class="ugc-unit">
 					UGC
@@ -56,7 +56,7 @@
         <img src="/img/kl-bg.png" class="kl-bg">
         <img src="/img/kl-title.png" class="kl-title-bg">
         <div class="kl">
-            <input id="kl-txt" type="text" value="sfas444" readonly="true">
+            <input id="kl-txt" type="text" value="<?=$record_code; ?>" readonly="true">
             <button class="btn" data-clipboard-action="copy" data-clipboard-target="#kl-txt">点击复制</button>
         </div>
         <div class="kl-tips">
@@ -162,11 +162,12 @@
 </div>
 </body>
 <script>
-    var state = <?= $redpacketInfo['status'] ?>;
+    var state = <?= $state ?>;
     var rid = "<?=$redpacketInfo['id'] ?>";
     var openid = "<?=$openid ?>";
     var nickname = "<?=$nickname ?>";
     var headimgurl = "<?=$headimgurl ?>";
+    var expire_time = "<?=$redpacketInfo['expire_time']?>"
 </script>
 <script src="/js/jquery-3.3.1.min.js"></script>
 <script src="/js/jquery-weui.min.js"></script>

@@ -75,7 +75,9 @@ class WeChatRedPacketController extends Controller
      */
     public function actionRedirectUrl()
     {
-        $wechatRedirectUrl = sprintf(self::WECHAT_REDIRECT_URL, $this->appid, $this->redirect_uri);
+        $redpacketId = Yii::$app->request->get("redpacket_id", "");
+        $redirect_uri = urlencode("$this->redirect_uri?redpacket_id=$redpacketId");
+        $wechatRedirectUrl = sprintf(self::WECHAT_REDIRECT_URL, $this->appid, $redirect_uri);
         header("Location: $wechatRedirectUrl");
     }
 
@@ -86,21 +88,18 @@ class WeChatRedPacketController extends Controller
     {
         //微信授权认证返回code码
         $code = Yii::$app->request->get("code", "");
-        $redpacketId = Yii::$app->request->get("redpacket_id", "1");
-
-        if (empty($code)) {
-            //TODO 授权失败！未获得code码
-        }
-
-        if (empty($redpacketId)) {
-            //TODO 未获取到redpacketId
+        $redpacketId = Yii::$app->request->get("redpacket_id", "");
+        if (!($code && $redpacketId)) {
+            outputHelper::ouputErrorcodeJson(\common\helpers\ErrorCodes::PARAM_NOT_EXIST);
         }
 
         //获取当前微信用户的access token和openid
         $wechatAccessTokenUrl = sprintf(self::WECHAT_ACCESS_TOKE_URL, $this->appid, $this->secret, $code);
         $accessTokenData = $this->useGetRequestUrl($wechatAccessTokenUrl);
         if (empty($accessTokenData->openid)) {
-            //TODO 获取openid失败
+            if ($accessTokenData->errcode == '40163') {
+                return $this->redirect("redirect-url?redpacket_id=$redpacketId");
+            }
         }
 
         //获取当前微信用户的头像、昵称
@@ -109,14 +108,15 @@ class WeChatRedPacketController extends Controller
 
         //获取当前红包的详细信息
         $redpacketInfo = RedPacket::getRedPacketInfoWithRecordList($redpacketId);
-
-        //获取当前用户的红包状态
-        $state = RedPacketRecord::getRedPacketRecordState($redpacketInfo['id'], $userInfoData->openid);
+        //获取当前用户的红包状态、红包口令
+        $recordInfo = RedPacketRecord::getRedPacketRecordInfo($redpacketInfo['id'], $userInfoData->openid);
 
         //渲染页面
         return $this->render('share', [
             'redpacketInfo' => $redpacketInfo,
-            'state' => $state,
+            'state' => $recordInfo['state'],
+            'record_code' => $recordInfo['code'],
+            'record_amount' => $recordInfo['amount'],
             'openid' => $userInfoData->openid,
             'nickname' => $userInfoData->nickname,
             'headimgurl' => $userInfoData->headimgurl
@@ -129,11 +129,11 @@ class WeChatRedPacketController extends Controller
     public function actionGradARedpacket()
     {
         $model = new RedPacketRecord();
-        $model->openid = Yii::$app->request->post('id', '1');
-        $model->rid = Yii::$app->request->post('rid', '1');
-        $model->wx_name = Yii::$app->request->post('nickname', 'aa');
-        $model->wx_avatar = Yii::$app->request->post('headimgurl', 'ccc');
-        $model->expire_time = Yii::$app->request->post( 'expire_time', '123221123');
+        $model->openid = Yii::$app->request->post('openid', '');
+        $model->rid = Yii::$app->request->post('rid', '');
+        $model->wx_name = Yii::$app->request->post('nickname', '');
+        $model->wx_avatar = Yii::$app->request->post('headimgurl', '');
+        $model->expire_time = Yii::$app->request->post( 'expire_time', '');
 
         //验证参数
         if(!($model->openid && $model->rid && $model->wx_name && $model->wx_avatar)){
@@ -144,12 +144,19 @@ class WeChatRedPacketController extends Controller
         $model->setRedpacketAmountWithAddQuantity();
         //生成红包口令
         $model->grenerateRedpacketCode();
+        //红包获得时间
+        $model->addtime = time();
+        //过滤emoji和燕尾紫
+        $model->wx_name = $this->filterEmoji($model->wx_name);
 
         if (!$model->save()) {
             outputHelper::ouputErrorcodeJson(\common\helpers\ErrorCodes::RED_PACKET_GRAD_FAIL);
         }
 
-        outputHelper::ouputErrorcodeJson(\common\helpers\ErrorCodes::SUCCESS,['code' => $model->code]);
+        $data = [
+            'code' => $model->code
+        ];
+        outputHelper::ouputErrorcodeJson(\common\helpers\ErrorCodes::SUCCESS, ['code' => $model->code]);
     }
 
     /**
@@ -223,10 +230,28 @@ class WeChatRedPacketController extends Controller
     {
         if (empty(self::$_redirect_uri)) {
             if (($redirect_uri = Yii::$app->params['wecat_redpacket_config']['redirect_uri']) == false) throw new InvalidParamException("wechat redirect_uri does not exist.");
-            self::$_redirect_uri = urlencode($redirect_uri);
+            self::$_redirect_uri = $redirect_uri;
         }
 
         return self::$_redirect_uri;
     }
+
+    /**
+     * 过滤emoji和颜文字
+     *
+     * @param $str
+     * @return mixed
+     */
+    private function filterEmoji($str)
+    {
+        $str = preg_replace_callback(
+            '/./u',
+            function (array $match) {
+                return strlen($match[0]) >= 4 ? '' : $match[0];
+            },
+            $str);
+        return $str;
+    }
+
 }
 /* end of file for WeChatRedPacketController */
