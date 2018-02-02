@@ -66,7 +66,7 @@ class MedalController extends  Controller
         $model->addtime = time();
         $model->update_time = time();
         $model->status = MedalGive::SUCCESS;
-        $model->token_id = base64_encode(time().rand(0,9));
+        $model->token_id = OutputHelper::guid();
         //保存勋章表
         $status = $model->save();
         if(!$status){

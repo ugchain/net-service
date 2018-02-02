@@ -35,3 +35,17 @@
       KEY `rose_id` (`rose_id`),
       KEY `history_give` (`from_address`,`to_address`)
     ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='玫瑰赠送记录表';
+    
+    
+### 玫瑰主题表
+    DROP TABLE IF EXISTS `ug_rose_theme`;
+    CREATE TABLE `ug_rose_theme` (
+      `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '自增ID',
+      `img` varchar(255) NOT NULL COMMENT '主题图片地址',
+      `title` varchar(255) NOT NULL COMMENT '主题标题',
+      `content` varchar(255) NOT NULL COMMENT '内容',
+      `thumb_img` varchar(255) NOT NULL COMMENT '主题缩略图地址',
+      `addtime` int(11) NOT NULL COMMENT '创建时间',
+      PRIMARY KEY (`id`)
+    ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COMMENT='玫瑰主题表';
+    

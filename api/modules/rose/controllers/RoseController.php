@@ -1,6 +1,6 @@
 <?php
 
-namespace api\modules\medal\controllers;
+namespace api\modules\rose\controllers;
 
 use Yii;
 use yii\web\Controller;
@@ -9,7 +9,7 @@ use yii\web\UploadedFile;
 use api\modules\rose\models\Rose;
 use api\modules\rose\models\RoseGive;
 
-class MedalController extends  Controller
+class RoseController extends  Controller
 {
 
     public $enableCsrfValidation = false;
@@ -31,42 +31,42 @@ class MedalController extends  Controller
      */
     public function actionCreateRose()
     {
-        $model = new Rose();
+        $Rose = new Rose();
         //主题ID
-        $model->theme_id = Yii::$app->request->post("theme_id","1");
+        $Rose->theme_id = Yii::$app->request->post("theme_id","1");
         //勋章名称
-        $model->rose_name	 = Yii::$app->request->post("rose_name");
+        $Rose->rose_name	 = Yii::$app->request->post("rose_name");
         //刻字内容
-        $model->theme_name = Yii::$app->request->post("theme_name","");
+        $Rose->theme_name = Yii::$app->request->post("theme_name","");
         //勋章材质
-        $model->material_type = Yii::$app->request->post("material_type","5");
+        $Rose->material_type = Yii::$app->request->post("material_type","5");
         //价格
-        $model->amount = Yii::$app->request->post("amount");
+        $Rose->amount = Yii::$app->request->post("amount");
         //地址
-        $model->address = Yii::$app->request->post("address");
+        $Rose->address = Yii::$app->request->post("address");
         //判断参数
-        if(!$model->rose_name || !$model->amount || !$model->address){
+        if(!$Rose->rose_name || !$Rose->amount || !$Rose->address){
             outputHelper::ouputErrorcodeJson(\common\helpers\ErrorCodes::PARAM_NOT_EXIST);
         }
         //实例化文件
-        $model->theme_img = UploadedFile::getInstanceByName('theme_img');
-        $model->theme_thumb_img = UploadedFile::getInstanceByName('theme_thumb_img');
+        $Rose->theme_img = UploadedFile::getInstanceByName('theme_img');
+        $Rose->theme_thumb_img = UploadedFile::getInstanceByName('theme_thumb_img');
         //判断是否有图片上传
-        if(!$model->theme_img || !$model->theme_thumb_img){
+        if(!$Rose->theme_img || !$Rose->theme_thumb_img){
             outputHelper::ouputErrorcodeJson(\common\helpers\ErrorCodes::UPLOAD_FILE_FALL);
         }
         //上传文件到服务器
-        $model->upload();
-        $model->addtime = time();
-        $model->status = RoseGive::SUCCESS;
-        $model->token_id = base64_encode(time().rand(0,9));
+        $Rose->upload();
+        $Rose->addtime = time();
+        $Rose->status = RoseGive::SUCCESS;
+        $Rose->token_id = OutputHelper::guid();
         //保存玫瑰表
-        $status = $model->save();
+        $status = $Rose->save();
         if(!$status){
             outputHelper::ouputErrorcodeJson(\common\helpers\ErrorCodes::FALL);
         }
         //初始化玫瑰转赠表
-        $give_status = RoseGive::insertData($model->address,$model->id,$model->address,RoseGive::SUCCESS);
+        $give_status = RoseGive::insertData($Rose->address,$Rose->id,$Rose->address,RoseGive::SUCCESS);
         if(!$give_status){
             outputHelper::ouputErrorcodeJson(\common\helpers\ErrorCodes::FALL);
         }
@@ -74,8 +74,9 @@ class MedalController extends  Controller
     }
 
     /**
-     * 勋章-我的资产
+     * 玫瑰-我的资产
      * @param address 地址
+     * @return json
      */
     public function actionGetList()
     {
@@ -94,25 +95,25 @@ class MedalController extends  Controller
     }
 
     /**
-     * 勋章详情
-     * @param medal_id 勋章ID
+     * 玫瑰详情
+     * @param rose_id 玫瑰ID
      */
-    public function actionMedalDetail()
+    public function actionRoseDetail()
     {
-        //勋章ID
-        $medal_id = Yii::$app->request->post("medal_id");
+        //玫瑰ID
+        $rose_id = Yii::$app->request->post("rose_id");
         //page
         $page = Yii::$app->request->post("page", Yii::$app->params['pagination']['page']);
         //pageSize
         $pageSize = Yii::$app->request->post("pageSize", Yii::$app->params['pagination']['pageSize']);
         //判断是否为空 && 是否是数字
-        if(!$medal_id || !is_numeric($medal_id)){
+        if(!$rose_id || !is_numeric($rose_id)){
             outputHelper::ouputErrorcodeJson(\common\helpers\ErrorCodes::PARAM_NOT_EXIST);
         }
 //        //查询玫瑰基本数据
 //        $medal_base_info = Medal::getInfoById($medal_id);
 //        //查询玫瑰转增记录
-        $medal_trade_info = RoseGive::getMedalGiveInfoByMedalId($medal_id, $page, $pageSize);
+        $medal_trade_info = RoseGive::getMedalGiveInfoByRoseId($rose_id, $page, $pageSize);
 //        //初始化创始人地址
 //        $medal_base_info["founder"] = $medal_base_info["address"];
         $give_data = [];
@@ -130,37 +131,37 @@ class MedalController extends  Controller
     }
 
     /**
-     * 勋章转赠
+     * 玫瑰转赠
      */
-    public function actionMedalGive()
+    public function actionRoseGive()
     {
         //持有者
         $address = Yii::$app->request->post("owner_address", "");
-        //勋章id
-        $medal_id = Yii::$app->request->post("medal_id", "");
-        //接收勋章者
+        //玫瑰id
+        $rose_id = Yii::$app->request->post("rose_id", "");
+        //接收玫瑰者
         $recipient_address = Yii::$app->request->post("recipient_address", "");
 
-        //校验持有者是否真实持有勋章
-        if (empty(Rose::getMedalOwner($address, $medal_id))) {
+        //校验持有者是否真实持有玫瑰
+        if (empty(Rose::getMedalOwner($address, $rose_id))) {
             outputHelper::ouputErrorcodeJson(\common\helpers\ErrorCodes::MEDAL_INFO_ERROR);
         }
 
-        //更新勋章持有者
-        if (!Rose::updateMedalOwner($address, $medal_id, $recipient_address)) {
+        //更新玫瑰持有者
+        if (!Rose::updateMedalOwner($address, $rose_id, $recipient_address)) {
             outputHelper::ouputErrorcodeJson(\common\helpers\ErrorCodes::MEDAL_UPDATE_ERROR);
         }
         //赠送记录
-        if (RoseGive::insertData($address, $medal_id, $recipient_address, RoseGive::SUCCESS)) {
+        if (RoseGive::insertData($address, $rose_id, $recipient_address, RoseGive::SUCCESS)) {
             outputHelper::ouputErrorcodeJson(\common\helpers\ErrorCodes::SUCCESS);
         }
         outputHelper::ouputErrorcodeJson(\common\helpers\ErrorCodes::MEDAL_GIVE_ADD_FAILED);
     }
 
     /**
-     * 勋章交易历史
+     * 玫瑰交易历史
      */
-    public function actionMedalHistory()
+    public function actionRoseHistory()
     {
         //地址
         $address = Yii::$app->request->post("address", "");
