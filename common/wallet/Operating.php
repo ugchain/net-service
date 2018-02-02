@@ -95,6 +95,7 @@ class Operating
         //组装数据
         $send_sign_data = [
             "txId" => $data["app_txid"],
+            "to" => $data["address"],
             "address" => $data["address"],
             "amount" => $data["amount"],
             "gasPrice" => $gas_price,
