@@ -46,4 +46,21 @@ class OutputHelper
         return true;
     }
 
+    /**
+     * 科学计数法数字转为字符串
+     */
+    public static function NumToString($num){
+        if(false !== stripos($num, "e")){
+            $num = number_format($num,10,'.','');
+        }
+
+        if(false !== stripos($num, ".")){
+            while (preg_match("/0$/i", $num)){
+                $num = rtrim($num,'0');
+            };
+        }
+        $num = rtrim($num,'.');
+        return (string)$num;
+    }
+
 }
