@@ -95,6 +95,7 @@ class Operating
         //组装数据
         $send_sign_data = [
             "txId" => $data["app_txid"],
+            "to" => $data["address"],
             "address" => $data["address"],
             "amount" => $data["amount"],
             "gasPrice" => $gas_price,
@@ -118,7 +119,7 @@ class Operating
     {
         //获取离线签名
         $sign_res = CurlRequest::curl($sign_host, $send_sign_data);
-        //var_dump($sign_res);die();
+
         if(!$sign_res){
             return false;
         }
@@ -126,7 +127,7 @@ class Operating
         if(isset($sign_res_data["status"])){
             return false;
         }
-        //返回txid
+
         //链上广播交易
         $broadcasting = CurlRequest::ChainCurl($host, $function, [$sign_res_data['data']["raw_transaction"]]);
         if(!$broadcasting){

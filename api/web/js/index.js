@@ -2,22 +2,24 @@
 var clipboard = new Clipboard('.btn');
 clipboard.on('success', function(e) {
     $.toast("复制成功", "text");
+    console.log('s')
 });
 
 clipboard.on('error', function(e) {
-    $.toast("失败", "text");
+    $.toast("复制失败", "text");
 });
 
-// 红包状态
-console.log(state)
 // mask
 function mask(){
 	$('.mask').show()
 		.find('.close')
 		.on('click', function() {
 			$('.mask').hide()
+			window.location.reload()
 		})
 }
+
+console.log(state)
 
 // 未领取
 if(state == 0){
@@ -45,7 +47,8 @@ if(state == 0){
                 rid: rid,
                 openid: openid,
                 nickname: nickname,
-                headimgurl: headimgurl
+                headimgurl: headimgurl,
+                expire_time: expire_time
             },
             success: function(data){
                 if(data.code == 0){
@@ -65,7 +68,7 @@ if(state == 0){
 
 // 已领取
 if(state == 1){
-	$('.received').show()
+	$('.received').show().css('opacity','1')
 	$('.packet-pic-open').hide()
 		.siblings('.get-ugc').hide()
 		.siblings('.packet-pic').show()
@@ -82,8 +85,21 @@ if(state == 2){
 	$('.exchanged').show()
 }
 
-// 已结束
+// 已领光
 if(state == 3){
+	$('.finished').show()
+	$('.packet-pic-open').hide()
+		.siblings('.get-ugc').hide()
+		.siblings('.packet-pic').show()
+	$('.state-info').show()
+	$('.state-info').find('.state-tips')
+		.show()
+		.text('红包已领光')
+		.siblings('').hide()
+}
+
+// 已结束
+if(state == 4){
 	$('.finished').show()
 	$('.packet-pic-open').hide()
 		.siblings('.get-ugc').hide()
@@ -97,9 +113,6 @@ if(state == 3){
 		.show()
 		.text('红包已结束')
 }
-
-
-
 
 // 滚动加载
 var loading = false;  

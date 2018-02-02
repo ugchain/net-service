@@ -51,15 +51,31 @@ class OutputHelper
      */
     public static function guid()
     {
-        $charid = strtoupper(md5(uniqid(mt_rand(), true).time()));
+        $charid = strtoupper(md5(uniqid(mt_rand(), true) . time()));
         $uuid =
-            substr($charid, 0, 12).
-            substr($charid, 8, 12).
-            substr($charid,12, 12).
-            substr($charid,16, 12).
-            substr($charid,20,12).
-            substr($charid,24,4);
+            substr($charid, 0, 12) .
+            substr($charid, 8, 12) .
+            substr($charid, 12, 12) .
+            substr($charid, 16, 12) .
+            substr($charid, 20, 12) .
+            substr($charid, 24, 4);
         return $uuid;
+    }
+    /**
+     * 科学计数法数字转为字符串
+     */
+    public static function NumToString($num){
+        if(false !== stripos($num, "e")){
+            $num = number_format($num,10,'.','');
+        }
+
+        if(false !== stripos($num, ".")){
+            while (preg_match("/0$/i", $num)){
+                $num = rtrim($num,'0');
+            };
+        }
+        $num = rtrim($num,'.');
+        return (string)$num;
     }
 
 }

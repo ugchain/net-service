@@ -12,6 +12,7 @@ use function GuzzleHttp\Psr7\str;
 use Yii;
 use yii\console\Controller;
 use common\helpers\CurlRequest;
+use api\modules\redpacket\models\PacketOfflineSign;
 /**
  * Class UgLisenController By ug-eth监听确认服务
  * @package console\controller
@@ -124,7 +125,7 @@ class UgListenController extends Controller
 
             //更新数据库
             if(!Trade::updateBlockAndStatusBytxid($info["app_txid"], $trade_info["blockNumber"], Trade::SUCCESS)){
-                echo "更新数据库失败".PHP_EOL;
+                echo "更新数据库交易表失败".PHP_EOL;
                 continue;
             }
 
@@ -133,7 +134,7 @@ class UgListenController extends Controller
              * 根据txid，更新status、time
              */
             if (!Operating::updateDataBytxid($info['type'], $info["app_txid"])) {
-                echo "更新数据库失败2".PHP_EOL;
+                echo "更新数据库失败".PHP_EOL;
                 continue;
             }
         }
@@ -198,7 +199,7 @@ class UgListenController extends Controller
     {
         echo "红包监听过期开始".time().PHP_EOL;
 
-        //获取数据库中创建成功的数据
+        //获取数据库中红包创建成功的数据
         $unsucc_info = RedPacket::getRedPacketList(RedPacket::CREATE_REDPACKET_SUCC);
         if (!$unsucc_info) {
             //OutputHelper::writeLog(dirname(__DIR__) . "/locklog/ugTradeListen.log",json_encode(["status" => Operating::LOG_UNLOCK_STATUS]));
@@ -208,52 +209,54 @@ class UgListenController extends Controller
         foreach ($unsucc_info as $info) {
             //create_succ_time + 24小时 < time() 过期
             if (date('Y-m-d H:i:s', $info['create_succ_time'] + 86400) < time()) {
-                //根据红包id，更新红包表状态为过期
-//                if (!RedPacket::updateAll(["status" => RedPacket::REDPACKET_EXPIRED], ["id" => $info['id']])) {
-//                    echo "更新数据库红包表失败".PHP_EOL;
-//                    continue;
-//                }
-
                 //检索该红包是否存在记录
                 $list = RedPacketRecord::find()->where(['rid' => $info['id']])->andWhere(['!=', 'status', RedPacketRecord::EXCHANGE_SUCC])->asArray()->all();
                 if (count($list) > 0) {
-                    echo "222";die;
                     //根据红包id，更新红包记录表状态为已过期
-//                    if (!RedPacketRecord::updateAll(["status" => RedPacketRecord::EXPIRED], "rid = " . $info['id'] . " and status != " . RedPacketRecord::EXCHANGE_SUCC)) {
-//                        echo "更新数据库记录表失败".PHP_EOL;
-//                        continue;
-//                    }
+                    if (!RedPacketRecord::updateAll(["status" => RedPacketRecord::EXPIRED], "rid = " . $info['id'] . " and status != " . RedPacketRecord::EXCHANGE_SUCC)) {
+                        echo "更新数据库红包记录表失败".PHP_EOL;
+                        continue;
+                    }
 
                     //退还过期红包金额给发红包账户
+                    $amount = 0;
                     foreach ($list as $k => $v) {
-
+                        $amount += $v['amount']; //退还总金额
+                        $v['address'] = $v['from_address'];
+                        $v['app_txid'] = ''; //空的
+                        $result[] = $v;
                     }
-                        //获取nince且组装签名数据
+
+                    //根据红包id，更新红包表状态为过期，修改退还金额
+                    if (!RedPacket::updateAll(["back_amount" => $amount, "status" => RedPacket::REDPACKET_EXPIRED], ['id' => $info['id']])) {
+                        echo "更新数据库红包表失败".PHP_EOL;
+                        continue;
+                    }
+
+                    //组装签名所需数据
+                    $send_sign_data = Operating::getNonceAssembleData($result, Yii::$app->params["ug"]["gas_price"], Yii::$app->params["ug"]["ug_host"], "eth_getTransactionCount", [Yii::$app->params["ug"]["red_packet_address"], "pending"]);
+
+                    //根据组装数据获取签名且广播交易
+                    $res_data = Operating::getSignatureAndBroadcast(Yii::$app->params["ug"]["ug_sign_red_packet"], $send_sign_data, Yii::$app->params["ug"]["ug_host"], "eth_sendRawTransaction");
+                    if (isset($res_data['error'])) {
+                        echo "广播交易失败".PHP_EOL;
+                        continue;
+                    }
+
+                    //根据txid去块上确认
+                    $trade_info['blockNumber'] = 0;
+                    $tradeStatus = Trade::CONFIRMED;
+                    $trade_info = Operating::txidByTransactionInfo(Yii::$app->params["ug"]["ug_host"], "eth_getTransactionReceipt", [$res_data["result"]]);
+                    if ($trade_info) {
+                        //截取blockNumber
+                        $trade_info = Operating::substrHexdec($trade_info["blockNumber"]);
+                        $tradeStatus = Trade::SUCCESS;
+                    }
+                    //插入交易记录表
+                    if (!Trade::insertData($res_data["result"], Yii::$app->params["ug"]["owner_address"], $result["from_address"], $amount, $tradeStatus, Trade::BACK_REDPACKET, $trade_info['blockNumber'])) {
+                        echo "插入交易记录表失败".PHP_EOL;
+                    }
                 }
-                    var_dump($list);die;
-
-
-
-
-
-
-                $info['address'] = $info['to_address'];
-                $info['app_txid'] = ''; //空的
-                $send_sign_data = Operating::getNonceAssembleData($info, Yii::$app->params["ug"]["gas_price"], Yii::$app->params["ug"]["ug_host"], "eth_getTransactionCount", [Yii::$app->params["ug"]["owner_address"], "pending"]);
-
-                //组装创建红包的签名数据
-                $sign_data = [
-                    "packet_id" => $info['id'],
-                    "address" => $address,
-                    "raw_transaction" => $send_sign_data,
-                    "type" => "1",
-                ];
-
-                //保存创建红包的签名
-                PacketOfflineSign::saveOfflineSign($sign_data);
-
-
-
             }
         }
 

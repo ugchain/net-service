@@ -41,10 +41,10 @@ class Trade extends ActiveRecord
      * @param int $status
      * @return array|ActiveRecord[]
      */
-    public static function getInfoByStatus($status = self::CONFIRMED, $type = 0)
+    public static function getInfoByStatus($status = self::CONFIRMED)
     {
         return Trade::find()
-            ->where(["status" => $status, 'blocknumber' => '0', 'type' => $type])
+            ->where(["status" => $status, 'blocknumber' => '0'])
             ->asArray()->all();
     }
 
@@ -56,7 +56,7 @@ class Trade extends ActiveRecord
      */
     public static function updateBlockAndStatusBytxid($txid, $blockNumber, $status)
     {
-        return Trade::updateAll(["blocknumber" => $blockNumber, "status" => $status, "trade_time" => time()], ["app_txid" => $txid]);
+        return Trade::updateAll(["blocknumber" => $blockNumber, "status" => $status, "addtime" => time()], ["app_txid" => $txid]);
     }
 
 }

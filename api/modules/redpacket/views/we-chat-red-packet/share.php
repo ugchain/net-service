@@ -15,7 +15,7 @@
     <h1 class="packet-title">"<?= $redpacketInfo['title'];?>"</h1>
     <div class="red-img" >
         <div class="get-ugc">
-            <p id="getugc-num"><?= $redpacketInfo['amount'];?></p>
+            <p id="getugc-num"><?= $record_amount;?></p>
             <p>UGC</p>
         </div>
         <img src="/img/packet.png" class="packet-pic">
