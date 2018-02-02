@@ -29,6 +29,7 @@ class RedPacket extends \common\models\RedPacket
             'quantity' => $result->quantity,
             'already_received_quantity' => count($result->redPacketRecords),
             'amount' => $result->amount,
+            'back_amount' => $result->back_amount,
             'already_received_amount' => 'TODO',
             'finish_time' => !empty($result->finish_time) ? date('m-d h:i', $result->finish_time) : '',
             'expire_time' => !empty($result->expire_time) ? date('m-d h:i', $result->expire_time) : '',

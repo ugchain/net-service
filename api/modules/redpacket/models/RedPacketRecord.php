@@ -2,6 +2,7 @@
 namespace api\modules\redpacket\models;
 
 use common\helpers\RewardData;
+use common\helpers\OutputHelper;
 use Yii;
 
 class RedPacketRecord extends \common\models\RedPacketRecord
@@ -40,7 +41,7 @@ class RedPacketRecord extends \common\models\RedPacketRecord
      * @var string
      * 生成红包口令需要的slat
      */
-    public $_salt;
+    static public $_salt;
 
     /**
      * 检查红包code和address是否存在
@@ -81,7 +82,7 @@ class RedPacketRecord extends \common\models\RedPacketRecord
      */
     public function grenerateRedpacketCode()
     {
-        $this->code = substr(md5($this->openid.$this->rid.$this->salt), 1, 9);
+        $this->code = "UaG3C".substr(md5($this->openid.$this->rid.$this->salt), 1, 9);
     }
 
     /**
@@ -101,16 +102,18 @@ class RedPacketRecord extends \common\models\RedPacketRecord
         //红包是否以被领光
         $redPacket = RedPacket::findOne($this->rid);
         if ($redPacket->already_received_quantity >= $redPacket->quantity) {
-            outputHelper::ouputErrorcodeJson(\common\helpers\ErrorCodes::RED_PACKET_LED_LIGHT);
+            output::ouputErrorcodeJson(\common\helpers\ErrorCodes::RED_PACKET_LED_LIGHT);
         }
 
         //去redis获取红包金额
-        $rewardData = new RewardData();
-        $this->amount = $rewardData->get($this->rid);
+        //$rewardData = new RewardData();
+        //$this->amount = $rewardData->get($this->rid);
+        $this->amount = 2;
 
-        //累加领取次数
-        $redPacket->quantity = $redPacket->quantity+1;
-        $redPacket->save();
+        //判断是否获取到红包金额
+        if (!$this->amount) {
+            outputHelper::ouputErrorcodeJson(\common\helpers\ErrorCodes::RED_PACKET_GRAD_FAIL);
+        }
     }
 
     /**
@@ -120,30 +123,35 @@ class RedPacketRecord extends \common\models\RedPacketRecord
      * @param $openid
      * @return int
      */
-    public static function getRedPacketRecordState($rid, $openid)
+    public static function getRedPacketRecordInfo($rid, $openid)
     {
-        $record = self::find()->where("rid=$rid and $openid='$openid'")->one();
+        $record = self::find()->where("rid=$rid and openid='$openid'")->one();
+        $info['state'] = null;
+        $info['code'] = !empty($record->code) ? $record->code : '';
+        $info['amount'] = !empty($record->amount) ? $record->amount : '';
         if (empty($record)) {
             $redPacket = RedPacket::findOne($rid);
             if ($redPacket->already_received_quantity >= $redPacket->quantity) {
-                return 4; //以领光
+                $info['state'] = 4; //以领光
             }
             return 0; //未领取
+        } else {
+            switch ($record->status) {
+                case self::REDPACKET_RECORD_STATUS_TORECEIVE:
+                case self::REDPACKET_RECORD_STATUS_REDEMPTION:
+                case self::REDPACKET_RECORD_STATUS_EXCHANGEFAILED:
+                    $info['state'] = 1; //以领取、未兑换
+                    break;
+                case self::REDPACKET_RECORD_STATUS_EXCHANGESUCCESS:
+                    $info['state'] = 2; //以兑换
+                    break;
+                case self::REDPACKET_RECORD_STATUS_EXPIRED:
+                    $info['state'] = 3; //已结束
+                    break;
+            }
         }
 
-        switch ($record->status) {
-            case self::REDPACKET_RECORD_STATUS_TORECEIVE:
-            case self::REDPACKET_RECORD_STATUS_REDEMPTION:
-            case self::REDPACKET_RECORD_STATUS_EXCHANGEFAILED:
-                return 1; //以领取、未兑换
-                break;
-            case self::REDPACKET_RECORD_STATUS_EXCHANGESUCCESS:
-                return 2; //以兑换
-                break;
-            case self::REDPACKET_RECORD_STATUS_EXPIRED:
-                return 3; //已结束
-                break;
-        }
+        return $info;
     }
 
     /**
