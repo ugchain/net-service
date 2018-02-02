@@ -53,7 +53,7 @@ if(state == 0){
             success: function(data){
                 if(data.code == 0){
                 	mask()
-					// $('.received').show().css('opacity','0')
+					$('.received').show().css('opacity','0')
 					$('#kl-txt').val(data.data.code)
 					$('.btn').click()
                 }
