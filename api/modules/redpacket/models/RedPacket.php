@@ -77,6 +77,8 @@ class RedPacket extends \common\models\RedPacket
         $redpacketInfo['theme_share_img'] = !empty($redPacketTheme->share_img) ? $redPacketTheme->share_img : '';
         $redpacketInfo['redPacketRecordList'] = $redPacketRecordList;
         $redpacketInfo['image_url'] = Yii::$app->params['image_url'];
+        $redpacketInfo["share_url"] = Yii::$app->params["host"]."/redpacket/we-chat-red-packet/redirect-url?redpacket_id=".$result->id;
+
 
         return $redpacketInfo;
     }
