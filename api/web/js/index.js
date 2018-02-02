@@ -53,7 +53,7 @@ if(state == 0){
             success: function(data){
                 if(data.code == 0){
                 	mask()
-					// $('.received').show().css('opacity','0')
+					$('.received').show().css('opacity','0')
 					$('#kl-txt').val(data.data.code)
 					$('.btn').click()
                 }
@@ -62,15 +62,13 @@ if(state == 0){
             	$.toast("您的网络有问题", "text");
             }
         })
-
-        $('.received').show().css('opacity','1')
 	})
 
 }
 
 // 已领取
 if(state == 1){
-	$('.received').show()
+	$('.received').show().css('opacity','1')
 	$('.packet-pic-open').hide()
 		.siblings('.get-ugc').hide()
 		.siblings('.packet-pic').show()
