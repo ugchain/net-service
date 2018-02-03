@@ -63,10 +63,12 @@ if(state == 0){
                     //     }
                     // });
                     // $('.btn2').click()
+                    $.toast(data.message, "text");
                 }
             },
             error: function() {
-            	$.toast("您的网络有问题", "text");
+            	// $.toast("您的网络有问题", "text");
+            	$.toast(data.message, "text");
             }
         })
 	})
