@@ -141,7 +141,7 @@ class WeChatRedPacketController extends Controller
         }
 
         //获得红包金额并累加领取次数
-        $model->setRedpacketAmountWithAddQuantity();
+        $model->setInfoWithRedpacket();
         //生成红包口令
         $model->grenerateRedpacketCode();
         //红包获得时间
