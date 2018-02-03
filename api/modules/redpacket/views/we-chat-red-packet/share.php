@@ -165,6 +165,10 @@
 <div class="mask">
     <div>
         <img src="/img/mask.png" class="mask-img">
+        <div class="download-app">
+            <img src="/img/logo.png">
+            <a href="#">点击下载“UGC”</a>
+        </div>
         <button class="btn" data-clipboard-action="copy" data-clipboard-target="#mask-copy">
         </button>
         <input id="mask-copy" type="text" value="test">     
