@@ -2,7 +2,7 @@
 var clipboard = new Clipboard('.btn');
 clipboard.on('success', function(e) {
     $.toast("复制成功", "text");
-    console.log('s')
+    console.log(e)
 });
 
 clipboard.on('error', function(e) {
@@ -13,11 +13,10 @@ clipboard.on('error', function(e) {
 // mask
 function mask(){
 	$('.mask').show()
-		.find('.close')
-		.on('click', funcion() {
-			$('.mask').hide()
-			window.location.reload()
-		})
+	.find('.close').on('click', function(){
+		$('.mask').hide()
+		window.location.reload()
+	})
 }
 
 console.log(state)
@@ -54,13 +53,11 @@ if(state == 0){
             success: function(data){
                 if(data.code == 0){
                 	mask()
-					$('#mask-copy').val(data.data.code)
-                    $.toast('网络访问'+ data.message, "text");
+                	$('#mask-copy').val(data.data.code)
                 }
             },
             error: function() {
-            	// $.toast("您的网络有问题", "text");
-            	$.toast('网络访问'+ data.message, "text");
+            	$.toast("您的网络有问题", "text");
             }
         })
 	})
