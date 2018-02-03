@@ -87,11 +87,13 @@ if(state == 1){
 // 已兑换
 if(state == 2){
 	$('.exchanged').show()
+	$('.received').hide()
 }
 
 // 已领光
 if(state == 3){
 	$('.finished').show()
+	$('.received').hide()
 	$('.packet-pic-open').hide()
 		.siblings('.get-ugc').hide()
 		.siblings('.packet-pic').show()
@@ -105,6 +107,7 @@ if(state == 3){
 // 已结束
 if(state == 4){
 	$('.finished').show()
+	$('.received').hide()
 	$('.packet-pic-open').hide()
 		.siblings('.get-ugc').hide()
 		.siblings('.packet-pic').show()
