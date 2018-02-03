@@ -3,6 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1, user-scalable=no">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+    <meta http-equiv="Pragma" content="no-cache" />
+    <meta http-equiv="Expires" content="0" />
     <title>红包领取</title>
     <link rel="stylesheet" href="/css/weui.min.css">
     <link rel="stylesheet" href="/css/jquery-weui.min.css">
@@ -161,14 +164,14 @@
 <!-- 弹层 -->
 <div class="mask">
     <div>
-        <img src="img/mask.png" class="mask-img">
+        <img src="/img/mask.png" class="mask-img">
         <button class="btn" data-clipboard-action="copy" data-clipboard-target="#mask-copy">
         </button>
         <input id="mask-copy" type="text" value="test">     
     </div>
-    <p><img src="img/close.png" class="close"></p>
+    <p><img src="/img/close.png" class="close"></p>
 </div>
-    
+
 </body>
 <script>
     var state = <?= $state ?>;
