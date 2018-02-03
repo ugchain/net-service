@@ -10,6 +10,9 @@ clipboard.on('error', function(e) {
     console.log(e)
 });
 
+
+
+console.log(state)
 // mask
 function mask(){
 	$('.mask').show()
@@ -18,8 +21,6 @@ function mask(){
 		window.location.reload()
 	})
 }
-
-console.log(state)
 
 // 未领取
 if(state == 0){
