@@ -141,6 +141,8 @@ body{
 	padding-top: 65px;
 	/*display: none;*/
 	opacity: 0;
+	overflow: hidden;
+	padding-bottom: 30px;
 }
 
 .top .received .kl-bg{
@@ -162,7 +164,7 @@ body{
 }
 .tie{
 	width: 100%;
-	margin-top: -20px;
+	margin-top: -60px;
 }
 .top .received .kl{
 	height: 35px;
