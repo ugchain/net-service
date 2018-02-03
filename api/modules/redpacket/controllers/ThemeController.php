@@ -37,6 +37,7 @@ class ThemeController extends  Controller
        $model = new RedPacketTheme();
        //主题标题
        $model->title = Yii::$app->request->post("title","1");
+       $model->desc = Yii::$app->request->post("desc","");
        //判断参数
        if(!$model->title){
            outputHelper::ouputErrorcodeJson(\common\helpers\ErrorCodes::PARAM_NOT_EXIST);

@@ -34,8 +34,8 @@ class RedPacketTheme extends ActiveRecord
     {
         return [
             [['addtime'], 'integer'],
-            [['title','img',"thumb_img",'share_img','addtime'], 'required'],
-            [['title','img','thumb_img','share_img'], 'string'],
+            [['title','desc','img',"thumb_img",'share_img','addtime'], 'required'],
+            [['title','desc','img','thumb_img','share_img'], 'string'],
         ];
     }
 

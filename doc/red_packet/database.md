@@ -3,15 +3,16 @@
 ```
 DROP TABLE IF EXISTS `ug_red_packet_theme`;
 
- CREATE TABLE `ug_red_packet_theme` (
+CREATE TABLE `ug_red_packet_theme` (
   `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '自增ID',
-  `img` varchar(255) NOT NULL COMMENT '主题图片地址',
   `title` varchar(255) NOT NULL COMMENT '主题标题',
+  `desc` varchar(255) NOT NULL COMMENT '主题描述',
+  `img` varchar(255) NOT NULL COMMENT '主题图片地址',
   `thumb_img` varchar(255) NOT NULL DEFAULT '' COMMENT '主题缩略图地址',
   `share_img` varchar(255) NOT NULL DEFAULT '' COMMENT '分享缩略图地址',
   `addtime` int(11) NOT NULL COMMENT '创建时间',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT "红包主题表"
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COMMENT='红包主题表'
 ```
 --
 
