@@ -14,7 +14,7 @@ clipboard.on('error', function(e) {
 function mask(){
 	$('.mask').show()
 		.find('.close')
-		.on('click', function() {
+		.on('click', funcion() {
 			$('.mask').hide()
 			window.location.reload()
 		})
@@ -55,12 +55,12 @@ if(state == 0){
                 if(data.code == 0){
                 	mask()
 					$('#mask-copy').val(data.data.code)
-                    $.toast(data.message, "text");
+                    $.toast('网络访问'+ data.message, "text");
                 }
             },
             error: function() {
             	// $.toast("您的网络有问题", "text");
-            	$.toast(data.message, "text");
+            	$.toast('网络访问'+ data.message, "text");
             }
         })
 	})

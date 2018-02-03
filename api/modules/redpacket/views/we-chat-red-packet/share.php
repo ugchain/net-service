@@ -161,14 +161,14 @@
 <!-- 弹层 -->
 <div class="mask">
     <div>
-        <img src="img/mask.png" class="mask-img">
+        <img src="/img/mask.png" class="mask-img">
         <button class="btn" data-clipboard-action="copy" data-clipboard-target="#mask-copy">
         </button>
         <input id="mask-copy" type="text" value="test">     
     </div>
-    <p><img src="img/close.png" class="close"></p>
+    <p><img src="/img/close.png" class="close"></p>
 </div>
-    
+
 </body>
 <script>
     var state = <?= $state ?>;
