@@ -160,10 +160,15 @@
 </div>
 <!-- 弹层 -->
 <div class="mask">
-    <p><img src="/img/mask.png" class="mask-img"></p>
-    <p><img src="/img/close.png" class="close"></p>
-    <button class="btn2" style="opacity: 0"></button>
+    <div>
+        <img src="img/mask.png" class="mask-img">
+        <button class="btn" data-clipboard-action="copy" data-clipboard-target="#mask-copy">
+        </button>
+        <input id="mask-copy" type="text" value="test">     
+    </div>
+    <p><img src="img/close.png" class="close"></p>
 </div>
+    
 </body>
 <script>
     var state = <?= $state ?>;

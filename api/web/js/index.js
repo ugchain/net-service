@@ -54,19 +54,13 @@ if(state == 0){
             success: function(data){
                 if(data.code == 0){
                 	mask()
-					$('.received').show().css('opacity','0')
-					$('#kl-txt').val(data.data.code)
-					$('.btn').click()
-                    // var clipboard2 = new Clipboard('.btn2', {
-                    //     text: function() {
-                    //         return 'to be or not to be';
-                    //     }
-                    // });
-                    // $('.btn2').click()
+					$('#mask-copy').val(data.data.code)
+                    $.toast(data.message, "text");
                 }
             },
             error: function() {
-            	$.toast("您的网络有问题", "text");
+            	// $.toast("您的网络有问题", "text");
+            	$.toast(data.message, "text");
             }
         })
 	})
