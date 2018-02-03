@@ -185,7 +185,7 @@ class RedpacketController extends  Controller
         $type = Yii::$app->request->post("type", "1");
 
         //校验账户和兑换码
-        $result = RedPacketRecord::checkCodeAndAddress($address, $code);
+        $result = RedPacketRecord::checkCodeAndAddress($code);
         if (!$result) {
             outputHelper::ouputErrorcodeJson(\common\helpers\ErrorCodes::RED_PACKET_REDEMPTION);
         }
@@ -222,7 +222,7 @@ class RedpacketController extends  Controller
             }
 
             //修改红包记录表状态
-            if (!RedPacketRecord::updateStatusAndTxidByid($result['id'], $recordStatus, $res_data["result"])) {
+            if (!RedPacketRecord::updateStatusAndTxidByid($result['id'], $recordStatus, $res_data["result"], $address)) {
                 outputHelper::ouputErrorcodeJson(\common\helpers\ErrorCodes::FALL);
             }
             //插入内部交易表
