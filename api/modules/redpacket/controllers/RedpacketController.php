@@ -197,7 +197,7 @@ class RedpacketController extends  Controller
 
         if ($type == 2) {
             //获取nince且组装签名数据
-            $result['address'] = $result['to_address'];
+            $result['address'] = $address;
             $result['app_txid'] = ''; //空的
             $result['amount'] = OutputHelper::NumToString($result['amount'] * pow(10, 18));
             $send_sign_data = Operating::getNonceAssembleData($result, Yii::$app->params["ug"]["gas_price"], Yii::$app->params["ug"]["ug_host"], "eth_getTransactionCount", [Yii::$app->params["ug"]["red_packet_address"], "pending"]);
