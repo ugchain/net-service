@@ -12,6 +12,7 @@
 |参数名|必选|类型|说明|
 |:----    |:---|:----- |-----   |
 |title |是  |string |主题标题 |
+|desc |是  |string |主题描述 |
 |img |是  |string |主题图片地址 |
 |thumb_img |是  |string |主题缩略图地址 |
 |share_img |是  |string |分享缩略图地址 |
@@ -49,6 +50,7 @@
 		"list": [{
 			"id": "1",
 			"title": "名字",
+			"desc"："描述"，
 			"img": "/upload/test/image2.png",
 			"thumb_img": "/upload/test/image.png",
 			"share_img": "/upload/test/image1.png",
@@ -56,6 +58,7 @@
 		}, {
 			"id": "2",
 			"title": "名字",
+			"desc"："描述"，
 			"img": "/upload/test/image2.png",
 			"thumb_img": "/upload/test/image.png",
 			"share_img": "/upload/test/image1.png",
