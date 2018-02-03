@@ -2,7 +2,7 @@
 var clipboard = new Clipboard('.btn');
 clipboard.on('success', function(e) {
     $.toast("复制成功", "text");
-    console.log('s')
+    console.log(e)
 });
 
 clipboard.on('error', function(e) {
@@ -10,17 +10,17 @@ clipboard.on('error', function(e) {
     console.log(e)
 });
 
+
+
+console.log(state)
 // mask
 function mask(){
 	$('.mask').show()
-		.find('.close')
-		.on('click', function() {
-			$('.mask').hide()
-			window.location.reload()
-		})
+	.find('.close').on('click', function(){
+		$('.mask').hide()
+		window.location.reload()
+	})
 }
-
-console.log(state)
 
 // 未领取
 if(state == 0){
@@ -32,6 +32,11 @@ if(state == 0){
 		"background-size": '100%',
 	})
 	$('.unreceived').show()
+	$('.received').css({
+		'height': '0',
+		"padding-bottom": '0',
+		"padding-top": '0'
+	})
 
 	$('.packet-pic-open').hide()
 		.siblings('.get-ugc').hide()
@@ -54,15 +59,7 @@ if(state == 0){
             success: function(data){
                 if(data.code == 0){
                 	mask()
-					$('.received').show().css('opacity','0')
-					$('#kl-txt').val(data.data.code)
-					$('.btn').click()
-                    // var clipboard2 = new Clipboard('.btn2', {
-                    //     text: function() {
-                    //         return 'to be or not to be';
-                    //     }
-                    // });
-                    // $('.btn2').click()
+                	$('#mask-copy').val(data.data.code)
                 }
             },
             error: function() {
@@ -90,11 +87,13 @@ if(state == 1){
 // 已兑换
 if(state == 2){
 	$('.exchanged').show()
+	$('.received').hide()
 }
 
 // 已领光
 if(state == 3){
 	$('.finished').show()
+	$('.received').hide()
 	$('.packet-pic-open').hide()
 		.siblings('.get-ugc').hide()
 		.siblings('.packet-pic').show()
@@ -108,6 +107,7 @@ if(state == 3){
 // 已结束
 if(state == 4){
 	$('.finished').show()
+	$('.received').hide()
 	$('.packet-pic-open').hide()
 		.siblings('.get-ugc').hide()
 		.siblings('.packet-pic').show()

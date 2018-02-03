@@ -3,6 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1, user-scalable=no">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+    <meta http-equiv="Pragma" content="no-cache" />
+    <meta http-equiv="Expires" content="0" />
     <title>红包领取</title>
     <link rel="stylesheet" href="/css/weui.min.css">
     <link rel="stylesheet" href="/css/jquery-weui.min.css">
@@ -160,10 +163,19 @@
 </div>
 <!-- 弹层 -->
 <div class="mask">
-    <p><img src="/img/mask.png" class="mask-img"></p>
+    <div>
+        <img src="/img/mask.png" class="mask-img">
+        <div class="download-app">
+            <img src="/img/logo.png">
+            <a href="#">点击下载“UGC”</a>
+        </div>
+        <button class="btn" data-clipboard-action="copy" data-clipboard-target="#mask-copy">
+        </button>
+        <input id="mask-copy" type="text" value="test">     
+    </div>
     <p><img src="/img/close.png" class="close"></p>
-    <button class="btn2" style="opacity: 0"></button>
 </div>
+
 </body>
 <script>
     var state = <?= $state ?>;
