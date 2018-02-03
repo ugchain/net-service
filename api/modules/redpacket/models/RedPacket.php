@@ -77,6 +77,8 @@ class RedPacket extends \common\models\RedPacket
         $redpacketInfo['theme_share_img'] = !empty($redPacketTheme->share_img) ? $redPacketTheme->share_img : '';
         $redpacketInfo['redPacketRecordList'] = $redPacketRecordList;
         $redpacketInfo['image_url'] = Yii::$app->params['image_url'];
+        $redpacketInfo["share_url"] = Yii::$app->params["host"]."/redpacket/we-chat-red-packet/redirect-url?redpacket_id=".$result->id;
+
 
         return $redpacketInfo;
     }
@@ -204,15 +206,16 @@ class RedPacket extends \common\models\RedPacket
     public static function checkRedPacketExistAndExpired($packet_id)
     {
         //查询红包是否存在
-        $redPacketInfo = RedPacket::find()->where(['id' => $packet_id])->one()->attributes;
+        $redPacketInfo = RedPacket::find()->where(['id' => $packet_id])->one();
         if (!$redPacketInfo) {
             return false;
         }
+        $redPacketInfo = $redPacketInfo->attributes;
         //红包是否过期
         if ($redPacketInfo['status'] == RedPacket::REDPACKET_EXPIRED) {
             return false;
         }
 
-        return true;
+        return $redPacketInfo;
     }
 }

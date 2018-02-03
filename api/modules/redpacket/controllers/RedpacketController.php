@@ -107,7 +107,7 @@ class RedpacketController extends  Controller
         $repack_info = RedPacket::getPacketInfoById($packet_id);
         //组装返回数据
         $return_data = [
-            "share_url"=>Yii::$app->params["host"]."/redpacket/we-chat-red-packet/redirect-url?packet_id=".$packet_id,
+            "share_url"=>Yii::$app->params["host"]."/redpacket/we-chat-red-packet/redirect-url?redpacket_id=".$packet_id,
             "id"=>$packet_id,
             "status"=>$this->REPACK_STATUS,
             "expire_time"=>$repack_info["expire_time"],
@@ -181,53 +181,60 @@ class RedpacketController extends  Controller
         $code = Yii::$app->request->post("code", "");
         //账户地址
         $address = Yii::$app->request->post("address", "");
+        //类型 1获取红包信息；2兑换红包
+        $type = Yii::$app->request->post("type", "1");
 
         //校验账户和兑换码
-        $result = RedPacketRecord::checkCodeAndAddress($address, $code);
+        $result = RedPacketRecord::checkCodeAndAddress($code);
         if (!$result) {
             outputHelper::ouputErrorcodeJson(\common\helpers\ErrorCodes::RED_PACKET_REDEMPTION);
         }
 
         //查询红包是否存在&红包是否过期
-        if (!RedPacket::checkRedPacketExistAndExpired($result['rid'])) {
+        if (!$redPacketInfo = RedPacket::checkRedPacketExistAndExpired($result['rid'])) {
             outputHelper::ouputErrorcodeJson(\common\helpers\ErrorCodes::RED_PACKET_NOT_EXIST);
         }
 
-        //获取nince且组装签名数据
-        $result['address'] = $result['to_address'];
-        $result['app_txid'] = ''; //空的
-        $result['amount'] = OutputHelper::NumToString($result['amount'] * pow(10, 18));
-        $send_sign_data = Operating::getNonceAssembleData($result, Yii::$app->params["ug"]["gas_price"], Yii::$app->params["ug"]["ug_host"], "eth_getTransactionCount", [Yii::$app->params["ug"]["red_packet_address"], "pending"]);
+        if ($type == 2) {
+            //获取nince且组装签名数据
+            $result['address'] = $address;
+            $result['app_txid'] = ''; //空的
+            $result['amount'] = OutputHelper::NumToString($result['amount'] * pow(10, 18));
+            $send_sign_data = Operating::getNonceAssembleData($result, Yii::$app->params["ug"]["gas_price"], Yii::$app->params["ug"]["ug_host"], "eth_getTransactionCount", [Yii::$app->params["ug"]["red_packet_address"], "pending"]);
 
-        //根据组装数据获取签名且广播交易
-        $res_data = Operating::getSignatureAndBroadcast(Yii::$app->params["ug"]["ug_sign_red_packet"], $send_sign_data, Yii::$app->params["ug"]["ug_host"], "eth_sendRawTransaction");
-        if (isset($res_data['error'])) {
-            outputHelper::ouputErrorcodeJson(\common\helpers\ErrorCodes::TRANSACTION_FAIL);
+            //根据组装数据获取签名且广播交易
+            $res_data = Operating::getSignatureAndBroadcast(Yii::$app->params["ug"]["ug_sign_red_packet"], $send_sign_data, Yii::$app->params["ug"]["ug_host"], "eth_sendRawTransaction");
+            if (isset($res_data['error'])) {
+                outputHelper::ouputErrorcodeJson(\common\helpers\ErrorCodes::TRANSACTION_FAIL);
+            }
+
+            //根据txid去块上确认
+            $trade_info = Operating::txidByTransactionInfo(Yii::$app->params["ug"]["ug_host"], "eth_getTransactionReceipt", [$res_data["result"]]);
+
+            //组装入库数据
+            $recordStatus = RedPacketRecord::REDEMPTION;
+            $tradeStatus = Trade::CONFIRMED;
+            if ($trade_info) {
+                //截取blockNumber
+                $trade_info = Operating::substrHexdec($trade_info["blockNumber"]);
+                $tradeStatus = Trade::SUCCESS;
+                $recordStatus = RedPacketRecord::EXCHANGE_SUCC;
+            }
+
+            //修改红包记录表状态
+            if (!RedPacketRecord::updateStatusAndTxidByid($result['id'], $recordStatus, $res_data["result"], $address)) {
+                outputHelper::ouputErrorcodeJson(\common\helpers\ErrorCodes::FALL);
+            }
+            //插入内部交易表
+            if (!Trade::insertData($res_data["result"], Yii::$app->params["ug"]["red_packet_address"], $result["to_address"], $result["amount"], $tradeStatus, Trade::OPEN_REDPACKET, empty($trade_info['blockNumber'])?0:$trade_info['blockNumber'])) {
+                outputHelper::ouputErrorcodeJson(\common\helpers\ErrorCodes::FALL);
+            }
+
+            outputHelper::ouputErrorcodeJson(\common\helpers\ErrorCodes::SUCCESS, ['id' => $result['rid']]);
+        } else {
+            outputHelper::ouputErrorcodeJson(\common\helpers\ErrorCodes::SUCCESS, ['id' => $redPacketInfo['id'], 'title' => $redPacketInfo['title']]);
         }
 
-        //根据txid去块上确认
-        $trade_info = Operating::txidByTransactionInfo(Yii::$app->params["ug"]["ug_host"], "eth_getTransactionReceipt", [$res_data["result"]]);
-
-        //组装入库数据
-        $recordStatus = RedPacketRecord::REDEMPTION;
-        $tradeStatus = Trade::CONFIRMED;
-        if ($trade_info) {
-            //截取blockNumber
-            $trade_info = Operating::substrHexdec($trade_info["blockNumber"]);
-            $tradeStatus = Trade::SUCCESS;
-            $recordStatus = RedPacketRecord::EXCHANGE_SUCC;
-        }
-
-        //修改红包记录表状态
-        if (!RedPacketRecord::updateStatusAndTxidByid($result['id'], $recordStatus, $res_data["result"])) {
-            outputHelper::ouputErrorcodeJson(\common\helpers\ErrorCodes::FALL);
-        }
-        //插入内部交易表
-        if (!Trade::insertData($res_data["result"], Yii::$app->params["ug"]["red_packet_address"], $result["to_address"], $result["amount"], $tradeStatus, Trade::OPEN_REDPACKET, empty($trade_info['blockNumber'])?0:$trade_info['blockNumber'])) {
-            outputHelper::ouputErrorcodeJson(\common\helpers\ErrorCodes::FALL);
-        }
-
-        outputHelper::ouputErrorcodeJson(\common\helpers\ErrorCodes::SUCCESS, ['id' => $result['rid']]);
     }
 
     /**

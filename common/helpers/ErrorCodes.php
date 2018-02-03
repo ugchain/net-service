@@ -33,7 +33,8 @@ class ErrorCodes
         RED_PACKET_EXPIRED                                          =   20115,//红包已过期
         RED_PACKET_EXIST                                            =   20116,//红包以领取
         RED_PACKET_GRAD_FAIL                                        =   20117,//红包领取失败
-        RED_PACKET_LED_LIGHT                                        =   20118;//红包以领光
+        RED_PACKET_LED_LIGHT                                        =   20118,//红包以领光
+        ROSE_THEME_NOT_EXISTS                                       =   20119;//玫瑰主题未获取到
 
 
 
@@ -58,13 +59,14 @@ class ErrorCodes
         self::MEDAL_GIVE_ADD_FAILED                                 =>'转增记录添加失败',
         self::PHONE_WRONGFOL                                        =>'手机号不合法',
         self::ADVERTISE_EXIST                                       =>'广告已申请',
-        self::RED_PACKET_REDEMPTION                                 =>'红包兑换中',
+        self::RED_PACKET_REDEMPTION                                 =>'兑换码无效',
         self::TRANSACTION_FAIL                                      =>'交易失败',
         self::RED_PACKET_NOT_EXIST                                  =>'红包不存在',
         self::RED_PACKET_EXPIRED                                    =>'红包已过期',
         self::RED_PACKET_EXIST                                      =>'红包以领取',
         self::RED_PACKET_GRAD_FAIL                                  =>'红包领取失败',
         self::RED_PACKET_LED_LIGHT                                  =>'红包以领光',
+        self::ROSE_THEME_NOT_EXISTS                                  =>'主题缺失',
     ];
 
 }

@@ -125,11 +125,13 @@
 {
     "code": 0,
     "message": "成功",
-    "data": [{
-        "id":"1",//红包ID
-        "status":"0",//红包创建中;1创建失败;2创建成功
-        “share_url”:"",//分享主题
-    }]
+    "data": {
+        "share_url": "http://ugwallet.local/redpacket/we-chat-red-packet/redirect-url?redpacket_id=8",
+        "id": 8,//红包ID
+        "status": 1,//状态值 0:部署中 1:创建成功
+        "expire_time": "1517652727",//过期时间
+        "create_succ_time": "1517566327"//创建成功时间
+    }
 }
 
 ```
@@ -150,6 +152,7 @@
 |:----    |:---|:----- |-----   |
 |code |是  |string |红包兑换码 |
 |address |是  |string |当前账户地址 |
+|type |是  |string |类型 1获取红包信息；2兑换红包 |
 
  **返回示例**
 
@@ -159,6 +162,7 @@
     "message": "成功",
     "data": {
         "id": 2
+        "title": "大吉大利"
     }
 }
 
@@ -212,6 +216,7 @@
             }
         ]
         "image_url": "http://wallet-pro.dev:8088" //拼接url
+        "share_url": "http://ugwallet.local/redpacket/we-chat-red-packet/redirect-url?redpacket_id=1"//微信分享连接
     }
 }
 

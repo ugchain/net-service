@@ -26,7 +26,7 @@ DROP TABLE IF EXISTS `ug_red_packet_theme`;
   `amount` varchar(100) NOT NULL COMMENT '红包总额',
   `quantity` int(10) NOT NULL DEFAULT '1' COMMENT '红包总个数',
   `theme_id` int(11) NOT NULL DEFAULT '1' COMMENT '红包主题id',
-  `txid` varchar(50) NOT NULL DEFAULT '' COMMENT 'txid',
+  `txid` varchar(100) NOT NULL DEFAULT '' COMMENT 'txid',
   `theme_img` varchar(255) NOT NULL DEFAULT '' COMMENT '主题图片地址',
   `theme_thumb_img` varchar(255) NOT NULL DEFAULT '' COMMENT '主题缩略图地址',
   `theme_share_img` varchar(255) NOT NULL DEFAULT '' COMMENT '分享缩略图地址',
