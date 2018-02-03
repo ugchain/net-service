@@ -32,6 +32,11 @@ if(state == 0){
 		"background-size": '100%',
 	})
 	$('.unreceived').show()
+	$('.received').css({
+		'height': '0',
+		"padding-bottom": '0',
+		"padding-top": '0'
+	})
 
 	$('.packet-pic-open').hide()
 		.siblings('.get-ugc').hide()

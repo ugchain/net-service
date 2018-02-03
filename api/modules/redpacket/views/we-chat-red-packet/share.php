@@ -164,16 +164,16 @@
 <!-- 弹层 -->
 <div class="mask">
     <div>
-        <img src="img/mask.png" class="mask-img">
+        <img src="/img/mask.png" class="mask-img">
         <div class="download-app">
-            <img src="./img/logo.png">
+            <img src="/img/logo.png">
             <a href="#">点击下载“UGC”</a>
         </div>
         <button class="btn" data-clipboard-action="copy" data-clipboard-target="#mask-copy">
         </button>
         <input id="mask-copy" type="text" value="test">     
     </div>
-    <p><img src="img/close.png" class="close"></p>
+    <p><img src="/img/close.png" class="close"></p>
 </div>
 
 </body>
