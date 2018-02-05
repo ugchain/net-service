@@ -66,7 +66,7 @@ class RedPacket extends \common\models\RedPacket
                 'wx_avatar' => $redPacketRecord->wx_avatar,
                 'amount' => !$type ? OutputHelper::fromWei($redPacketRecord->amount) : $redPacketRecord->amount,
                 'status' => $redPacketRecord->status,
-                'time' => !empty($time) ? date('m-d s:i', $time) : ''
+                'time' => !empty($time) ? date('m-d H:i', $time) : ''
             ];
         }
 
