@@ -209,7 +209,7 @@ doc/api.md
 
 --
 
-### 勋章详情
+### 玫瑰详情
 **请求URL：** 
 - `/rose/rose/rose-detail`
   
@@ -246,7 +246,7 @@ doc/api.md
 ```
 --
 
-### 勋章交易历史
+### 玫瑰交易历史
 **请求URL：** 
 - `/rose/rose/rose-history`
   
@@ -296,7 +296,7 @@ doc/api.md
 ```
 --
 
-### 勋章转赠
+### 玫瑰转赠
 **请求URL：** 
 - `/rose/rose/rose-give`
   
