@@ -120,6 +120,7 @@ class RedPacket extends \common\models\RedPacket
             $count = RedPacket::find()->where($where)->count();
             $sum = RedPacket::find()->where($where)->sum('amount');
         }
+        $sum = OutputHelper::NumToString($sum);
 
         $query = Yii::$app->db;
         $offset = ($page - 1) * $pageSize;
