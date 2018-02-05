@@ -72,7 +72,7 @@ class RedPacket extends \common\models\RedPacket
         $redPacketTheme = $result->redPacketTheme;
 
         //拼装回返
-        $redpacketInfo['already_received_amount'] = $alreadyReceivedAmount;
+        $redpacketInfo['already_received_amount'] =  OutputHelper::fromWei($alreadyReceivedAmount);
         $redpacketInfo['theme_img'] = !empty($redPacketTheme->img) ? $redPacketTheme->img : '';
         $redpacketInfo['theme_thumb_img'] = !empty($redPacketTheme->thumb_img) ? $redPacketTheme->thumb_img : '';
         $redpacketInfo['theme_share_img'] = !empty($redPacketTheme->share_img) ? $redPacketTheme->share_img : '';
