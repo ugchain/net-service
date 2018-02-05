@@ -162,6 +162,32 @@ class WeChatRedPacketController extends Controller
         outputHelper::ouputErrorcodeJson(\common\helpers\ErrorCodes::SUCCESS, ['code' => $model->code]);
     }
 
+    public function actionTest()
+    {
+        $wechat = Yii::$app->wechat;
+        var_dump($wechat->jsApiTicket);exit;
+    }
+
+    private function getWxConfigForJs($length = 16) {
+        //生成签名的时间戳
+        $timestamp = time();
+
+        //成签名的随机串
+        $chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+        $nonceStr = "";
+        for ($i = 0; $i < $length; $i++) {
+            $nonceStr .= substr($chars, mt_rand(0, strlen($chars) - 1), 1);
+        }
+
+        return [
+            'appid' => $this->appid,
+            'timestamp' => $timestamp,
+            'nonceStr' => $nonceStr,
+            'signature' => $signature,
+            'jsApiList' => $jsApiList
+        ];
+    }
+
     /**
      * 使用GET方式请求URL，默认20s超时。私有方法，只支持在类内调用。
      *

@@ -9,7 +9,7 @@ class OutputHelper
     /**
      * 组装返回数据
      */
-    public static function  ouputErrorcodeJson($code,$data=[])
+    public static function ouputErrorcodeJson($code,$data=[])
     {
         header('Content-type:text/json;charset=utf-8');
         $errorcode['code'] = $code;
@@ -76,6 +76,25 @@ class OutputHelper
         }
         $num = rtrim($num,'.');
         return (string)$num;
+    }
+
+    /**
+     * web3 ether to wei
+     * @param $number
+     */
+    public static function fromWei($number)
+    {
+        return $number / pow(10,18);
+    }
+
+
+    /**
+     * web3 wei to ether
+     * @param $number
+     */
+    public static function toWei($number)
+    {
+        return $number * pow(10,18);
     }
 
 }

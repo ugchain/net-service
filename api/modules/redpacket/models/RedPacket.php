@@ -1,6 +1,7 @@
 <?php
 namespace api\modules\redpacket\models;
 
+use common\helpers\OutputHelper;
 use Yii;
 use api\modules\redpacket\models\RedPacketRecord;
 use api\modules\redpacket\models\RedPacketTheme;
@@ -28,7 +29,7 @@ class RedPacket extends \common\models\RedPacket
             'status' => $result->status,
             'quantity' => $result->quantity,
             'already_received_quantity' => count($result->redPacketRecords),
-            'amount' => $result->amount,
+            'amount' => OutputHelper::fromWei($result->amount),
             'back_amount' => $result->back_amount,
             'already_received_amount' => 'TODO',
             'finish_time' => !empty($result->finish_time) ? date('m-d h:i', $result->finish_time) : '',
@@ -61,7 +62,7 @@ class RedPacket extends \common\models\RedPacket
             $redPacketRecordList[] = [
                 'wx_name' => $redPacketRecord->wx_name,
                 'wx_avatar' => $redPacketRecord->wx_avatar,
-                'amount' => $redPacketRecord->amount,
+                'amount' => OutputHelper::fromWei($redPacketRecord->amount),
                 'status' => $redPacketRecord->status,
                 'time' => !empty($time) ? date('m-d s:i', $time) : ''
             ];
@@ -71,7 +72,7 @@ class RedPacket extends \common\models\RedPacket
         $redPacketTheme = $result->redPacketTheme;
 
         //拼装回返
-        $redpacketInfo['already_received_amount'] = $alreadyReceivedAmount;
+        $redpacketInfo['already_received_amount'] =  OutputHelper::fromWei($alreadyReceivedAmount);
         $redpacketInfo['theme_img'] = !empty($redPacketTheme->img) ? $redPacketTheme->img : '';
         $redpacketInfo['theme_thumb_img'] = !empty($redPacketTheme->thumb_img) ? $redPacketTheme->thumb_img : '';
         $redpacketInfo['theme_share_img'] = !empty($redPacketTheme->share_img) ? $redPacketTheme->share_img : '';
