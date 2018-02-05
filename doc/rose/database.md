@@ -42,6 +42,7 @@
     CREATE TABLE `ug_rose_theme` (
       `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '自增ID',
       `title` varchar(255) NOT NULL COMMENT '主题标题',
+      `slogan` varchar(255) NOT NULL COMMENT '标语',
       `content` varchar(255) NOT NULL COMMENT '内容',
       `img` varchar(255) NOT NULL COMMENT '主题图片地址',
       `thumb_img` varchar(255) NOT NULL COMMENT '主题缩略图地址',
