@@ -125,11 +125,6 @@ class RedPacketRecord extends \common\models\RedPacketRecord
         $this->from_address = $redPacket->address;
 
         $redPacket->save();
-
-        //判断是否获取到红包金额
-        if (!$this->amount) {
-            outputHelper::ouputErrorcodeJson(\common\helpers\ErrorCodes::RED_PACKET_GRAD_FAIL);
-        }
     }
 
     /**

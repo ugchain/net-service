@@ -135,31 +135,35 @@ class WeChatRedPacketController extends Controller
      */
     public function actionGradARedpacket()
     {
-        $model = new RedPacketRecord();
-        $model->openid = Yii::$app->request->post('openid', '');
-        $model->rid = Yii::$app->request->post('rid', '');
-        $model->wx_name = Yii::$app->request->post('nickname', '');
-        $model->wx_avatar = Yii::$app->request->post('headimgurl', '');
-        $model->expire_time = Yii::$app->request->post( 'expire_time', '0');
+        $tr = Yii::$app->db->beginTransaction();
+        try {
+            $model = new RedPacketRecord();
+            $model->openid = Yii::$app->request->post('openid', '');
+            $model->rid = Yii::$app->request->post('rid', '');
+            $model->wx_name = Yii::$app->request->post('nickname', '');
+            $model->wx_avatar = Yii::$app->request->post('headimgurl', '');
 
-        //验证参数
-        if(!($model->openid && $model->rid && $model->wx_name && $model->wx_avatar)){
-            outputHelper::ouputErrorcodeJson(\common\helpers\ErrorCodes::PARAM_NOT_EXIST);
-        }
+            //验证参数
+            if(!($model->openid && $model->rid && $model->wx_name && $model->wx_avatar)){
+                outputHelper::ouputErrorcodeJson(\common\helpers\ErrorCodes::PARAM_NOT_EXIST);
+            }
 
-        //获得红包金额并累加领取次数
-        $model->setInfoWithRedpacket();
-        //生成红包口令
-        $model->grenerateRedpacketCode();
-        //红包获得时间
-        $model->addtime = time();
-        //过滤emoji
-        $model->wx_name = $this->filterEmoji($model->wx_name);
+            //获得红包金额并累加领取次数
+            $model->setInfoWithRedpacket();
+            //生成红包口令
+            $model->grenerateRedpacketCode();
+            //红包获得时间
+            $model->addtime = time();
+            //过滤emoji
+            $model->wx_name = $this->filterEmoji($model->wx_name);
 
-        if (!$model->save()) {
+            $model->save();
+            $tr->commit();
+
+        } catch (Exception $e){
+            $tr->rollback();
             outputHelper::ouputErrorcodeJson(\common\helpers\ErrorCodes::RED_PACKET_GRAD_FAIL);
         }
-
         outputHelper::ouputErrorcodeJson(\common\helpers\ErrorCodes::SUCCESS, ['code' => $model->code]);
     }
 
