@@ -102,7 +102,7 @@
             <span>已领取</span>
             <span><?=$redpacketInfo['already_received_quantity'] ?>/<?=$redpacketInfo['quantity'] ?></span>
             <span>共</span>
-            <span><?=$redpacketInfo['already_received_amount'] ?>/<?=$redpacketInfo['amount'] ?> ugc</span>
+            <span><?=$redpacketInfo['already_received_amount'] ?>/<?=$redpacketInfo['amount'] ?> UGC</span>
         </div>
 
         <?php if($redpacketInfo['already_received_quantity'] == 0){ ?>
