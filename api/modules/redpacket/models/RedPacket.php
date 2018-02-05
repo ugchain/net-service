@@ -36,7 +36,7 @@ class RedPacket extends \common\models\RedPacket
             'already_received_amount' => 'TODO',
             'finish_time' => !empty($result->finish_time) ? date('m-d h:i', $result->finish_time) : '',
             'expire_time' => !empty($result->expire_time) ? date('m-d h:i', $result->expire_time) : '',
-            'last_time' => date('H时i分', $result->expire_time - time()),
+            'last_time' => self::timeTostring($result->expire_time - time()),
             'current_time' => date('m-d h:i', time())
         ];
 
@@ -94,6 +94,20 @@ class RedPacket extends \common\models\RedPacket
     public function getRedPacketTheme()
     {
         return $this->hasOne(RedPacketTheme::className(), ['id' => 'theme_id']);
+    }
+
+    /**
+     * 将时间戳转换成剩余的小时分钟，只支持在24小时以内的转换
+     * @param $time
+     * @return string
+     */
+    private static function timeTostring($time){
+        $second = $time%(3600*24);//除去整天之后剩余的时间
+        $hour = floor($second/3600);
+        $second = $second/600;//除去整小时之后剩余的时间
+        $minute = floor($second/60);
+
+        return $hour.'时'.$minute.'分';
     }
 
 
