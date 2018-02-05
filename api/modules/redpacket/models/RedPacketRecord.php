@@ -44,17 +44,18 @@ class RedPacketRecord extends \common\models\RedPacketRecord
     static public $_salt;
 
     /**
-     * 检查红包code和address是否存在
+     * 检查红包code是否存在
      * @param $code
      * @param $address
      */
-    public static function checkCodeAndAddress($address, $code)
+    public static function checkCodeAndAddress($code)
     {
         //查询红包记录
-        $recordInfo = RedPacketRecord::find()->where(['code' => $code, 'to_address' => $address])->one()->attributes;
+        $recordInfo = RedPacketRecord::find()->where(['code' => $code])->one();
         if (!$recordInfo) {
             return false;
         }
+        $recordInfo = $recordInfo->attributes;
         //查询是否为领取状态
         if ($recordInfo['status'] == self::RECEIVED) {
             return $recordInfo;
@@ -71,9 +72,9 @@ class RedPacketRecord extends \common\models\RedPacketRecord
      *
      * @return int
      */
-    public static function updateStatusAndTxidByid($id, $status, $txid)
+    public static function updateStatusAndTxidByid($id, $status, $txid, $to_address)
     {
-        return RedPacketRecord::updateAll(["status" => $status, "txid" => $txid], ["id" => $id]);
+        return RedPacketRecord::updateAll(["status" => $status, "txid" => $txid, "to_address" => $to_address], ["id" => $id]);
     }
 
     /**
@@ -89,7 +90,7 @@ class RedPacketRecord extends \common\models\RedPacketRecord
      * 领取一个红包金额，并累加领取次数
      * @return string
      */
-    public function setRedpacketAmountWithAddQuantity()
+    public function setInfoWithRedpacket()
     {
         //一个红包一个微信用户职能领取一次
         $redPacketRecordCountForCurrentOpenid = self::find()
@@ -111,15 +112,18 @@ class RedPacketRecord extends \common\models\RedPacketRecord
         }
 
         //去redis获取红包金额
-        //$rewardData = new RewardData();
-        //$this->amount = $rewardData->get($this->rid);
-        $this->amount = 2;
+        $rewardData = new RewardData();
+        $this->amount = $rewardData->get($this->rid);
 
         //增加一次领取次数，如果正好领取完更改红包状态为已完成
         $redPacket->already_received_quantity = $redPacket->already_received_quantity+1;
         if ($redPacket->already_received_quantity >= $redPacket->quantity && $redPacket->status != 3 && $redPacket->status != 4) {
             $redPacket->status = 3;
         }
+
+        //获取红包表的来源地址
+        $this->from_address = $redPacket->address;
+
         $redPacket->save();
 
         //判断是否获取到红包金额

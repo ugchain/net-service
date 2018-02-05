@@ -28,7 +28,7 @@ class RoseController extends  Controller
 //    }
 
     /**
-     * 创建勋章
+     * 创建玫瑰
      */
     public function actionCreateRose()
     {

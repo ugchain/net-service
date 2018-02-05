@@ -89,8 +89,14 @@ class WeChatRedPacketController extends Controller
         //微信授权认证返回code码
         $code = Yii::$app->request->get("code", "");
         $redpacketId = Yii::$app->request->get("redpacket_id", "");
-        if (!($code && $redpacketId)) {
+
+        if (!$redpacketId) {
             outputHelper::ouputErrorcodeJson(\common\helpers\ErrorCodes::PARAM_NOT_EXIST);
+        }
+
+        //重新跳转用户权限页面
+        if (!$code) {
+            return $this->redirect("redirect-url?redpacket_id=$redpacketId");
         }
 
         //获取当前微信用户的access token和openid
@@ -141,7 +147,7 @@ class WeChatRedPacketController extends Controller
         }
 
         //获得红包金额并累加领取次数
-        $model->setRedpacketAmountWithAddQuantity();
+        $model->setInfoWithRedpacket();
         //生成红包口令
         $model->grenerateRedpacketCode();
         //红包获得时间

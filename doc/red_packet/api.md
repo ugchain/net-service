@@ -8,10 +8,11 @@
 - POST 
 
 **参数：** 
-
+``
 |参数名|必选|类型|说明|
 |:----    |:---|:----- |-----   |
 |title |是  |string |主题标题 |
+|desc |是  |string |主题描述 |
 |img |是  |string |主题图片地址 |
 |thumb_img |是  |string |主题缩略图地址 |
 |share_img |是  |string |分享缩略图地址 |
@@ -19,7 +20,7 @@
  **返回示例**
 
 ``` 
-{
+{````````
     "code": 0,
     "message": "成功",
     "data": []
@@ -49,6 +50,7 @@
 		"list": [{
 			"id": "1",
 			"title": "名字",
+			"desc"："描述"，
 			"img": "/upload/test/image2.png",
 			"thumb_img": "/upload/test/image.png",
 			"share_img": "/upload/test/image1.png",
@@ -56,6 +58,7 @@
 		}, {
 			"id": "2",
 			"title": "名字",
+			"desc"："描述"，
 			"img": "/upload/test/image2.png",
 			"thumb_img": "/upload/test/image.png",
 			"share_img": "/upload/test/image1.png",
@@ -152,6 +155,7 @@
 |:----    |:---|:----- |-----   |
 |code |是  |string |红包兑换码 |
 |address |是  |string |当前账户地址 |
+|type |是  |string |类型 1获取红包信息；2兑换红包 |
 
  **返回示例**
 
@@ -161,6 +165,8 @@
     "message": "成功",
     "data": {
         "id": 2
+        "title": "大吉大利"
+        "amount":1.98
     }
 }
 
@@ -214,6 +220,7 @@
             }
         ]
         "image_url": "http://wallet-pro.dev:8088" //拼接url
+        "share_url": "http://ugwallet.local/redpacket/we-chat-red-packet/redirect-url?redpacket_id=1"//微信分享连接
     }
 }
 
