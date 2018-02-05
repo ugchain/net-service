@@ -160,7 +160,7 @@ class WeChatRedPacketController extends Controller
 
             $model->save();
             $rewardData = new RewardData();
-            $this->amount = $rewardData->delete($model->rid);
+            $rewardData->delete($model->rid);
             $tr->commit();
         } catch (Exception $e){
             $tr->rollback();
