@@ -127,7 +127,7 @@ class WeChatRedPacketController extends Controller
             'openid' => $userInfoData->openid,
             'nickname' => $userInfoData->nickname,
             'headimgurl' => $userInfoData->headimgurl,
-            'jsApiConfig' => @Yii::$app->wechat->jsApiConfig(['jsApiList' => ['onMenuShareTimeline']])
+            //'jsApiConfig' => @Yii::$app->wechat->jsApiConfig(['jsApiList' => ['onMenuShareTimeline']])
         ]);
     }
 
