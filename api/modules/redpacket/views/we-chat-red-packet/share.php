@@ -177,6 +177,11 @@
 </div>
 
 </body>
+<script src="/js/jquery-3.3.1.min.js"></script>
+<script src="/js/jquery-weui.min.js"></script>
+<script src="/js/clipboard.min.js"></script>
+<script src="/js/index.js"></script>
+<script src="http://res.wx.qq.com/open/js/jweixin-1.2.0.js"></script>
 <script>
     var state = <?= $state ?>;
     var rid = "<?=$redpacketInfo['id'] ?>";
@@ -184,10 +189,17 @@
     var nickname = "<?=$nickname ?>";
     var headimgurl = "<?=$headimgurl ?>";
     var expire_time = "<?=$redpacketInfo['expire_time']?>"
+    // 接入wx_sdk
+    // wx.config({
+    //     debug: true, 
+    //     appId: '', 
+    //     timestamp: ,
+    //     nonceStr: '', 
+    //     signature: '',
+    //     jsApiList: [
+    //         'onMenuShareTimeline',
+    //         'onMenuShareAppMessage',
+    //     ] 
+    // });
 </script>
-<script src="/js/jquery-3.3.1.min.js"></script>
-<script src="/js/jquery-weui.min.js"></script>
-<script src="/js/clipboard.min.js"></script>
-
-<script src="/js/index.js"></script>
 </html>
