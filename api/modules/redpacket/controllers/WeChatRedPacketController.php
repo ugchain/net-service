@@ -75,9 +75,9 @@ class WeChatRedPacketController extends Controller
      */
     public function actionRedirectUrl()
     {
-        $wechat = Yii::$app->wechat;
         $redpacketId = Yii::$app->request->get("redpacket_id", "");
-        $wechatRedirectUrl = $wechat->getOauth2AuthorizeUrl("$this->redirect_uri?redpacket_id=$redpacketId");
+        $redirect_uri = urlencode("$this->redirect_uri?redpacket_id=$redpacketId");
+        $wechatRedirectUrl = sprintf(self::WECHAT_REDIRECT_URL, $this->appid, $redirect_uri);
         header("Location: $wechatRedirectUrl");
     }
 
