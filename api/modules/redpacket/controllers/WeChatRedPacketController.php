@@ -9,6 +9,7 @@ namespace api\modules\redpacket\controllers;
 
 use common\helpers\RewardData;
 use Yii;
+use yii\db\Exception;
 use yii\web\Controller;
 use yii\base\InvalidParamException;
 use common\helpers\OutputHelper;
@@ -159,6 +160,8 @@ class WeChatRedPacketController extends Controller
 
             $model->save();
             $tr->commit();
+            $rewardData = new RewardData();
+            $this->amount = $rewardData->delete($this->rid);
 
         } catch (Exception $e){
             $tr->rollback();
