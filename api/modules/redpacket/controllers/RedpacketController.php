@@ -88,7 +88,7 @@ class RedpacketController extends  Controller
         $rewardData = new RewardData();
         $rewardData->set($packet_id,$redis_data);
         //发送离线签名数据
-        $res_data = CurlRequest::ChainCurl(Yii::$app->params["ug"]["ug_sign_url"], "eth_sendRawTransaction", [$data['raw_transaction']]);
+        $res_data = CurlRequest::ChainCurl(Yii::$app->params["ug"]["ug_host"], "eth_sendRawTransaction", [$data['raw_transaction']]);
         if(!$res_data){
             outputHelper::ouputErrorcodeJson(\common\helpers\ErrorCodes::FALL);
         }
@@ -151,6 +151,13 @@ class RedpacketController extends  Controller
         if(!$data['title'] || !$data['theme_id'] || !$data['from_address'] ||!$data["to_address"] || !$data['amount'] || !$data['quantity'] || !$data['raw_transaction'] || !$data['hash']){
             outputHelper::ouputErrorcodeJson(\common\helpers\ErrorCodes::PARAM_NOT_EXIST);
         }
+
+        //验证红包数量
+        if ($data['quantity'] > 200) {
+            outputHelper::ouputErrorcodeJson(\common\helpers\ErrorCodes::PARAM_NOT_EXIST);
+        }
+        //验证红包title
+
         return $data;
     }
 
@@ -268,7 +275,6 @@ class RedpacketController extends  Controller
         $result = RedPacket::getRedList($address, $type, $page, $pageSize);
 
         //组装返回数据
-        $result['received_quantity'] = $result['count'];
         $result['image_url'] = Yii::$app->params['image_url'];
         outputHelper::ouputErrorcodeJson(\common\helpers\ErrorCodes::SUCCESS, $result);
     }

@@ -105,24 +105,35 @@ class RedPacket extends \common\models\RedPacket
      */
     public static function getRedList($address, $type, $page, $pageSize)
     {
+        $sum = 0;
+        $count = 0;
+        //获取领取个数
+        if ($type == 0) {
+            $where = ['to_address' => $address];
+            $count = RedPacketRecord::find()->where($where)->count();
+            $sum = RedPacketRecord::find()->where($where)->sum('amount');
+        } else {
+            $where = ['address' => $address];
+            $count = RedPacket::find()->where($where)->count();
+            $sum = RedPacket::find()->where($where)->sum('amount');
+        }
+
         $query = Yii::$app->db;
         $offset = ($page - 1) * $pageSize;
         if ($type == self::I_RECEIVED) {
-            $sql = "SELECT `rr`.status, `rr`.exchange_time, `rr`.expire_time, `rr`.rid, `rr`.amount, `rp`.theme_id, `rp`.title, `rp`.id FROM `ug_red_packet_record` as rr LEFT JOIN `ug_red_packet` as rp on rr.rid = rp.id 
+            $sql = "SELECT `rr`.status, `rr`.to_address, `rr`.exchange_time, `rr`.expire_time, `rr`.rid, `rr`.amount, `rp`.theme_id, `rp`.title, `rp`.id FROM `ug_red_packet_record` as rr LEFT JOIN `ug_red_packet` as rp on rr.rid = rp.id 
                   where rr.to_address = '" . $address . "' and `rr`.status in ('" . RedPacketRecord::EXCHANGE_SUCC . "','". RedPacketRecord::REDEMPTION . "') order by id desc limit " . $pageSize . " offset " . $offset;
         } else {
             $sql = "SELECT * FROM `ug_red_packet` where address = '" . $address . "' order by id desc limit " . $pageSize . " offset " . $offset;
         }
         $commond = $query->createCommand($sql);
         $list = $commond->queryAll();
-        $count = count($list);
         //默认无下一页
         $is_next_page = "0";
         if ($count - ($page * $pageSize) >= 0) {
             $is_next_page = "1";//有下一页
         }
 
-        $sum = 0;
        foreach ($list as $k => $v) {
            //获取已领人数
            $receive_count = RedPacketRecord::find()->where(['rid' => $v['id']])->count();
@@ -130,11 +141,10 @@ class RedPacket extends \common\models\RedPacket
            $list[$k]['theme_img'] = $theme['img'];
            $list[$k]['theme_thumb_img'] = $theme['thumb_img'];
            $list[$k]['theme_share_img'] = $theme['share_img'];
-           $sum += $v['amount'];
            $list[$k]['receive'] = $receive_count;
        }
 
-        return ['list' => $list, 'is_next_page' => $is_next_page, "count"=> $count, "page" => $page, "pageSize" => $pageSize, "received_amount" => $sum];
+        return ['list' => $list, 'is_next_page' => $is_next_page, "count"=> $count, "page" => $page, "pageSize" => $pageSize, "received_amount" => $sum, 'received_quantity' => $count];
     }
 
     /**
