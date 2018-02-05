@@ -37,7 +37,8 @@ class ErrorCodes
         RED_PACKET_LED_LIGHT                                        =   20118,//红包以领光
         ROSE_THEME_NOT_EXISTS                                       =   20119,//玫瑰主题未获取到
         RED_PACKET_QUANTITY_EXCEEDED                                =   20120,//红包数量超出限制
-        RED_PACKET_TITLE_EXCEEDED                                   =   20121;//红包名称超出限制
+        RED_PACKET_TITLE_EXCEEDED                                   =   20121,//红包名称超出限制
+        RED_PACKET_SEND_CHAIN_FALL                                  =   20122;//上链失败
 
 
 
@@ -71,7 +72,8 @@ class ErrorCodes
         self::RED_PACKET_LED_LIGHT                                  =>'红包以领光',
         self::ROSE_THEME_NOT_EXISTS                                 =>'主题缺失',
         self::RED_PACKET_QUANTITY_EXCEEDED                          =>'红包数量超出限制',
-        self::RED_PACKET_TITLE_EXCEEDED                             =>'红包名称超出限制'
+        self::RED_PACKET_TITLE_EXCEEDED                             =>'红包名称超出限制',
+        self::RED_PACKET_SEND_CHAIN_FALL                            =>'发送交易上链失败',
     ];
 
 }
