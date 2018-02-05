@@ -72,7 +72,8 @@ class RedpacketController extends  Controller
         //事务结束
         //红包计算公示(红包ID：{2,3,4,5})
         $redis_data = [];
-        $average_amount = $data["amount"] / $data['quantity'];
+        $amount = (string)OutputHelper::fromWei($data["amount"]);
+        $average_amount = $amount / $data['quantity'];
         if($data["type"] == 0){
             for($i=0;$i<$data["quantity"];$i++){
                 $redis_data[$i] = $average_amount;
@@ -81,14 +82,14 @@ class RedpacketController extends  Controller
             //随机红包分配
             $max = $average_amount * self::MAX;
             $min = $average_amount * self::MIN;
-            $redis_data = self::random_red($data["amount"],$data["quantity"],$max,$min);
+            $redis_data = self::random_red($amount,$data["quantity"],$max,$min);
         }
         $this->REPACK_STATUS = 0;
         //存放redis
         $rewardData = new RewardData();
         $rewardData->set($packet_id,$redis_data);
         //发送离线签名数据
-        $res_data = CurlRequest::ChainCurl(Yii::$app->params["ug"]["ug_sign_url"], "eth_sendRawTransaction", [$data['raw_transaction']]);
+        $res_data = CurlRequest::ChainCurl(Yii::$app->params["ug"]["ug_host"], "eth_sendRawTransaction", [$data['raw_transaction']]);
         if(!$res_data){
             outputHelper::ouputErrorcodeJson(\common\helpers\ErrorCodes::FALL);
         }
@@ -151,6 +152,13 @@ class RedpacketController extends  Controller
         if(!$data['title'] || !$data['theme_id'] || !$data['from_address'] ||!$data["to_address"] || !$data['amount'] || !$data['quantity'] || !$data['raw_transaction'] || !$data['hash']){
             outputHelper::ouputErrorcodeJson(\common\helpers\ErrorCodes::PARAM_NOT_EXIST);
         }
+
+        //验证红包数量
+        if ($data['quantity'] > 200) {
+            outputHelper::ouputErrorcodeJson(\common\helpers\ErrorCodes::PARAM_NOT_EXIST);
+        }
+        //验证红包title
+
         return $data;
     }
 
@@ -268,7 +276,6 @@ class RedpacketController extends  Controller
         $result = RedPacket::getRedList($address, $type, $page, $pageSize);
 
         //组装返回数据
-        $result['received_quantity'] = $result['count'];
         $result['image_url'] = Yii::$app->params['image_url'];
         outputHelper::ouputErrorcodeJson(\common\helpers\ErrorCodes::SUCCESS, $result);
     }

@@ -62,17 +62,26 @@ class RoseGive extends \common\models\RoseGive
     {
         $query = Yii::$app->db;
         $offset = ($page - 1) * $pageSize;
-        $sql = "SELECT `m`.*, `mg`.* FROM `ug_rose_give` as `mg` LEFT JOIN `ug_rose` as `m` ON mg.rose_id = m.id where 
-            mg.from_address = '" . $address . "'  group by mg.rose_id order by mg.addtime desc limit " . $pageSize . " offset " . $offset;
+        $sql = "SELECT `m`.*, `mg`.addtime as give_addtime, `mg`.* FROM `ug_rose_give` as `mg` LEFT JOIN `ug_rose` as `m` ON mg.rose_id = m.id where 
+            mg.from_address = '" . $address . "' order by mg.addtime desc limit " . $pageSize . " offset " . $offset;
         $commond = $query->createCommand($sql);
         $list = $commond->queryAll();
-        $count = count($list);
+
+        $arr = [];
+        $new_list = [];
+        foreach ($list as $k => $v) {
+            if(!in_array($v['rose_id'], $arr)) {
+                $arr[] = $v['rose_id'];
+                $new_list[] = $v;
+            }
+        }
+        $count = count($new_list);
         //默认无下一页
         $is_next_page = "0";
         if ($count - ($page * $pageSize) >= 0) {
             $is_next_page = "1";//有下一页
         }
-        return ['list' => $list, 'is_next_page' => $is_next_page,"count"=> $count];
+        return ['list' => $new_list, 'is_next_page' => $is_next_page,"count"=> $count];
     }
 
 
