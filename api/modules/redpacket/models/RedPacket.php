@@ -36,7 +36,7 @@ class RedPacket extends \common\models\RedPacket
             'already_received_amount' => 'TODO',
             'finish_time' => !empty($result->finish_time) ? date('m-d h:i', $result->finish_time) : '',
             'expire_time' => !empty($result->expire_time) ? date('m-d h:i', $result->expire_time) : '',
-            'last_time' => self::timeTostring($result->expire_time - time()),
+            'last_time' => self::timeTostring($result->expire_time),
             'current_time' => date('m-d h:i', time())
         ];
 
@@ -101,11 +101,17 @@ class RedPacket extends \common\models\RedPacket
      * @param $time
      * @return string
      */
-    private static function timeTostring($time){
-        $second = $time%(3600*24);//除去整天之后剩余的时间
-        $hour = floor($second/3600);
-        $second = $second/600;//除去整小时之后剩余的时间
-        $minute = floor($second/60);
+    private static function timeTostring($time)
+    {
+        $time = $time - time();
+
+        $hour = 0;
+        if ($time >= 3600) { // 如果大于1小时
+            $hour = (int)($time / 3600);
+            $time = $time % 3600; // 计算小时后剩余的毫秒数
+        }
+
+        $minute = (int)($time / 60); // 剩下的毫秒数都算作分
 
         return $hour.'时'.$minute.'分';
     }
