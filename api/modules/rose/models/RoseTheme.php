@@ -8,6 +8,8 @@ use Yii;
  *
  * @property string $img
  * @property string $title
+ * @property string $content
+ * @property string $slogan
  * @property string $thumb_img
  * @property string $share_img
  * @property integer $addtime

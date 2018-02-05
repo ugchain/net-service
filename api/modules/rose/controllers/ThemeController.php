@@ -36,8 +36,9 @@ class ThemeController extends  Controller
        //主题标题
        $model->title = Yii::$app->request->post("title","");
        $model->content = Yii::$app->request->post("content","");
+       $model->slogan = Yii::$app->request->post("slogan","");
        //判断参数
-       if(!$model->title || !$model->content){
+       if(!$model->title || !$model->content || !$model->slogan){
            outputHelper::ouputErrorcodeJson(\common\helpers\ErrorCodes::PARAM_NOT_EXIST);
        }
        //实例化文件

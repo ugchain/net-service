@@ -207,7 +207,8 @@ class RedpacketController extends  Controller
             //获取nince且组装签名数据
             $result['address'] = $address;
             $result['app_txid'] = ''; //空的
-            $result['amount'] = OutputHelper::NumToString($result['amount'] * pow(10, 18));
+//            $result['amount'] = OutputHelper::NumToString($result['amount'] * pow(10, 18));
+            $result['amount'] = $result['amount'];
             $send_sign_data = Operating::getNonceAssembleData($result, Yii::$app->params["ug"]["gas_price"], Yii::$app->params["ug"]["ug_host"], "eth_getTransactionCount", [Yii::$app->params["ug"]["red_packet_address"], "pending"]);
 
             //根据组装数据获取签名且广播交易
@@ -238,7 +239,7 @@ class RedpacketController extends  Controller
                 outputHelper::ouputErrorcodeJson(\common\helpers\ErrorCodes::FALL);
             }
 
-            outputHelper::ouputErrorcodeJson(\common\helpers\ErrorCodes::SUCCESS, ['id' => $result['rid'], 'amount' => $result['amount'] / pow(10, 18)]);
+            outputHelper::ouputErrorcodeJson(\common\helpers\ErrorCodes::SUCCESS, ['id' => $result['rid'], 'amount' => $result['amount']]);
         } else {
             outputHelper::ouputErrorcodeJson(\common\helpers\ErrorCodes::SUCCESS, ['id' => $redPacketInfo['id'], 'title' => $redPacketInfo['title']]);
         }

@@ -63,7 +63,7 @@ class RoseGive extends \common\models\RoseGive
         $query = Yii::$app->db;
         $offset = ($page - 1) * $pageSize;
         $sql = "SELECT `m`.*, `mg`.addtime as give_addtime, `mg`.* FROM `ug_rose_give` as `mg` LEFT JOIN `ug_rose` as `m` ON mg.rose_id = m.id where 
-            mg.from_address = '" . $address . "' order by mg.addtime desc limit " . $pageSize . " offset " . $offset;
+            mg.from_address = '" . $address . "' or  mg.to_address = '" . $address . "' order by mg.addtime desc limit " . $pageSize . " offset " . $offset;
         $commond = $query->createCommand($sql);
         $list = $commond->queryAll();
 

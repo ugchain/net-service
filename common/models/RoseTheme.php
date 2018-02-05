@@ -10,6 +10,7 @@ use yii\data\ActiveDataProvider;
  *
  * @property string $img
  * @property string $title
+ * @property string $slogan
  * @property string $content
  * @property string $thumb_img
  * @property integer $addtime
@@ -34,8 +35,8 @@ class RoseTheme extends ActiveRecord
     {
         return [
             [['addtime'], 'integer'],
-            [['title',"content",'img',"thumb_img",'banner_img','addtime'], 'required'],
-            [['title','img','thumb_img','banner_img','content'], 'string'],
+            [['title',"content",'img',"thumb_img",'banner_img','addtime','slogan'], 'required'],
+            [['title','img','thumb_img','banner_img','content','slogan'], 'string'],
         ];
     }
 
