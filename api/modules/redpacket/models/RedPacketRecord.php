@@ -120,6 +120,7 @@ class RedPacketRecord extends \common\models\RedPacketRecord
         $redPacket->already_received_quantity = $redPacket->already_received_quantity+1;
         if ($redPacket->already_received_quantity >= $redPacket->quantity && $redPacket->status != 3 && $redPacket->status != 4) {
             $redPacket->status = 3;
+            $redPacket->finish_time = time();
         }
 
         //获取红包表的来源地址
