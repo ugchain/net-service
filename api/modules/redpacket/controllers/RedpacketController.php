@@ -72,7 +72,8 @@ class RedpacketController extends  Controller
         //事务结束
         //红包计算公示(红包ID：{2,3,4,5})
         $redis_data = [];
-        $average_amount = $data["amount"] / $data['quantity'];
+        $amount = (string)OutputHelper::fromWei($data["amount"]);
+        $average_amount = $amount / $data['quantity'];
         if($data["type"] == 0){
             for($i=0;$i<$data["quantity"];$i++){
                 $redis_data[$i] = $average_amount;
@@ -81,7 +82,7 @@ class RedpacketController extends  Controller
             //随机红包分配
             $max = $average_amount * self::MAX;
             $min = $average_amount * self::MIN;
-            $redis_data = self::random_red($data["amount"],$data["quantity"],$max,$min);
+            $redis_data = self::random_red($amount,$data["quantity"],$max,$min);
         }
         $this->REPACK_STATUS = 0;
         //存放redis
