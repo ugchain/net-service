@@ -113,7 +113,7 @@ class WeChatRedPacketController extends Controller
         $userInfoData = $this->useGetRequestUrl($wechatUserInfoUrl);
 
         //获取当前红包的详细信息
-        $redpacketInfo = RedPacket::getRedPacketInfoWithRecordList($redpacketId);
+        $redpacketInfo = RedPacket::getRedPacketInfoWithRecordList($redpacketId, true);
         //获取当前用户的红包状态、红包口令
         $recordInfo = RedPacketRecord::getRedPacketRecordInfo($redpacketInfo['id'], $userInfoData->openid);
 
@@ -160,6 +160,34 @@ class WeChatRedPacketController extends Controller
         }
 
         outputHelper::ouputErrorcodeJson(\common\helpers\ErrorCodes::SUCCESS, ['code' => $model->code]);
+    }
+
+    public function actionTest()
+    {
+        $wechat = Yii::$app->wechat;
+        var_dump($wechat->jsApiTicket);exit;
+    }
+
+    private function getWxConfigForJs($length = 16) {
+        $wechat = Yii::$app->wechat;
+
+        //生成签名的时间戳
+        $timestamp = time();
+
+        //成签名的随机串
+        $chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+        $nonceStr = "";
+        for ($i = 0; $i < $length; $i++) {
+            $nonceStr .= substr($chars, mt_rand(0, strlen($chars) - 1), 1);
+        }
+
+        return [
+            'appid' => $this->appid,
+            'timestamp' => $timestamp,
+            'nonceStr' => $nonceStr,
+            'signature' => $signature,
+            'jsApiList' => $jsApiList
+        ];
     }
 
     /**

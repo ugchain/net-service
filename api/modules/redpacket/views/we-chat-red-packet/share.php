@@ -14,6 +14,14 @@
     <script>
     var vConsole = new VConsole();
   </script>
+  <script type="text/javascript">
+    var ua = window.navigator.userAgent.toLowerCase();
+    if(ua.match(/MicroMessenger/i) == "micromessenger"){ 
+        console.log('wx')
+    } else{
+        window.location.href = 'www.baidu.com'
+    }
+  </script>
 </head>
 <body>
     <!-- 头部红包 -->
