@@ -148,7 +148,7 @@ class RedPacket extends \common\models\RedPacket
            $list[$k]['receive'] = $receive_count;
        }
 
-        return ['list' => $list, 'is_next_page' => $is_next_page, "count"=> $count, "page" => $page, "pageSize" => $pageSize, "received_amount" => $sum, 'received_quantity' => $count];
+        return ['list' => $list, 'is_next_page' => $is_next_page, "count"=> $count, "page" => $page, "pageSize" => $pageSize, "received_amount" => empty($sum)?0:$sum, 'received_quantity' => $count];
     }
 
     /**
