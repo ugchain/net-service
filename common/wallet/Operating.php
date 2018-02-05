@@ -183,8 +183,9 @@ class Operating
     public static function updateDataBytxid($type, $txid)
     {
         if ($type == Trade::CREATE_REDPACKET) {
-            //更新红包表 status创建成功, create_succ_time创建成功时间
-            return RedPacket::updateAll(["status" => RedPacket::CREATE_REDPACKET_SUCC, "create_succ_time" => time()], ["txid" => $txid]);
+            //更新红包表 status创建成功, create_succ_time创建成功时间 expire_time 过期时间
+            $expire_time = time() + 86400;
+            return RedPacket::updateAll(["status" => RedPacket::CREATE_REDPACKET_SUCC, "create_succ_time" => time(),"expire_time" => $expire_time], ["txid" => $txid]);
         } else if($type == Trade::OPEN_REDPACKET) {
             //更新红包记录表 status兑换成功, exchange_time兑换时间
             return RedPacketRecord::updateAll(["status" => RedPacketRecord::EXCHANGE_SUCC, "exchange_time" => time()], ["txid" => $txid]);
