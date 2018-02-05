@@ -3,6 +3,7 @@
 namespace common\helpers;
 
 use Yii;
+use common\helpers\OutputHelper;
 /**
  * Class RewardData
  * @package common\helpers
@@ -70,7 +71,8 @@ class RewardData
 
         //重新保存
         $this->set($id,$data);
-
+        //转成大数
+        $amount = OutputHelper::toWei($amount);
         return $amount;
     }
 
