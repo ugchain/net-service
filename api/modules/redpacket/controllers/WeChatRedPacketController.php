@@ -75,9 +75,9 @@ class WeChatRedPacketController extends Controller
      */
     public function actionRedirectUrl()
     {
+        $wechat = Yii::$app->wechat;
         $redpacketId = Yii::$app->request->get("redpacket_id", "");
-        $redirect_uri = urlencode("$this->redirect_uri?redpacket_id=$redpacketId");
-        $wechatRedirectUrl = sprintf(self::WECHAT_REDIRECT_URL, $this->appid, $redirect_uri);
+        $wechatRedirectUrl = $wechat->getOauth2AuthorizeUrl("$this->redirect_uri?redpacket_id=$redpacketId");
         header("Location: $wechatRedirectUrl");
     }
 
@@ -165,7 +165,8 @@ class WeChatRedPacketController extends Controller
     public function actionTest()
     {
         $wechat = Yii::$app->wechat;
-        var_dump($wechat->jsApiTicket);exit;
+        echo "<pre>";
+        var_dump($wechat->jsApiConfig(['jsApiList' => ['onMenuShareTimeline']]));exit;
     }
 
     private function getWxConfigForJs($length = 16) {

@@ -113,7 +113,7 @@ class RedPacketRecord extends \common\models\RedPacketRecord
 
         //去redis获取红包金额
         $rewardData = new RewardData();
-        $this->amount = $rewardData->get($this->rid);
+        $this->amount = OutputHelper::NumToString($rewardData->get($this->rid));
 
         //增加一次领取次数，如果正好领取完更改红包状态为已完成
         $redPacket->already_received_quantity = $redPacket->already_received_quantity+1;

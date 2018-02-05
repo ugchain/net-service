@@ -29,6 +29,7 @@ class RedPacket extends \common\models\RedPacket
             'title' => $result->title,
             'status' => $result->status,
             'quantity' => $result->quantity,
+            'theme_id' => $result->theme_id,
             'already_received_quantity' => count($result->redPacketRecords),
             'amount' => isset($type) ? OutputHelper::fromWei($result->amount) : $result->amount,
             'back_amount' => isset($type) ? OutputHelper::fromWei($result->back_amount) : $result->back_amount,
