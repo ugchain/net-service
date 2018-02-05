@@ -125,7 +125,8 @@ class WeChatRedPacketController extends Controller
             'record_amount' => $recordInfo['amount'],
             'openid' => $userInfoData->openid,
             'nickname' => $userInfoData->nickname,
-            'headimgurl' => $userInfoData->headimgurl
+            'headimgurl' => $userInfoData->headimgurl,
+            'jsApiConfig' => @Yii::$app->wechat->jsApiConfig(['jsApiList' => ['onMenuShareTimeline']])
         ]);
     }
 
@@ -160,37 +161,6 @@ class WeChatRedPacketController extends Controller
         }
 
         outputHelper::ouputErrorcodeJson(\common\helpers\ErrorCodes::SUCCESS, ['code' => $model->code]);
-    }
-
-    public function actionTest()
-    {
-        $result = RedPacket::getRedPacketInfoWithRecordList('1');
-        echo "<pre>";var_dump($result);exit;
-        $wechat = Yii::$app->wechat;
-        echo "<pre>";
-        var_dump($wechat->jsApiConfig(['jsApiList' => ['onMenuShareTimeline']]));exit;
-    }
-
-    private function getWxConfigForJs($length = 16) {
-        $wechat = Yii::$app->wechat;
-
-        //生成签名的时间戳
-        $timestamp = time();
-
-        //成签名的随机串
-        $chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
-        $nonceStr = "";
-        for ($i = 0; $i < $length; $i++) {
-            $nonceStr .= substr($chars, mt_rand(0, strlen($chars) - 1), 1);
-        }
-
-        return [
-            'appid' => $this->appid,
-            'timestamp' => $timestamp,
-            'nonceStr' => $nonceStr,
-            'signature' => $signature,
-            'jsApiList' => $jsApiList
-        ];
     }
 
     /**
