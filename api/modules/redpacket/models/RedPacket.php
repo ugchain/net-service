@@ -31,8 +31,8 @@ class RedPacket extends \common\models\RedPacket
             'quantity' => $result->quantity,
             'theme_id' => $result->theme_id,
             'already_received_quantity' => count($result->redPacketRecords),
-            'amount' => isset($type) ? OutputHelper::fromWei($result->amount) : OutputHelper::NumToString($result->amount),
-            'back_amount' => isset($type) ? OutputHelper::fromWei($result->back_amount) : OutputHelper::NumToString($result->back_amount),
+            'amount' => !$type ? OutputHelper::fromWei($result->amount) : $result->amount,
+            'back_amount' => !$type ? OutputHelper::fromWei($result->back_amount) : OutputHelper::NumToString($result->back_amount),
             'already_received_amount' => 'TODO',
             'finish_time' => !empty($result->finish_time) ? date('m-d h:i', $result->finish_time) : '',
             'expire_time' => !empty($result->expire_time) ? date('m-d h:i', $result->expire_time) : '',
@@ -64,7 +64,7 @@ class RedPacket extends \common\models\RedPacket
             $redPacketRecordList[] = [
                 'wx_name' => $redPacketRecord->wx_name,
                 'wx_avatar' => $redPacketRecord->wx_avatar,
-                'amount' => isset($type) ? OutputHelper::fromWei($redPacketRecord->amount) : $redPacketRecord->amount,
+                'amount' => !$type ? OutputHelper::fromWei($redPacketRecord->amount) : $redPacketRecord->amount,
                 'status' => $redPacketRecord->status,
                 'time' => !empty($time) ? date('m-d s:i', $time) : ''
             ];
@@ -74,7 +74,7 @@ class RedPacket extends \common\models\RedPacket
         $redPacketTheme = $result->redPacketTheme;
 
         //拼装回返
-        $redpacketInfo['already_received_amount'] =  isset($type) ? OutputHelper::fromWei($alreadyReceivedAmount) : $alreadyReceivedAmount;
+        $redpacketInfo['already_received_amount'] =  !$type ? OutputHelper::fromWei($alreadyReceivedAmount) : $alreadyReceivedAmount;
         $redpacketInfo['theme_img'] = !empty($redPacketTheme->img) ? $redPacketTheme->img : '';
         $redpacketInfo['theme_thumb_img'] = !empty($redPacketTheme->thumb_img) ? $redPacketTheme->thumb_img : '';
         $redpacketInfo['theme_share_img'] = !empty($redPacketTheme->share_img) ? $redPacketTheme->share_img : '';
