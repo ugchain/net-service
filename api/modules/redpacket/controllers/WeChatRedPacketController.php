@@ -164,6 +164,8 @@ class WeChatRedPacketController extends Controller
 
     public function actionTest()
     {
+        $result = RedPacket::getRedPacketInfoWithRecordList('1');
+        echo "<pre>";var_dump($result);exit;
         $wechat = Yii::$app->wechat;
         echo "<pre>";
         var_dump($wechat->jsApiConfig(['jsApiList' => ['onMenuShareTimeline']]));exit;
