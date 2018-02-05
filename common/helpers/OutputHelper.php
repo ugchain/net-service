@@ -78,4 +78,23 @@ class OutputHelper
         return (string)$num;
     }
 
+    /**
+     * web3 ether to wei
+     * @param $number
+     */
+    public static function fromWei($number)
+    {
+        return $number / pow(10,18);
+    }
+
+
+    /**
+     * web3 wei to ether
+     * @param $number
+     */
+    public static function toWei($number)
+    {
+        return $number * pow(10,18);
+    }
+
 }

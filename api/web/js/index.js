@@ -22,8 +22,8 @@ $(function(){
 		})
 	}
 
-	// 未领取
 	if(state == 0){
+		// 未领取
 		$('.tie').css({
 			'margin-top': '-30px'
 		})
@@ -67,11 +67,8 @@ $(function(){
 	            }
 	        })
 		})
-
-	}
-
-	// 已领取
-	if(state == 1){
+	}else if(state == 1){
+		// 已领取
 		$('.received').show().css('opacity','1')
 		$('.packet-pic-open').hide()
 			.siblings('.get-ugc').hide()
@@ -81,16 +78,12 @@ $(function(){
 			'font-size':'21px',
 			'color': '#fff'
 		}).text('恭喜您抢到一个UGC红包').show()
-	}
-
-	// 已兑换
-	if(state == 2){
+	}else if(state == 2){
+		// 已兑换
 		$('.exchanged').show()
 		$('.received').hide()
-	}
-
-	// 已领光
-	if(state == 3){
+	}else if(state == 3){
+		// 已领光
 		$('.finished').show()
 		$('.received').hide()
 		$('.packet-pic-open').hide()
@@ -101,10 +94,8 @@ $(function(){
 			.show()
 			.text('红包已领光')
 			.siblings('').hide()
-	}
-
-	// 已结束
-	if(state == 4){
+	}else if(state == 4){
+		// 已结束
 		$('.finished').show()
 		$('.received').hide()
 		$('.packet-pic-open').hide()
@@ -118,15 +109,23 @@ $(function(){
 		$('.state-info').find('.state-tips')
 			.show()
 			.text('红包已结束')
+	}else {
+		state = 0
+		return false
 	}
 
 	// 模拟 加载领取详情
-	setTimeout(function() {
-		
-	}, 1500); 
+	// setTimeout(function() {
+	// 	$('.weui-loadmore').on('click', function() {
+	// 		$('.weui-loading').show()
+	// 		$('.weui-loadmore__tips').text("正在加载")
+	// 		$('weui-panel__bd').css({
+	// 			'height': 'auto'
+	// 		})
+	// 	});
+	// }, 1500); 
 
-
-	// 配置sdk
+	// 配置微信分享
 	// wx.ready(function () {
 	// 	wx.onMenuShareTimeline({
 	// 	    title: '', 
