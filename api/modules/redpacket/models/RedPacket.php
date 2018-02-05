@@ -18,7 +18,7 @@ class RedPacket extends \common\models\RedPacket
      * @param $type boolean 是否fromWei
      * @return array
      */
-    public static function getRedPacketInfoWithRecordList($id, $type = false)
+    public static function getRedPacketInfoWithRecordList($id, $type = true)
     {
         $result = self::findOne($id);
 

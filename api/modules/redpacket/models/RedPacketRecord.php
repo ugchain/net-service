@@ -144,7 +144,7 @@ class RedPacketRecord extends \common\models\RedPacketRecord
         $record = self::find()->where("rid=$rid and openid='$openid'")->one();
         $info['state'] = null;
         $info['code'] = !empty($record->code) ? $record->code : '';
-        $info['amount'] = !empty($record->amount) ? $record->amount : '';
+        $info['amount'] = !empty($record->amount) ? OutputHelper::fromWei($record->amount) : '';
         if (empty($record)) {
             $redPacket = RedPacket::findOne($rid);
             if ($redPacket->status == 3) {
