@@ -159,10 +159,9 @@ class WeChatRedPacketController extends Controller
             $model->wx_name = $this->filterEmoji($model->wx_name);
 
             $model->save();
-            $tr->commit();
             $rewardData = new RewardData();
-            $this->amount = $rewardData->delete($this->rid);
-
+            $this->amount = $rewardData->delete($model->rid);
+            $tr->commit();
         } catch (Exception $e){
             $tr->rollback();
             outputHelper::ouputErrorcodeJson(\common\helpers\ErrorCodes::RED_PACKET_GRAD_FAIL);
