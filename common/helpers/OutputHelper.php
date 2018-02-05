@@ -9,7 +9,7 @@ class OutputHelper
     /**
      * 组装返回数据
      */
-    public static function  ouputErrorcodeJson($code,$data=[])
+    public static function ouputErrorcodeJson($code,$data=[])
     {
         header('Content-type:text/json;charset=utf-8');
         $errorcode['code'] = $code;
