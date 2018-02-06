@@ -63,6 +63,33 @@ class RewardData
         }
         $amount = $data[0];
 
+        //转成大数
+        $amount = OutputHelper::toWei($amount);
+        return $amount;
+    }
+
+    /**
+     * 删除数据
+     * @param $id
+     * @return bool
+     */
+    public function delete($id)
+    {
+        if(!$this->redis){
+            return false;
+        }
+        $data = $this->redis->get($id);
+
+        if(!$data){
+            return false;
+        }
+        $data = json_decode($data,true);
+
+        //获取第一个元素值
+        if(!$data){
+            return false;
+        }
+
         //删除元素key
         unset($data[0]);
 
@@ -71,12 +98,7 @@ class RewardData
 
         //重新保存
         $this->set($id,$data);
-        //转成大数
-        $amount = OutputHelper::toWei($amount);
-        return $amount;
+
+        return true;
     }
-
-
-
-
 }

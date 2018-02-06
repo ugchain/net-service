@@ -131,7 +131,7 @@
     "data": {
         "share_url": "http://ugwallet.local/redpacket/we-chat-red-packet/redirect-url?redpacket_id=8",
         "id": 8,//红包ID
-        "status": 1,//状态值 0:部署中 1:创建成功
+        "status": 1,//状态值 0:部署中 1:创建失败 2:创建成功
         "expire_time": "1517652727",//过期时间
         "create_succ_time": "1517566327"//创建成功时间
     }
@@ -396,6 +396,31 @@
     "message": "成功",
     "data": {
         "code": "EScdsqWXxx", //红包口令
+    }
+}
+```
+
+### app端主动监听数据是否上链
+**请求URL：** 
+- `redpacket/redpacket/listen-repacket`
+  
+**请求方式：**
+- POST
+
+**参数：** 
+
+|参数名|必选|类型|说明|
+|:----    |:---|:----- |-----   |
+|packet_id |是  |inter | 红包ID  |
+
+ **返回示例**
+
+``` 
+{
+    "code": 0,
+    "message": "成功",
+    "data": {
+        "status": 0, //0:部署中 1:成功
     }
 }
 ```

@@ -4,6 +4,7 @@ namespace api\modules\redpacket\models;
 use common\helpers\RewardData;
 use common\helpers\OutputHelper;
 use Yii;
+use yii\db\Exception;
 
 class RedPacketRecord extends \common\models\RedPacketRecord
 {
@@ -53,7 +54,7 @@ class RedPacketRecord extends \common\models\RedPacketRecord
         //查询红包记录
         $recordInfo = RedPacketRecord::find()->where(['code' => $code])->one();
         if (!$recordInfo) {
-            return false;
+            return 1;
         }
         $recordInfo = $recordInfo->attributes;
         //查询是否为领取状态
@@ -61,7 +62,7 @@ class RedPacketRecord extends \common\models\RedPacketRecord
             return $recordInfo;
         }
 
-       return false;
+       return 2;
     }
 
     /**
@@ -97,18 +98,18 @@ class RedPacketRecord extends \common\models\RedPacketRecord
             ->where("rid=".$this->rid." and openid='".$this->openid."'")
             ->count();
         if ($redPacketRecordCountForCurrentOpenid != 0) {
-            outputHelper::ouputErrorcodeJson(\common\helpers\ErrorCodes::RED_PACKET_EXIST);
+            throw new Exception();
         }
 
         //红包是否以被领光
         $redPacket = RedPacket::findOne($this->rid);
         if ($redPacket->already_received_quantity >= $redPacket->quantity) {
-            output::ouputErrorcodeJson(\common\helpers\ErrorCodes::RED_PACKET_LED_LIGHT);
+            throw new Exception();
         }
 
         //如果红包状态为0创建红包和1链上失败则不能领取
         if ($redPacket->status == 0 || $redPacket->status == 1) {
-            outputHelper::ouputErrorcodeJson(\common\helpers\ErrorCodes::RED_PACKET_GRAD_FAIL);
+            throw new Exception();
         }
 
         //去redis获取红包金额
@@ -119,17 +120,13 @@ class RedPacketRecord extends \common\models\RedPacketRecord
         $redPacket->already_received_quantity = $redPacket->already_received_quantity+1;
         if ($redPacket->already_received_quantity >= $redPacket->quantity && $redPacket->status != 3 && $redPacket->status != 4) {
             $redPacket->status = 3;
+            $redPacket->finish_time = time();
         }
 
         //获取红包表的来源地址
         $this->from_address = $redPacket->address;
 
         $redPacket->save();
-
-        //判断是否获取到红包金额
-        if (!$this->amount) {
-            outputHelper::ouputErrorcodeJson(\common\helpers\ErrorCodes::RED_PACKET_GRAD_FAIL);
-        }
     }
 
     /**
@@ -144,7 +141,7 @@ class RedPacketRecord extends \common\models\RedPacketRecord
         $record = self::find()->where("rid=$rid and openid='$openid'")->one();
         $info['state'] = null;
         $info['code'] = !empty($record->code) ? $record->code : '';
-        $info['amount'] = !empty($record->amount) ? $record->amount : '';
+        $info['amount'] = !empty($record->amount) ? OutputHelper::fromWei($record->amount) : '';
         if (empty($record)) {
             $redPacket = RedPacket::findOne($rid);
             if ($redPacket->status == 3) {

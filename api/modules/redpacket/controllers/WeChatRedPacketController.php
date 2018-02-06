@@ -9,6 +9,7 @@ namespace api\modules\redpacket\controllers;
 
 use common\helpers\RewardData;
 use Yii;
+use yii\db\Exception;
 use yii\web\Controller;
 use yii\base\InvalidParamException;
 use common\helpers\OutputHelper;
@@ -75,9 +76,9 @@ class WeChatRedPacketController extends Controller
      */
     public function actionRedirectUrl()
     {
-        $wechat = Yii::$app->wechat;
         $redpacketId = Yii::$app->request->get("redpacket_id", "");
-        $wechatRedirectUrl = $wechat->getOauth2AuthorizeUrl("$this->redirect_uri?redpacket_id=$redpacketId");
+        $redirect_uri = urlencode("$this->redirect_uri?redpacket_id=$redpacketId");
+        $wechatRedirectUrl = sprintf(self::WECHAT_REDIRECT_URL, $this->appid, $redirect_uri);
         header("Location: $wechatRedirectUrl");
     }
 
@@ -113,7 +114,7 @@ class WeChatRedPacketController extends Controller
         $userInfoData = $this->useGetRequestUrl($wechatUserInfoUrl);
 
         //获取当前红包的详细信息
-        $redpacketInfo = RedPacket::getRedPacketInfoWithRecordList($redpacketId, true);
+        $redpacketInfo = RedPacket::getRedPacketInfoWithRecordList($redpacketId, false);
         //获取当前用户的红包状态、红包口令
         $recordInfo = RedPacketRecord::getRedPacketRecordInfo($redpacketInfo['id'], $userInfoData->openid);
 
@@ -125,7 +126,8 @@ class WeChatRedPacketController extends Controller
             'record_amount' => $recordInfo['amount'],
             'openid' => $userInfoData->openid,
             'nickname' => $userInfoData->nickname,
-            'headimgurl' => $userInfoData->headimgurl
+            'headimgurl' => $userInfoData->headimgurl,
+            //'jsApiConfig' => @Yii::$app->wechat->jsApiConfig(['jsApiList' => ['onMenuShareTimeline']])
         ]);
     }
 
@@ -134,61 +136,37 @@ class WeChatRedPacketController extends Controller
      */
     public function actionGradARedpacket()
     {
-        $model = new RedPacketRecord();
-        $model->openid = Yii::$app->request->post('openid', '');
-        $model->rid = Yii::$app->request->post('rid', '');
-        $model->wx_name = Yii::$app->request->post('nickname', '');
-        $model->wx_avatar = Yii::$app->request->post('headimgurl', '');
-        $model->expire_time = Yii::$app->request->post( 'expire_time', '0');
+        $tr = Yii::$app->db->beginTransaction();
+        try {
+            $model = new RedPacketRecord();
+            $model->openid = Yii::$app->request->post('openid', '');
+            $model->rid = Yii::$app->request->post('rid', '');
+            $model->wx_name = Yii::$app->request->post('nickname', '');
+            $model->wx_avatar = Yii::$app->request->post('headimgurl', '');
 
-        //验证参数
-        if(!($model->openid && $model->rid && $model->wx_name && $model->wx_avatar)){
-            outputHelper::ouputErrorcodeJson(\common\helpers\ErrorCodes::PARAM_NOT_EXIST);
-        }
+            //验证参数
+            if(!($model->openid && $model->rid && $model->wx_name && $model->wx_avatar)){
+                outputHelper::ouputErrorcodeJson(\common\helpers\ErrorCodes::PARAM_NOT_EXIST);
+            }
 
-        //获得红包金额并累加领取次数
-        $model->setInfoWithRedpacket();
-        //生成红包口令
-        $model->grenerateRedpacketCode();
-        //红包获得时间
-        $model->addtime = time();
-        //过滤emoji
-        $model->wx_name = $this->filterEmoji($model->wx_name);
+            //获得红包金额并累加领取次数
+            $model->setInfoWithRedpacket();
+            //生成红包口令
+            $model->grenerateRedpacketCode();
+            //红包获得时间
+            $model->addtime = time();
+            //过滤emoji
+            $model->wx_name = $this->filterEmoji($model->wx_name);
 
-        if (!$model->save()) {
+            $model->save();
+            $rewardData = new RewardData();
+            $rewardData->delete($model->rid);
+            $tr->commit();
+        } catch (Exception $e){
+            $tr->rollback();
             outputHelper::ouputErrorcodeJson(\common\helpers\ErrorCodes::RED_PACKET_GRAD_FAIL);
         }
-
         outputHelper::ouputErrorcodeJson(\common\helpers\ErrorCodes::SUCCESS, ['code' => $model->code]);
-    }
-
-    public function actionTest()
-    {
-        $wechat = Yii::$app->wechat;
-        echo "<pre>";
-        var_dump($wechat->jsApiConfig(['jsApiList' => ['onMenuShareTimeline']]));exit;
-    }
-
-    private function getWxConfigForJs($length = 16) {
-        $wechat = Yii::$app->wechat;
-
-        //生成签名的时间戳
-        $timestamp = time();
-
-        //成签名的随机串
-        $chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
-        $nonceStr = "";
-        for ($i = 0; $i < $length; $i++) {
-            $nonceStr .= substr($chars, mt_rand(0, strlen($chars) - 1), 1);
-        }
-
-        return [
-            'appid' => $this->appid,
-            'timestamp' => $timestamp,
-            'nonceStr' => $nonceStr,
-            'signature' => $signature,
-            'jsApiList' => $jsApiList
-        ];
     }
 
     /**

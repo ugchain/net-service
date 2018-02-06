@@ -37,7 +37,7 @@ doc/api.md
 
 ----
 
-### 主题创建接口
+### 主题列表接口
 **请求URL：** 
 - `/rose/theme/theme-list`
   
