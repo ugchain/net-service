@@ -8,8 +8,8 @@ $config = [
         ],
         'wechat' => [
             'class' => 'callmez\wechat\sdk\Wechat',
-            'appId' => 'wxc0a27d73cce5b658',
-            'appSecret' => 'bf5f6d2c3fad4b0b44df9043445ff826',
+            'appId' => 'wx6fe341398c265015',
+            'appSecret' => '7324fc27fbe1525d0f4a6909105dedbc',
             'token' => ''
         ]
     ],
