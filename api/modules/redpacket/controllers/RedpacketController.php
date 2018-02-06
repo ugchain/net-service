@@ -259,7 +259,9 @@ class RedpacketController extends  Controller
     {
         //红包id
         $id = Yii::$app->request->post("id", "");
-
+        if(!$id){
+            outputHelper::ouputErrorcodeJson(\common\helpers\ErrorCodes::PARAM_NOT_EXIST);
+        }
         //获取红包详情数据
         $result = RedPacket::getRedPacketInfoWithRecordList($id);
         if($result["status"] == 0){
