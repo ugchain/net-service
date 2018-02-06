@@ -195,6 +195,9 @@ class RedpacketController extends  Controller
         $address = Yii::$app->request->post("address", "");
         //类型 1获取红包信息；2兑换红包
         $type = Yii::$app->request->post("type", "1");
+        if (!$code || !$address) {
+            outputHelper::ouputErrorcodeJson(\common\helpers\ErrorCodes::PARAM_NOT_EXIST);
+        }
 
         //校验账户和兑换码
         $result = RedPacketRecord::checkCodeAndAddress($code);
@@ -258,7 +261,7 @@ class RedpacketController extends  Controller
     public function actionDetail()
     {
         //红包id
-        $id = Yii::$app->request->post("id", "");
+        (int)$id = Yii::$app->request->post("id", "");
         if(!$id){
             outputHelper::ouputErrorcodeJson(\common\helpers\ErrorCodes::PARAM_NOT_EXIST);
         }
@@ -296,7 +299,9 @@ class RedpacketController extends  Controller
         $type = Yii::$app->request->post("type", "0");
         $page = Yii::$app->request->post("page", "1");
         $pageSize = Yii::$app->request->post("pageSize", "10");
-
+        if (!$address) {
+            outputHelper::ouputErrorcodeJson(\common\helpers\ErrorCodes::PARAM_NOT_EXIST);
+        }
         //获取红包记录
         $result = RedPacket::getRedList($address, $type, $page, $pageSize);
 
