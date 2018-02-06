@@ -25,10 +25,6 @@
                 <p id="getugc-num"><?= $record_amount;?></p>
                 <p>UGC</p>
             </div>
-
-            <!-- <img src="/img/packet.png" class="packet-pic"> -->
-            <!-- <img src="/img/packet-open.png" class="packet-pic-open"> --> 
-        
             <div id="packet-close"> </div>
             <div id="packet-open"></div>
 
@@ -37,17 +33,17 @@
                 console.log(theme_id);
                 var packet_name 
                 if(theme_id ==1 ){
-                    packet_name = 'baoerye'
-                }else if(theme_id == 2 ){
-                    packet_name = 'jiucai'
-                }else if(theme_id == 3 ){
                     packet_name = 'putong'
-                }else if(theme_id == 4 ){
+                }else if(theme_id == 2 ){
                     packet_name = 'xinnian'
-                }else if(theme_id == 5 ){
-                    packet_name = 'yifeichongtian'
-                }else if(theme_id == 6 ){
+                }else if(theme_id == 3 ){
                     packet_name = 'yuhaihai'
+                }else if(theme_id == 4 ){
+                    packet_name = 'jiucai'
+                }else if(theme_id == 5 ){
+                    packet_name = 'baoerye'
+                }else if(theme_id == 6 ){
+                    packet_name = 'yifeichongtian'
                 }
                 spineWidget = new spine.SpineWidget("packet-close", {
                     json: "/resource/" + packet_name +'/'+ packet_name +".json",
@@ -224,6 +220,7 @@
 <script src="http://res.wx.qq.com/open/js/jweixin-1.2.0.js"></script>
 <script>
     var state = <?= $state ?>;
+    // var state = 2;
     var rid = "<?=$redpacketInfo['id'] ?>";
     var openid = "<?=$openid ?>";
     var nickname = "<?=$nickname ?>";
