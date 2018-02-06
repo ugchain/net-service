@@ -93,7 +93,7 @@ class RedpacketController extends  Controller
         if(!$res_data){
             RedPacket::updateStatus($packet_id,"1");
             $this->REPACK_STATUS = 1;
-            outputHelper::ouputErrorcodeJson(\common\helpers\ErrorCodes::RED_PACKET_SEND_CHAIN_FALL,["status"=>$this->REPACK_STATUS]);
+            outputHelper::ouputErrorcodeJson(\common\helpers\ErrorCodes::REQUEST_FAILED,["status"=>$this->REPACK_STATUS]);
         }
         //检测是否上链--成功5%
         $block_info = CurlRequest::ChainCurl(Yii::$app->params["ug"]["ug_host"], "eth_getTransactionReceipt", [$data["hash"]]);
@@ -216,14 +216,13 @@ class RedpacketController extends  Controller
             //获取nince且组装签名数据
             $result['address'] = $address;
             $result['app_txid'] = ''; //空的
-//            $result['amount'] = OutputHelper::NumToString($result['amount'] * pow(10, 18));
-//            $result['amount'] = $result['amount'];
+
             $send_sign_data = Operating::getNonceAssembleData($result, Yii::$app->params["ug"]["gas_price"], Yii::$app->params["ug"]["ug_host"], "eth_getTransactionCount", [Yii::$app->params["ug"]["red_packet_address"], "pending"]);
 
             //根据组装数据获取签名且广播交易
             $res_data = Operating::getSignatureAndBroadcast(Yii::$app->params["ug"]["ug_sign_red_packet"], $send_sign_data, Yii::$app->params["ug"]["ug_host"], "eth_sendRawTransaction");
             if (isset($res_data['error'])) {
-                outputHelper::ouputErrorcodeJson(\common\helpers\ErrorCodes::TRANSACTION_FAIL);
+                outputHelper::ouputErrorcodeJson(\common\helpers\ErrorCodes::REQUEST_FAILED);
             }
 
             //根据txid去块上确认
@@ -244,7 +243,7 @@ class RedpacketController extends  Controller
                 outputHelper::ouputErrorcodeJson(\common\helpers\ErrorCodes::FALL);
             }
             //插入内部交易表
-            if (!Trade::insertData($res_data["result"], Yii::$app->params["ug"]["red_packet_address"], $result["to_address"], $result["amount"], $tradeStatus, Trade::OPEN_REDPACKET, empty($trade_info['blockNumber'])?0:$trade_info['blockNumber'])) {
+            if (!Trade::insertData($res_data["result"], Yii::$app->params["ug"]["red_packet_address"], $address, $result["amount"], $tradeStatus, Trade::OPEN_REDPACKET, empty($trade_info['blockNumber'])?0:$trade_info['blockNumber'])) {
                 outputHelper::ouputErrorcodeJson(\common\helpers\ErrorCodes::FALL);
             }
 
