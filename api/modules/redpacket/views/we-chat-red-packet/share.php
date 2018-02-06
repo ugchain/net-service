@@ -12,9 +12,9 @@
     <link rel="stylesheet" type="text/css" href="/css/index.css">
     <script src="/js/vconsole.min.js"></script>
     <script src="/js/spine-widget.js"></script>
-   <!--  <script>
-    var vConsole = new VConsole();
-  </script> -->
+    <script>
+        var vConsole = new VConsole();
+    </script>
 </head>
 <body>
     <!-- 头部红包 -->
