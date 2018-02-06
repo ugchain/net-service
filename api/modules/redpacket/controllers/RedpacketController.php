@@ -194,13 +194,15 @@ class RedpacketController extends  Controller
 
         //校验账户和兑换码
         $result = RedPacketRecord::checkCodeAndAddress($code);
-        if (!$result) {
-            outputHelper::ouputErrorcodeJson(\common\helpers\ErrorCodes::RED_PACKET_REDEMPTION);
+        if ($result == 1) {
+            outputHelper::ouputErrorcodeJson(\common\helpers\ErrorCodes::RED_PACKET_NOT_EXIST);
         }
-
+        if ($result == 2) {
+            outputHelper::ouputErrorcodeJson(\common\helpers\ErrorCodes::RED_PACKET_OPEN);
+        }
         //查询红包是否存在&红包是否过期
         if (!$redPacketInfo = RedPacket::checkRedPacketExistAndExpired($result['rid'])) {
-            outputHelper::ouputErrorcodeJson(\common\helpers\ErrorCodes::RED_PACKET_NOT_EXIST);
+            outputHelper::ouputErrorcodeJson(\common\helpers\ErrorCodes::RED_PACKET_EXPIRED);
         }
 
         if ($type == 2) {

@@ -53,7 +53,7 @@ class RedPacketRecord extends \common\models\RedPacketRecord
         //查询红包记录
         $recordInfo = RedPacketRecord::find()->where(['code' => $code])->one();
         if (!$recordInfo) {
-            return false;
+            return 1;
         }
         $recordInfo = $recordInfo->attributes;
         //查询是否为领取状态
@@ -61,7 +61,7 @@ class RedPacketRecord extends \common\models\RedPacketRecord
             return $recordInfo;
         }
 
-       return false;
+       return 2;
     }
 
     /**
