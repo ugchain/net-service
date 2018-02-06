@@ -87,7 +87,10 @@ class MedalController extends  Controller
     public function actionGetList()
     {
         //地址
-        $address = Yii::$app->request->post("address");
+        $address = Yii::$app->request->post("address", "");
+        if (!$address) {
+            outputHelper::ouputErrorcodeJson(\common\helpers\ErrorCodes::PARAM_NOT_EXIST);
+        }
         //页数
         $page = Yii::$app->request->post("page",Yii::$app->params['pagination']['page']);
         //展示数量
