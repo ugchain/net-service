@@ -107,9 +107,9 @@ class RedpacketController extends  Controller
                 $trade_info = Operating::substrHexdec($block_info["result"]);
                 Trade::updateBlockAndStatusBytxid($data["hash"], $trade_info["blockNumber"], Trade::SUCCESS);
                 $this->REPACK_STATUS = 2;
-                $repack_info = RedPacket::getPacketInfoById($packet_id);
             }
         }
+        $repack_info = RedPacket::getPacketInfoById($packet_id);
         //组装返回数据
         $return_data = [
             "share_url"=>Yii::$app->params["host"]."/redpacket/we-chat-red-packet/redirect-url?redpacket_id=".$packet_id,
