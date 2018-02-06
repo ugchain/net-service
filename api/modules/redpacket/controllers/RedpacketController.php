@@ -249,7 +249,7 @@ class RedpacketController extends  Controller
 
             outputHelper::ouputErrorcodeJson(\common\helpers\ErrorCodes::SUCCESS, ['id' => $result['rid'], 'amount' => $result['amount']]);
         } else {
-            outputHelper::ouputErrorcodeJson(\common\helpers\ErrorCodes::SUCCESS, ['id' => $redPacketInfo['id'], 'title' => $redPacketInfo['title']]);
+            outputHelper::ouputErrorcodeJson(\common\helpers\ErrorCodes::SUCCESS, ['id' => $redPacketInfo['id'], 'title' => $redPacketInfo['title'], 'theme_id' => $redPacketInfo['theme_id']]);
         }
 
     }
