@@ -264,7 +264,7 @@ class RedpacketController extends  Controller
         $result = RedPacket::getRedPacketInfoWithRecordList($id);
         if($result["status"] == 0){
             //检测是否上链--成功5%
-            $block_info = CurlRequest::ChainCurl(Yii::$app->params["ug"]["ug_host"], "eth_getTransactionReceipt", [$result["hash"]]);
+            $block_info = CurlRequest::ChainCurl(Yii::$app->params["ug"]["ug_host"], "eth_getTransactionReceipt", [$result["txid"]]);
             if($block_info){
                 $block_info = json_decode($block_info,true);
                 //blockNumber 不为空
@@ -273,7 +273,7 @@ class RedpacketController extends  Controller
                     RedPacket::updateStatus($result["id"],"2");
                     //blockNumber截取前两位0x && 16进制 转换为10进制
                     $trade_info = Operating::substrHexdec($block_info["result"]);
-                    Trade::updateBlockAndStatusBytxid($result["hash"], $trade_info["blockNumber"], Trade::SUCCESS);
+                    Trade::updateBlockAndStatusBytxid($result["txid"], $trade_info["blockNumber"], Trade::SUCCESS);
                     $result["status"] = "2";
                 }
             }
