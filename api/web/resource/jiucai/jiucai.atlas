@@ -1,0 +1,83 @@
+
+jiucai.png
+size: 2048,1024
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+bg
+  rotate: false
+  xy: 2, 307
+  size: 491, 613
+  orig: 491, 613
+  offset: 0, 0
+  index: -1
+dun
+  rotate: false
+  xy: 1599, 647
+  size: 215, 273
+  orig: 215, 273
+  offset: 0, 0
+  index: -1
+gai
+  rotate: false
+  xy: 2, 114
+  size: 491, 191
+  orig: 491, 191
+  offset: 0, 0
+  index: -1
+guangshu
+  rotate: true
+  xy: 2, 2
+  size: 110, 331
+  orig: 110, 331
+  offset: 0, 0
+  index: -1
+hua
+  rotate: false
+  xy: 1520, 467
+  size: 56, 54
+  orig: 56, 54
+  offset: 0, 0
+  index: -1
+jian2
+  rotate: false
+  xy: 749, 255
+  size: 107, 184
+  orig: 107, 184
+  offset: 0, 0
+  index: -1
+jianduan
+  rotate: false
+  xy: 1599, 528
+  size: 146, 117
+  orig: 146, 117
+  offset: 0, 0
+  index: -1
+jiucai
+  rotate: false
+  xy: 495, 115
+  size: 252, 324
+  orig: 252, 324
+  offset: 0, 0
+  index: -1
+suide
+  rotate: false
+  xy: 1014, 450
+  size: 504, 71
+  orig: 504, 71
+  offset: 0, 0
+  index: -1
+xiankai
+  rotate: false
+  xy: 1014, 523
+  size: 583, 397
+  orig: 583, 397
+  offset: 0, 0
+  index: -1
+zhaozi
+  rotate: false
+  xy: 495, 441
+  size: 517, 479
+  orig: 517, 479
+  offset: 0, 0
+  index: -1

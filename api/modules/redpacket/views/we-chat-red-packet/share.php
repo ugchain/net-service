@@ -11,42 +11,75 @@
     <link rel="stylesheet" href="/css/jquery-weui.min.css">
     <link rel="stylesheet" type="text/css" href="/css/index.css">
     <script src="/js/vconsole.min.js"></script>
-    <script>
+    <script src="/js/spine-widget.js"></script>
+   <!--  <script>
     var vConsole = new VConsole();
-  </script>
-  <script type="text/javascript">
-    var ua = window.navigator.userAgent.toLowerCase();
-    if(ua.match(/MicroMessenger/i) == "micromessenger"){ 
-        console.log('wx')
-    } else{
-        window.location.href = 'www.baidu.com'
-    }
-  </script>
+  </script> -->
 </head>
 <body>
     <!-- 头部红包 -->
     <div class="top">
         <h1 class="packet-title">"<?= $redpacketInfo['title'];?>"</h1>
         <div class="red-img" >
-            <div class="get-ugc">
+            <div class="get-ugc" style="display: none;">
                 <p id="getugc-num"><?= $record_amount;?></p>
                 <p>UGC</p>
             </div>
-            <img src="/img/packet.png" class="packet-pic">
-            <img src="/img/packet-open.png" class="packet-pic-open">
+
+            <!-- <img src="/img/packet.png" class="packet-pic"> -->
+            <!-- <img src="/img/packet-open.png" class="packet-pic-open"> --> 
+        
+            <div id="packet-close"> </div>
+            <div id="packet-open"></div>
+
+            <script>
+                var theme_id = '<?= $redpacketInfo['theme_id'];?>'
+                console.log(theme_id);
+                var packet_name 
+                if(theme_id ==1 ){
+                    packet_name = 'baoerye'
+                }else if(theme_id == 2 ){
+                    packet_name = 'jiucai'
+                }else if(theme_id == 3 ){
+                    packet_name = 'putong'
+                }else if(theme_id == 4 ){
+                    packet_name = 'xinnian'
+                }else if(theme_id == 5 ){
+                    packet_name = 'yifeichongtian'
+                }else if(theme_id == 6 ){
+                    packet_name = 'yuhaihai'
+                }
+                spineWidget = new spine.SpineWidget("packet-close", {
+                    json: "/resource/" + packet_name +'/'+ packet_name +".json",
+                    atlas: "/resource/"+ packet_name +'/'+ packet_name  +".atlas",
+                    animation: 'Close',
+                    backgroundColor: "#00000000",
+                    // debug: true,
+                });
+               
+                spineWidget = new spine.SpineWidget("packet-open", {
+                    json: "/resource/" + packet_name +'/'+ packet_name +".json",
+                    atlas: "/resource/"+ packet_name +'/'+ packet_name  +".atlas",
+                    animation: 'Open',
+                    backgroundColor: "#00000000",
+                    // debug: true,
+                });
+            </script>
+           
+            <!-- 提示 -->
             <p class="state-info">
-    				<span class="state-tips">
-    					恭喜您抢到
-    				</span>
+				<span class="state-tips">
+					恭喜您抢到
+				</span>
                 <span class="state-getugc">
-    					<?= $record_amount;?>
-    				</span>
+    				<?= $record_amount;?>
+    			</span>
                 <span class="ugc-unit">
     					UGC
-    				</span>
+    			</span>
                 <span class="state-time">
 
-    				</span>
+    			</span>
             </p>
 
 
@@ -196,6 +229,7 @@
     var nickname = "<?=$nickname ?>";
     var headimgurl = "<?=$headimgurl ?>";
     var expire_time = "<?=$redpacketInfo['expire_time']?>"
+    var finish_time = '<?=$redpacketInfo['finish_time']?>'
     // 接入wx_sdk
     // wx.config({
     //     debug: true, 
