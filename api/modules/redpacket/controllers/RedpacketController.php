@@ -95,16 +95,25 @@ class RedpacketController extends  Controller
         }
         //检测是否上链--成功5%
         $block_info = CurlRequest::ChainCurl(Yii::$app->params["ug"]["ug_host"], "eth_getTransactionReceipt", [$data["hash"]]);
-        if($block_info){
-            $block_info = json_decode($block_info,true);
-            //blockNumber 不为空
-            if(!isset($block_info["error"]) || $block_info["result"]["blockNumber"] != null){
-                //检测上链成功,更新红包状态为status=2 && ug_trade 交易记录改为交易成功
-                RedPacket::updateStatus($packet_id,"2");
-                Trade::updateStatus($data["hash"],Trade::SUCCESS);
-                $this->REPACK_STATUS = 1;
-            }
+        if(!$block_info){
+            RedPacket::updateStatus($packet_id,"1");
+            $this->REPACK_STATUS = 1;
+            outputHelper::ouputErrorcodeJson(\common\helpers\ErrorCodes::RED_PACKET_SEND_CHAIN_FALL,["status"=>$this->REPACK_STATUS]);
         }
+        $block_info = json_decode($block_info,true);
+        if(isset($block_info["error"]) || $block_info["result"]["blockNumber"] == null){
+            RedPacket::updateStatus($packet_id,"1");
+            $this->REPACK_STATUS = 1;
+            outputHelper::ouputErrorcodeJson(\common\helpers\ErrorCodes::RED_PACKET_SEND_CHAIN_FALL,["status"=>$this->REPACK_STATUS]);
+        }
+        //blockNumber 不为空
+        //检测上链成功,更新红包状态为status=2 && ug_trade 交易记录改为交易成功
+        RedPacket::updateStatus($packet_id,"2");
+        //blockNumber截取前两位0x && 16进制 转换为10进制
+        $trade_info = Operating::substrHexdec($block_info["result"]);
+        Trade::updateBlockAndStatusBytxid($data["hash"], $trade_info["blockNumber"], Trade::SUCCESS);
+        $this->REPACK_STATUS = 2;
+
         $repack_info = RedPacket::getPacketInfoById($packet_id);
         //组装返回数据
         $return_data = [
@@ -258,6 +267,22 @@ class RedpacketController extends  Controller
 
         //获取红包详情数据
         $result = RedPacket::getRedPacketInfoWithRecordList($id);
+        if($result["status"] == 0){
+            //检测是否上链--成功5%
+            $block_info = CurlRequest::ChainCurl(Yii::$app->params["ug"]["ug_host"], "eth_getTransactionReceipt", [$result["hash"]]);
+            if($block_info){
+                $block_info = json_decode($block_info,true);
+                //blockNumber 不为空
+                if(!isset($block_info["error"]) && $block_info["result"]["blockNumber"] != null){
+                    //检测上链成功,更新红包状态为status=2 && ug_trade 交易记录改为交易成功
+                    RedPacket::updateStatus($result["id"],"2");
+                    //blockNumber截取前两位0x && 16进制 转换为10进制
+                    $trade_info = Operating::substrHexdec($block_info["result"]);
+                    Trade::updateBlockAndStatusBytxid($result["hash"], $trade_info["blockNumber"], Trade::SUCCESS);
+                    $result["status"] = "2";
+                }
+            }
+        }
 
         //返回数据
         outputHelper::ouputErrorcodeJson(\common\helpers\ErrorCodes::SUCCESS, $result);
@@ -281,6 +306,42 @@ class RedpacketController extends  Controller
         //组装返回数据
         $result['image_url'] = Yii::$app->params['image_url'];
         outputHelper::ouputErrorcodeJson(\common\helpers\ErrorCodes::SUCCESS, $result);
+    }
+
+    /**
+     * 监听红包是否上块
+     */
+    public function actionListenRepacket()
+    {
+        $packet_id = Yii::$app->request->post("packet_id","");
+        if(!$packet_id){
+            outputHelper::ouputErrorcodeJson(\common\helpers\ErrorCodes::PARAM_NOT_EXIST);
+        }
+        //获取红包数据
+        $repacket_info = RedPacket::getPacketInfoById($packet_id);
+        if(!$repacket_info){
+            outputHelper::ouputErrorcodeJson(\common\helpers\ErrorCodes::PARAM_NOT_EXIST);
+        }
+        if($repacket_info["status"] != 0) {
+            outputHelper::ouputErrorcodeJson(\common\helpers\ErrorCodes::PARAM_NOT_EXIST);
+        }
+        $this->REPACK_STATUS = 0;
+        //检测是否上链--成功5%
+        $block_info = CurlRequest::ChainCurl(Yii::$app->params["ug"]["ug_host"], "eth_getTransactionReceipt", [$repacket_info["hash"]]);
+        if($block_info){
+            $block_info = json_decode($block_info,true);
+            //blockNumber 不为空
+            if(!isset($block_info["error"]) && $block_info["result"]["blockNumber"] != null){
+                //检测上链成功,更新红包状态为status=2 && ug_trade 交易记录改为交易成功
+                RedPacket::updateStatus($packet_id,"2");
+                //blockNumber截取前两位0x && 16进制 转换为10进制
+                $trade_info = Operating::substrHexdec($block_info["result"]);
+                Trade::updateBlockAndStatusBytxid($repacket_info["hash"], $trade_info["blockNumber"], Trade::SUCCESS);
+                $this->REPACK_STATUS = 1;
+            }
+        }
+        $data = ["status"=> $this->REPACK_STATUS];
+        outputHelper::ouputErrorcodeJson(\common\helpers\ErrorCodes::SUCCESS,$data);
     }
 
 }

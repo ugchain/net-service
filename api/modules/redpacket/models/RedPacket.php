@@ -36,7 +36,7 @@ class RedPacket extends \common\models\RedPacket
             'already_received_amount' => 'TODO',
             'finish_time' => !empty($result->finish_time) ? date('m-d h:i', $result->finish_time) : '',
             'expire_time' => !empty($result->expire_time) ? date('m-d h:i', $result->expire_time) : '',
-            'last_time' => date('H时i分', $result->expire_time - time()),
+            'last_time' => self::timeTostring($result->expire_time),
             'current_time' => date('m-d h:i', time())
         ];
 
@@ -58,15 +58,15 @@ class RedPacket extends \common\models\RedPacket
                     break;
                 case RedPacketRecord::REDPACKET_RECORD_STATUS_EXCHANGESUCCESS:
                     $time = $redPacketRecord->exchange_time;
-                    $alreadyReceivedAmount += $redPacketRecord->amount;
+                    $alreadyReceivedAmount += OutputHelper::fromWei($redPacketRecord->amount);
                     break;
             }
             $redPacketRecordList[] = [
                 'wx_name' => $redPacketRecord->wx_name,
                 'wx_avatar' => $redPacketRecord->wx_avatar,
-                'amount' => !$type ? OutputHelper::fromWei($redPacketRecord->amount) : $redPacketRecord->amount,
+                'amount' => !$type ? OutputHelper::fromWei($redPacketRecord->amount) : OutputHelper::NumToString($redPacketRecord->amount),
                 'status' => $redPacketRecord->status,
-                'time' => !empty($time) ? date('m-d s:i', $time) : ''
+                'time' => !empty($time) ? date('m-d H:i', $time) : ''
             ];
         }
 
@@ -74,7 +74,7 @@ class RedPacket extends \common\models\RedPacket
         $redPacketTheme = $result->redPacketTheme;
 
         //拼装回返
-        $redpacketInfo['already_received_amount'] =  !$type ? OutputHelper::fromWei($alreadyReceivedAmount) : $alreadyReceivedAmount;
+        $redpacketInfo['already_received_amount'] =  !$type ? $alreadyReceivedAmount : OutputHelper::toWei($alreadyReceivedAmount);
         $redpacketInfo['theme_img'] = !empty($redPacketTheme->img) ? $redPacketTheme->img : '';
         $redpacketInfo['theme_thumb_img'] = !empty($redPacketTheme->thumb_img) ? $redPacketTheme->thumb_img : '';
         $redpacketInfo['theme_share_img'] = !empty($redPacketTheme->share_img) ? $redPacketTheme->share_img : '';
@@ -94,6 +94,26 @@ class RedPacket extends \common\models\RedPacket
     public function getRedPacketTheme()
     {
         return $this->hasOne(RedPacketTheme::className(), ['id' => 'theme_id']);
+    }
+
+    /**
+     * 将时间戳转换成剩余的小时分钟，只支持在24小时以内的转换
+     * @param $time
+     * @return string
+     */
+    private static function timeTostring($time)
+    {
+        $time = $time - time();
+
+        $hour = 0;
+        if ($time >= 3600) { // 如果大于1小时
+            $hour = (int)($time / 3600);
+            $time = $time % 3600; // 计算小时后剩余的毫秒数
+        }
+
+        $minute = (int)($time / 60); // 剩下的毫秒数都算作分
+
+        return $hour.'时'.$minute.'分';
     }
 
 
