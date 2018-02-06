@@ -38,9 +38,9 @@ $(function(){
 			"padding-top": '0'
 		})
 
-		$('.packet-pic-open').hide()
+		$('.packet-open').hide()
 			.siblings('.get-ugc').hide()
-			.siblings('.packet-pic').show()
+			.siblings('.packet-close').show()
 		$('.state-info').hide()
 
 		// 获取口令 传入微信用户信息
@@ -70,9 +70,9 @@ $(function(){
 	}else if(state == 1){
 		// 已领取
 		$('.received').show().css('opacity','1')
-		$('.packet-pic-open').hide()
+		$('#packet-open').hide()
 			.siblings('.get-ugc').hide()
-			.siblings('.packet-pic').show()
+			.siblings('#packet-close').show()
 
 		$('.state-info').css({
 			'font-size':'21px',
@@ -86,9 +86,9 @@ $(function(){
 		// 已领光
 		$('.finished').show()
 		$('.received').hide()
-		$('.packet-pic-open').hide()
+		$('#packet-open').hide()
 			.siblings('.get-ugc').hide()
-			.siblings('.packet-pic').show()
+			.siblings('#packet-close').show()
 		$('.state-info').show()
 		$('.state-info').find('.state-tips')
 			.show()
@@ -96,15 +96,16 @@ $(function(){
 			.siblings('').hide()
 	}else if(state == 4){
 		// 已结束
+		var str = '于'+ finish_time +'结束'
 		$('.finished').show()
 		$('.received').hide()
-		$('.packet-pic-open').hide()
+		$('#packet-open').hide()
 			.siblings('.get-ugc').hide()
-			.siblings('.packet-pic').show()
+			.siblings('#packet-close').show()
 		$('.state-info').css({
 				'margin-top': '10px'
 			}).find('.state-time')
-				.text('于1-25 16:32 结束')
+				.text(str)
 				.siblings().hide()
 		$('.state-info').find('.state-tips')
 			.show()
