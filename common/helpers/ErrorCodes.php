@@ -13,6 +13,7 @@ class ErrorCodes
         FALL                                                        =   1,
 
         SYSTEM_NOT_POST                                             =   10001,//当前请求方式有误
+        REQUEST_FAILED                                              =   10002,//请求失败
 
         //
         PARAM_NOT_EXIST                                             =   20101,//
@@ -65,7 +66,7 @@ class ErrorCodes
         self::PHONE_WRONGFOL                                        =>'手机号不合法',
         self::ADVERTISE_EXIST                                       =>'广告已申请',
         self::RED_PACKET_REDEMPTION                                 =>'兑换码无效',
-        self::TRANSACTION_FAIL                                      =>'交易失败',
+        self::TRANSACTION_FAIL                                      =>'兑换红包失败',
         self::RED_PACKET_NOT_EXIST                                  =>'没有这个红包哦',
         self::RED_PACKET_EXPIRED                                    =>'红包已过期',
         self::RED_PACKET_EXIST                                      =>'红包以领取',
@@ -76,6 +77,7 @@ class ErrorCodes
         self::RED_PACKET_TITLE_EXCEEDED                             =>'红包名称超出限制',
         self::RED_PACKET_OPEN                                       =>'您已经拆过这个红包啦',
         self::RED_PACKET_SEND_CHAIN_FALL                            =>'发送交易上链失败',
+        self::REQUEST_FAILED                                        =>'请求失败',
     ];
 
 }
