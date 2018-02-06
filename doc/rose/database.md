@@ -1,7 +1,7 @@
 # 数据库
-##玫瑰
-###玫瑰表
-    
+## 玫瑰
+
+### 玫瑰表
     DROP TABLE IF EXISTS `ug_rose`;
     CREATE TABLE `ug_rose` (
       `id` int(11) unsigned NOT NULL AUTO_INCREMENT COMMENT '自增ID',
@@ -21,8 +21,8 @@
       UNIQUE KEY `token_id` (`token_id`),
       KEY `address` (`address`)
     ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='勋章表';
-###玫瑰赠送记录表
 
+### 玫瑰赠送记录表
     DROP TABLE IF EXISTS `ug_rose_give`;
     CREATE TABLE `ug_rose_give` (
       `id` int(11) unsigned NOT NULL AUTO_INCREMENT COMMENT '自增ID',
@@ -38,7 +38,6 @@
     
     
 ### 玫瑰主题表
-    
     DROP TABLE IF EXISTS `ug_rose_theme`;
     CREATE TABLE `ug_rose_theme` (
       `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '自增ID',
