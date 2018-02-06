@@ -87,7 +87,10 @@ class MedalController extends  Controller
     public function actionGetList()
     {
         //地址
-        $address = Yii::$app->request->post("address");
+        $address = Yii::$app->request->post("address", "");
+        if (!$address) {
+            outputHelper::ouputErrorcodeJson(\common\helpers\ErrorCodes::PARAM_NOT_EXIST);
+        }
         //页数
         $page = Yii::$app->request->post("page",Yii::$app->params['pagination']['page']);
         //展示数量
@@ -107,7 +110,7 @@ class MedalController extends  Controller
     public function actionMedalDetail()
     {
         //勋章ID
-        $medal_id = Yii::$app->request->post("medal_id");
+        (int)$medal_id = Yii::$app->request->post("medal_id");
         //page
         $page = Yii::$app->request->post("page", Yii::$app->params['pagination']['page']);
         //pageSize
@@ -144,9 +147,12 @@ class MedalController extends  Controller
         //持有者
         $address = Yii::$app->request->post("owner_address", "");
         //勋章id
-        $medal_id = Yii::$app->request->post("medal_id", "");
+        (int)$medal_id = Yii::$app->request->post("medal_id", "");
         //接收勋章者
         $recipient_address = Yii::$app->request->post("recipient_address", "");
+        if (!$address || !$medal_id || !$recipient_address) {
+            outputHelper::ouputErrorcodeJson(\common\helpers\ErrorCodes::PARAM_NOT_EXIST);
+        }
 
         //校验持有者是否真实持有勋章
         if (empty(Medal::getMedalOwner($address, $medal_id))) {

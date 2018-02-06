@@ -58,7 +58,7 @@ class RedPacket extends \common\models\RedPacket
                     break;
                 case RedPacketRecord::REDPACKET_RECORD_STATUS_EXCHANGESUCCESS:
                     $time = $redPacketRecord->exchange_time;
-                    $alreadyReceivedAmount += OutputHelper::fromWei($redPacketRecord->amount);
+                    $alreadyReceivedAmount += $redPacketRecord->amount;
                     break;
             }
             $redPacketRecordList[] = [
@@ -74,7 +74,7 @@ class RedPacket extends \common\models\RedPacket
         $redPacketTheme = $result->redPacketTheme;
 
         //拼装回返
-        $redpacketInfo['already_received_amount'] =  !$type ? $alreadyReceivedAmount : OutputHelper::toWei($alreadyReceivedAmount);
+        $redpacketInfo['already_received_amount'] =  !$type ? OutputHelper::fromWei($alreadyReceivedAmount) : OutputHelper::NumToString($alreadyReceivedAmount);
         $redpacketInfo['theme_img'] = !empty($redPacketTheme->img) ? $redPacketTheme->img : '';
         $redpacketInfo['theme_thumb_img'] = !empty($redPacketTheme->thumb_img) ? $redPacketTheme->thumb_img : '';
         $redpacketInfo['theme_share_img'] = !empty($redPacketTheme->share_img) ? $redPacketTheme->share_img : '';
