@@ -8,6 +8,7 @@ body{
 	font-stretch: normal;
 	overflow-x: hidden;
 }
+
 .top .weui-btn {
     width: 300px;
 }
@@ -60,7 +61,6 @@ body{
 }
 .top .red-img {
 	position: relative;
-	height: 400px;
 }
 .top .red-img .get-ugc{
 	text-align: center;
@@ -76,20 +76,20 @@ body{
 	font-size: 21px;
 }
  #packet-close{
-	
-	width: 100%; 
-	height: 400px; 
-	margin-top: -30px;
+	width: 97%; 
+	height: 550px; 
+	margin-top: -100px;
 }
 #packet-open{
 	width: 100%; 
-	height: 400px; 
-	margin-top: -30px;
+	height: 550px; 
+	margin-top: -100px;
 	display: none;
 }
 
 .top .red-img .state-info {
 	margin-top: -12px;
+	margin-bottom: 10px;
 }
 .top .red-img .state-info .state-tips{
 	font-size: 21px;
@@ -134,7 +134,6 @@ body{
 	letter-spacing: 1px;
 	color: rgba(255,255,255,0.6);
 	margin-top: 9px;
-	/*height: 55px;*/
 }
 
 /*已领取*/
@@ -142,7 +141,6 @@ body{
 	width: 100%;
 	position: relative;
 	padding-top: 65px;
-	/*display: none;*/
 	opacity: 0;
 	overflow: hidden;
 	padding-bottom: 30px;
@@ -158,7 +156,6 @@ body{
 .top .received .kl-title{
 	font-size: 18px;
 	color: #f3be56;
-	/*margin-bottom: -5px;*/
 	margin-top: 20px;
 }
 .top .received  .kl-title-bg{
@@ -216,9 +213,8 @@ body{
 /*已结束*/
 .top .finished{
 	display: none;
-	/*height: 50px;*/
 	position: relative;
-	margin-top: 60px;
+	margin-top: 75px;
 	padding-bottom: 30px;
 }
 .top .finished .kl-bg{
@@ -226,8 +222,9 @@ body{
 	height: 200px;
 	position: absolute;
 	z-index: -888;
-	top: -80px;
+	top: -100px;
 	left: -15px;
+	overflow: hidden;
 }
 .top .finished p:nth-child(2),
 .top .finished p:nth-child(3){
