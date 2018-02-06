@@ -74,7 +74,7 @@ $(function(){
 			.siblings('.get-ugc').hide()
 			.siblings('#packet-close').show()
 
-		$('.state-info').css({
+		$('.state-info').show().css({
 			'font-size':'21px',
 			'color': '#fff'
 		}).text('恭喜您抢到一个UGC红包').show()
@@ -82,10 +82,13 @@ $(function(){
 		// 已兑换
 		$('.exchanged').show()
 		$('.received').hide()
+		$('#packet-close').hide()
+		$('#packet-open').show().css('margin-top','-75px')
+		$('.state-info').show().css('margin-top','-60px')
 	}else if(state == 3){
 		// 已领光
-		$('.finished').show()
-		$('.received').hide()
+		$('.finished').hide()
+		$('.received').show()
 		$('#packet-open').hide()
 			.siblings('.get-ugc').hide()
 			.siblings('#packet-close').show()
@@ -102,7 +105,7 @@ $(function(){
 		$('#packet-open').hide()
 			.siblings('.get-ugc').hide()
 			.siblings('#packet-close').show()
-		$('.state-info').css({
+		$('.state-info').show().css({
 				'margin-top': '10px'
 			}).find('.state-time')
 				.text(str)

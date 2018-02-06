@@ -71,7 +71,7 @@
     				<?= $record_amount;?>
     			</span>
                 <span class="ugc-unit">
-    					UGC
+    					个UGC
     			</span>
                 <span class="state-time">
 
@@ -208,7 +208,7 @@
             </div>
             <button class="btn" data-clipboard-action="copy" data-clipboard-target="#mask-copy">
             </button>
-            <input id="mask-copy" type="text" value="test">     
+            <input id="mask-copy" type="text" value="test" readonly="true">     
         </div>
         <p><img src="/img/close.png" class="close"></p>
     </div>
@@ -219,8 +219,8 @@
 <script src="/js/index.js"></script>
 <script src="http://res.wx.qq.com/open/js/jweixin-1.2.0.js"></script>
 <script>
-    var state = <?= $state ?>;
-    // var state = 2;
+    // var state = <?= $state ?>;
+    var state = 2;
     var rid = "<?=$redpacketInfo['id'] ?>";
     var openid = "<?=$openid ?>";
     var nickname = "<?=$nickname ?>";
