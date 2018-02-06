@@ -139,9 +139,19 @@ class RedPacketRecord extends \common\models\RedPacketRecord
     public static function getRedPacketRecordInfo($rid, $openid)
     {
         $record = self::find()->where("rid=$rid and openid='$openid'")->one();
+        //拼装当前用户的红包信息
         $info['state'] = null;
         $info['code'] = !empty($record->code) ? $record->code : '';
         $info['amount'] = !empty($record->amount) ? OutputHelper::fromWei($record->amount) : '';
+
+        //如果当前用户与其他用户红包都被提取成功则状态为已结束
+        $receieNotSuccessNums = self::find()->where("rid=$rid and status!=4")->count();
+        if (!$receieNotSuccessNums) {
+            $info['state'] = 4;
+            return $info;
+        }
+
+        //判断当前红包与当前用户领取状态
         if (empty($record)) {
             $redPacket = RedPacket::findOne($rid);
             if ($redPacket->status == 3) {
