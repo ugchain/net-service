@@ -30,8 +30,8 @@
             <div id="packet-open"></div>
 
             <script>
-                // var theme_id = '<?= $redpacketInfo['theme_id'];?>'
-                var theme_id = 2
+                var theme_id = '<?= $redpacketInfo['theme_id'];?>'
+                // var theme_id = 2
                 var packet_name
                 if(theme_id == 1 ){
                     packet_name = 'putong'
@@ -264,141 +264,8 @@
                             </div>
                         </div>
                     </a>
-
-
-
-
-                    <a href="javascript:void(0);" class="weui-media-box weui-media-box_appmsg">
-                        <div class="weui-media-box__hd">
-                            <img class="weui-media-box__thumb" src="<?=$redPacketRecord['wx_avatar'] ?>">
-                        </div>
-                        <div class="weui-media-box__bd">
-                            <div class="info-l">
-                                <p id="username"><?=$redPacketRecord['wx_name'] ?></p>
-                                <p class="time">
-                                    <?=$redPacketRecord['time'] ?>
-                                </p>
-                            </div>
-                            <div class="info-r" >
-                                <p class="get-ugc">
-                                    <?php if ($redPacketRecord['status'] == \api\modules\redpacket\models\RedPacketRecord::REDPACKET_RECORD_STATUS_EXCHANGESUCCESS){ ?>
-                                        得到
-                                        <span><?=$redPacketRecord['amount'] ?></span>
-                                        个ugc
-                                    <?php }else{ ?>
-                                        领取了一个UGC红包
-                                    <?php } ?>
-                                </p>
-                            </div>
-                        </div>
-                    </a>
-
-
-
-                    <a href="javascript:void(0);" class="weui-media-box weui-media-box_appmsg">
-                        <div class="weui-media-box__hd">
-                            <img class="weui-media-box__thumb" src="<?=$redPacketRecord['wx_avatar'] ?>">
-                        </div>
-                        <div class="weui-media-box__bd">
-                            <div class="info-l">
-                                <p id="username"><?=$redPacketRecord['wx_name'] ?></p>
-                                <p class="time">
-                                    <?=$redPacketRecord['time'] ?>
-                                </p>
-                            </div>
-                            <div class="info-r" >
-                                <p class="get-ugc">
-                                    <?php if ($redPacketRecord['status'] == \api\modules\redpacket\models\RedPacketRecord::REDPACKET_RECORD_STATUS_EXCHANGESUCCESS){ ?>
-                                        得到
-                                        <span><?=$redPacketRecord['amount'] ?></span>
-                                        个ugc
-                                    <?php }else{ ?>
-                                        领取了一个UGC红包
-                                    <?php } ?>
-                                </p>
-                            </div>
-                        </div>
-                    </a>
-
-
-                    <a href="javascript:void(0);" class="weui-media-box weui-media-box_appmsg">
-                        <div class="weui-media-box__hd">
-                            <img class="weui-media-box__thumb" src="<?=$redPacketRecord['wx_avatar'] ?>">
-                        </div>
-                        <div class="weui-media-box__bd">
-                            <div class="info-l">
-                                <p id="username"><?=$redPacketRecord['wx_name'] ?></p>
-                                <p class="time">
-                                    <?=$redPacketRecord['time'] ?>
-                                </p>
-                            </div>
-                            <div class="info-r" >
-                                <p class="get-ugc">
-                                    <?php if ($redPacketRecord['status'] == \api\modules\redpacket\models\RedPacketRecord::REDPACKET_RECORD_STATUS_EXCHANGESUCCESS){ ?>
-                                        得到
-                                        <span><?=$redPacketRecord['amount'] ?></span>
-                                        个ugc
-                                    <?php }else{ ?>
-                                        领取了一个UGC红包
-                                    <?php } ?>
-                                </p>
-                            </div>
-                        </div>
-                    </a>
                     <?php } ?>
-
-
-
-                    <a href="javascript:void(0);" class="weui-media-box weui-media-box_appmsg">
-                        <div class="weui-media-box__hd">
-                            <img class="weui-media-box__thumb" src="<?=$redPacketRecord['wx_avatar'] ?>">
-                        </div>
-                        <div class="weui-media-box__bd">
-                            <div class="info-l">
-                                <p id="username"><?=$redPacketRecord['wx_name'] ?></p>
-                                <p class="time">
-                                    <?=$redPacketRecord['time'] ?>
-                                </p>
-                            </div>
-                            <div class="info-r" >
-                                <p class="get-ugc">
-                                    <?php if ($redPacketRecord['status'] == \api\modules\redpacket\models\RedPacketRecord::REDPACKET_RECORD_STATUS_EXCHANGESUCCESS){ ?>
-                                        得到
-                                        <span><?=$redPacketRecord['amount'] ?></span>
-                                        个ugc
-                                    <?php }else{ ?>
-                                        领取了一个UGC红包
-                                    <?php } ?>
-                                </p>
-                            </div>
-                        </div>
-                    </a>
-
-                    <a href="javascript:void(0);" class="weui-media-box weui-media-box_appmsg">
-                        <div class="weui-media-box__hd">
-                            <img class="weui-media-box__thumb" src="<?=$redPacketRecord['wx_avatar'] ?>">
-                        </div>
-                        <div class="weui-media-box__bd">
-                            <div class="info-l">
-                                <p id="username"><?=$redPacketRecord['wx_name'] ?></p>
-                                <p class="time">
-                                    <?=$redPacketRecord['time'] ?>
-                                </p>
-                            </div>
-                            <div class="info-r" >
-                                <p class="get-ugc">
-                                    <?php if ($redPacketRecord['status'] == \api\modules\redpacket\models\RedPacketRecord::REDPACKET_RECORD_STATUS_EXCHANGESUCCESS){ ?>
-                                        得到
-                                        <span><?=$redPacketRecord['amount'] ?></span>
-                                        个ugc
-                                    <?php }else{ ?>
-                                        领取了一个UGC红包
-                                    <?php } ?>
-                                </p>
-                            </div>
-                        </div>
-                    </a>
-
+ 
                 </div>
                 <!-- <div class="weui-panel__ft"></div> -->
             <?php } ?>
@@ -441,8 +308,8 @@
 <script src="/js/index.js"></script>
 <script src="http://res.wx.qq.com/open/js/jweixin-1.2.0.js"></script>
 <script>
-    // var state = <?= $state ?>;
-    var state = 0;
+    var state = <?= $state ?>;
+    // var state = 0;
     var rid = "<?=$redpacketInfo['id'] ?>";
     var openid = "<?=$openid ?>";
     var nickname = "<?=$nickname ?>";
