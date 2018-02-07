@@ -35,8 +35,8 @@ class RoseTheme extends ActiveRecord
     {
         return [
             [['addtime'], 'integer'],
-            [['title',"content",'img',"thumb_img",'banner_img','addtime','slogan'], 'required'],
-            [['title','img','thumb_img','banner_img','content','slogan'], 'string'],
+            [['title', "content", 'img', "thumb_img", 'banner_img', 'addtime', 'slogan'], 'required'],
+            [['title', 'img', 'thumb_img', 'banner_img', 'content', 'slogan', 'share_img'], 'string'],
         ];
     }
 
