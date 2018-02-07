@@ -84,6 +84,10 @@ class RedpacketController extends  Controller
             $min = $average_amount * self::MIN;
             $redis_data = self::random_red($amount,$data["quantity"],$max,$min);
         }
+        //红包金额过小时返回返回
+        if(!$redis_data){
+            outputHelper::ouputErrorcodeJson(\common\helpers\ErrorCodes::RED_PACKET_QUANTITY_EXCEEDED);
+        }
         $this->REPACK_STATUS = 0;
         //存放redis
         $rewardData = new RewardData();
