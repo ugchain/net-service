@@ -30,8 +30,8 @@
             <div id="packet-open"></div>
 
             <script>
-                var theme_id = '<?= $redpacketInfo['theme_id'];?>'
-                // var theme_id = 4
+                // var theme_id = '<?= $redpacketInfo['theme_id'];?>'
+                var theme_id = 2
                 var packet_name
                 if(theme_id == 1 ){
                     packet_name = 'putong'
@@ -310,8 +310,8 @@
 <script src="/js/index.js"></script>
 <script src="http://res.wx.qq.com/open/js/jweixin-1.2.0.js"></script>
 <script>
-    var state = <?= $state ?>;
-    // var state = 0;
+    // var state = <?= $state ?>;
+    var state = 4;
     var rid = "<?=$redpacketInfo['id'] ?>";
     var openid = "<?=$openid ?>";
     var nickname = "<?=$nickname ?>";
@@ -324,6 +324,7 @@
 
     // 配置微信分享
     wx.ready(function () {
+        console.log('g')
         wx.onMenuShareTimeline({
             title: 'UGC红包领取', 
             link: 't9-cname.ugchain.com', 
