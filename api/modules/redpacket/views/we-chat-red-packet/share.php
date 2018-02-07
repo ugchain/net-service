@@ -12,6 +12,7 @@
     <link rel="stylesheet" type="text/css" href="/css/index.css">
     <script src="/js/vconsole.min.js"></script>
     <script src="/js/spine-widget.js"></script>
+    <script src="/js/jquery-3.3.1.min.js"></script>
     <script>
         var vConsole = new VConsole();
     </script>
@@ -29,21 +30,83 @@
             <div id="packet-open"></div>
 
             <script>
-                var theme_id = '<?= $redpacketInfo['theme_id'];?>'
-                console.log(theme_id);
-                var packet_name 
-                if(theme_id ==1 ){
+                // var theme_id = '<?= $redpacketInfo['theme_id'];?>'
+                var theme_id = 3
+                var packet_name
+                if(theme_id == 1 ){
                     packet_name = 'putong'
+                    $('#packet-close').css({
+                        'height': '400px',
+                        'margin-top': '-20px',
+                        'margin-bottom': '20px'
+                    });
+                    $('.top').css('background-size','100% 80%')
+                    $('#packet-open').css({
+                        'height': '400px',
+                        'padding-top': '20px',
+                        'margin-bottom': '20px'
+                    });
                 }else if(theme_id == 2 ){
                     packet_name = 'xinnian'
+                    $('.top').css('background-size','100% 80%')
+                    $('#packet-close').css({
+                        'height': '470px',
+                        'margin-top': '-60px'
+                    });
+                    $('#packet-open').css({
+                        'height': '470px',
+                        'margin-top': '-60px'
+                    });
                 }else if(theme_id == 3 ){
                     packet_name = 'yuhaihai'
+                    $('.top').css('background-size','100% 80%')
+                    $('#packet-close').css({
+                        'height': '550px',
+                        'margin-top': '-60px',
+                        'margin-bottom': '-40px',
+                    });
+                    $('#packet-open').css({
+                        'height': '550px',
+                        'margin-top': '-60px',
+                        'margin-bottom': '-40px',
+                    });
                 }else if(theme_id == 4 ){
                     packet_name = 'jiucai'
+                    $('.top').css('background-size','100% 80%')
+                     $('#packet-close').css({
+                        'height': '530px',
+                        'margin-top': '-80px',
+                        'margin-bottom': '-40px',
+                    });
+                    $('#packet-open').css({
+                        'height': '510px',
+                        'margin-top': '-80px',
+                        'margin-bottom': '-40px',
+                    });
                 }else if(theme_id == 5 ){
                     packet_name = 'baoerye'
+                    $('#packet-close').css({
+                        'height': '440px',
+                        'margin-top': '-10px',
+                        'margin-bottom': '10px',
+                    });
+                    $('#packet-open').css({
+                        'height': '440px',
+                        'margin-top': '-10px',
+                        'margin-bottom': '10px',
+                    });
                 }else if(theme_id == 6 ){
                     packet_name = 'yifeichongtian'
+                    $('#packet-close').css({
+                        'height': '440px',
+                        'margin-top': '-0px',
+                        'margin-bottom': '-10px'
+                    });
+                    $('#packet-open').css({
+                        'height': '440px',
+                        'margin-top': '-0px',
+                        'margin-bottom': '-10px',
+                    });
                 }
                 spineWidget = new spine.SpineWidget("packet-close", {
                     json: "/resource/" + packet_name +'/'+ packet_name +".json",
@@ -77,7 +140,6 @@
 
     			</span>
             </p>
-
 
         </div>
         <!-- 未领取 -->
@@ -213,14 +275,13 @@
         <p><img src="/img/close.png" class="close"></p>
     </div>
 </body>
-<script src="/js/jquery-3.3.1.min.js"></script>
 <script src="/js/jquery-weui.min.js"></script>
 <script src="/js/clipboard.min.js"></script>
 <script src="/js/index.js"></script>
 <script src="http://res.wx.qq.com/open/js/jweixin-1.2.0.js"></script>
 <script>
-    // var state = <?= $state ?>;
-    var state = 2;
+    var state = <?= $state ?>;
+    // var state = 2;
     var rid = "<?=$redpacketInfo['id'] ?>";
     var openid = "<?=$openid ?>";
     var nickname = "<?=$nickname ?>";

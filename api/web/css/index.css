@@ -8,7 +8,9 @@ body{
 	font-stretch: normal;
 	overflow-x: hidden;
 }
-
+canvas{
+	
+}
 .top .weui-btn {
     width: 300px;
 }
@@ -66,7 +68,7 @@ body{
 	text-align: center;
 	width: 100%;
 	position: absolute;
-	top: 100px;
+	top: 170px;
 	left: 0;
 	font-size: 17px;
 	line-height: 25px;
@@ -76,7 +78,7 @@ body{
 	font-size: 21px;
 }
  #packet-close{
-	width: 97%; 
+	width: 100%; 
 	height: 500px; 
 	margin-top: -100px;
 }
@@ -141,7 +143,7 @@ body{
 .top .received{
 	width: 100%;
 	position: relative;
-	padding-top: 65px;
+	padding-top: 35px;
 	opacity: 0;
 	overflow: hidden;
 	padding-bottom: 10px;
@@ -215,7 +217,7 @@ body{
 .top .finished{
 	display: none;
 	position: relative;
-	margin-top: 75px;
+	margin-top: 65px;
 	padding-bottom: 30px;
 }
 .top .finished .kl-bg{
