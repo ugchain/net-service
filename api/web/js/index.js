@@ -13,6 +13,11 @@ $(function(){
 
 	console.log(state)
 
+            
+    $('#packet-close').on('click', function() {
+    	mask()
+    });
+
 	// mask
 	function mask(){
 		$('.mask').show()

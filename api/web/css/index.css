@@ -363,7 +363,7 @@ canvas{
 	left: 0;
 	background: rgba(0,0,0,.5);
 	text-align: center;
-	/*display: none;*/
+	display: none;
 }
 .mask .mask-img{
 	width: 230px;
