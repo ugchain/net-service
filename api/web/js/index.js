@@ -80,18 +80,24 @@ $(function(){
 		}).text('恭喜您抢到一个UGC红包').show()
 	}else if(state == 2){
 		// 已兑换
+		$('.top').css('background-size','100% 102%')
+		console.log($('.top'))
 		$('.exchanged').show()
 		$('.received').hide()
 		$('#packet-close').hide()
-		$('#packet-open').show().css('margin-top','-75px')
-		$('.state-info').show().css('margin-top','-60px')
+		$('#packet-open').show().css('margin-top','-35px')
+		$('.state-info').show().css('margin-top','-40px')
+		$('.get-ugc').show()
 	}else if(state == 3){
 		// 已领光
-		$('.finished').hide()
-		$('.received').show()
+		$('.finished').show()
+		$('.received').hide()
 		$('#packet-open').hide()
 			.siblings('.get-ugc').hide()
 			.siblings('#packet-close').show()
+			.css({
+				'margin-top': '-80px',
+			})
 		$('.state-info').show()
 		$('.state-info').find('.state-tips')
 			.show()
@@ -106,7 +112,7 @@ $(function(){
 			.siblings('.get-ugc').hide()
 			.siblings('#packet-close').show()
 		$('.state-info').show().css({
-				'margin-top': '10px'
+				'padding-top': '10px'
 			}).find('.state-time')
 				.text(str)
 				.siblings().hide()
@@ -130,33 +136,31 @@ $(function(){
 	// }, 1500); 
 
 	// 配置微信分享
-	// wx.ready(function () {
-	// 	wx.onMenuShareTimeline({
-	// 	    title: '', 
-	// 	    link: '', 
-	// 	    imgUrl: '', 
-	// 	    success: function () {
-		   
-	// 		},
-	// 		cancel: function () {
+	wx.ready(function () {
+		wx.onMenuShareTimeline({
+		    title: 'UGC红包领取', 
+		    link: 't9-cname.ugchain.com', 
+		    imgUrl: '/img/logo.png', 
+		    success: function () {
+		   		console.log('票圈成功')
+			},
+			cancel: function () {
 			    
-	// 		}
-	// 	});
+			}
+		});
 
-	// 	wx.onMenuShareAppMessage({
-	// 		title: '', 
-	// 		desc: '', 
-	// 		link: '', 
-	// 		imgUrl: '', 
-	// 		type: '', 
-	// 		dataUrl: '',
-	// 		success: function () {
-			
-	// 		},
-	// 		cancel: function () {
-			
-	// 		}
-	// 	})
-	// })
+		wx.onMenuShareAppMessage({
+			title: 'UGC红包领取', 
+			desc: '快来领取UGC红包', 
+			link: 't9-cname.ugchain.com', 
+			imgUrl: '/img/logo.png',
+			success: function () {
+				console.log('好友成功')
+			},
+			cancel: function () {
+				console.log('d')
+			}
+		})
+	})
 
 })
