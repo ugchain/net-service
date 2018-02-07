@@ -23,7 +23,7 @@
         <h1 class="packet-title">"<?= $redpacketInfo['title'];?>"</h1>
         <div class="red-img" >
             <div class="get-ugc" style="display: none;">
-                <p id="getugc-num"><?= $record_amount;?></p>
+                <p id="getugc-num"><?= $record_amount;?>44</p>
                 <p>UGC</p>
             </div>
             <div id="packet-close"> </div>
@@ -31,7 +31,7 @@
 
             <script>
                 var theme_id = '<?= $redpacketInfo['theme_id'];?>'
-                // var theme_id = 5
+                // var theme_id = 2
                 var packet_name
                 if(theme_id == 1 ){
                     packet_name = 'putong'
@@ -46,6 +46,10 @@
                         'padding-top': '20px',
                         'margin-bottom': '20px'
                     });
+                    $('.get-ugc').css({
+                        'top': '135px',
+                        'left': '-2px'
+                    })
                 }else if(theme_id == 2 ){
                     packet_name = 'xinnian'
                     $('.top').css('background-size','100% 80%')
@@ -57,6 +61,10 @@
                         'height': '470px',
                         'margin-top': '-60px'
                     });
+                    $('.get-ugc').css({
+                        'top': '162px',
+                        'left': '2px'
+                    })
                 }else if(theme_id == 3 ){
                     packet_name = 'yuhaihai'
                     $('.top').css('background-size','100% 80%')
@@ -70,6 +78,10 @@
                         'margin-top': '-60px',
                         'margin-bottom': '-40px',
                     });
+                    $('.get-ugc').css({
+                        'top': '150px',
+                        'left': '5px'
+                    })
                 }else if(theme_id == 4 ){
                     packet_name = 'jiucai'
                     $('.top').css('background-size','100% 80%')
@@ -83,19 +95,31 @@
                         'margin-top': '-80px',
                         'margin-bottom': '-40px',
                     });
+                    $('.get-ugc').css({
+                        'top': '166px',
+                        'left': '6px'
+                    })
                 }else if(theme_id == 5 ){
                     packet_name = 'baoerye'
+                    $('.top').css('background-size','100% 76%')
                     $('#packet-close').css({
                         'height': '440px',
                         'margin-top': '-40px',
                         'margin-bottom': '10px',
+
                     });
                     $('#packet-open').css({
                         'height': '440px',
                         'margin-top': '-10px',
                         'margin-bottom': '10px',
+                        'margin-left': '15px',
                     });
+                    $('.get-ugc').css({
+                        'top': '150px',
+                        'left': '6px'
+                    })
                 }else if(theme_id == 6 ){
+                    $('.top').css('background-size','100% 77%')
                     packet_name = 'yifeichongtian'
                     $('#packet-close').css({
                         'height': '440px',
@@ -107,6 +131,10 @@
                         'margin-top': '-0px',
                         'margin-bottom': '-10px',
                     });
+                     $('.get-ugc').css({
+                        'top': '140px',
+                        'left': '2px'
+                    })
                 }
                 spineWidget = new spine.SpineWidget("packet-close", {
                     json: "/resource/" + packet_name +'/'+ packet_name +".json",
@@ -131,7 +159,7 @@
 					恭喜您抢到
 				</span>
                 <span class="state-getugc">
-    				<?= $record_amount;?>
+    				<?= $record_amount;?>44
     			</span>
                 <span class="ugc-unit">
     					个UGC
@@ -237,7 +265,7 @@
                         </div>
                     </a>
                     <?php } ?>
-
+ 
                 </div>
                 <!-- <div class="weui-panel__ft"></div> -->
             <?php } ?>
@@ -245,7 +273,7 @@
         <!-- 滚动加载 -->
         <div class="weui-loadmore">
             <i class="weui-loading"></i> 
-            <span class="weui-loadmore__tips">加载更多</span>
+            <span class="weui-loadmore__tips">点击加载更多</span>
         </div>
     </div>
     <!-- 底部二维码 -->
@@ -281,7 +309,7 @@
 <script src="http://res.wx.qq.com/open/js/jweixin-1.2.0.js"></script>
 <script>
     var state = <?= $state ?>;
-    // var state = 1;
+    // var state = 0;
     var rid = "<?=$redpacketInfo['id'] ?>";
     var openid = "<?=$openid ?>";
     var nickname = "<?=$nickname ?>";
@@ -312,7 +340,7 @@
             link: 't9-cname.ugchain.com', 
             imgUrl: '/img/logo.png', 
             success: function () {
-                console.log('票圈成功')
+                $.toast("成功", "text");
             },
             cancel: function () {
                 
@@ -325,7 +353,7 @@
             link: 't9-cname.ugchain.com', 
             imgUrl: 'https://image.baidu.com/search/detail?ct=503316480&z=0&ipn=d&word=%E5%9B%BE%E6%A0%87%20%E7%B4%A0%E6%9D%90&step_word=&hs=2&pn=6&spn=0&di=122073751360&pi=0&rn=1&tn=baiduimagedetail&is=0%2C0&istype=2&ie=utf-8&oe=utf-8&in=&cl=2&lm=-1&st=-1&cs=300740771%2C3627937371&os=1455981412%2C1873328956&simid=4159199666%2C858328444&adpicid=0&lpn=0&ln=1980&fr=&fmq=1389861203899_R&fm=&ic=0&s=undefined&se=&sme=&tab=0&width=&height=&face=undefined&ist=&jit=&cg=&bdtype=0&oriquery=%E5%9B%BE%E6%A0%87&objurl=http%3A%2F%2Fpic.qiantucdn.com%2F58pic%2F18%2F19%2F87%2F09f58PICBJU_1024.jpg&fromurl=ippr_z2C%24qAzdH3FAzdH3Fooo_z%26e3Bcbrtv_z%26e3Bv54AzdH3Frf1AzdH3F8b8lb0al_z%26e3Bip4s&gsm=0&rpstart=0&rpnum=0',
             success: function () {
-                console.log('好友成功')
+                $.toast("成功", "text");
             },
             cancel: function () {
                 console.log('d')
