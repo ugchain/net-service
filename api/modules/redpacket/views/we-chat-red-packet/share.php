@@ -303,7 +303,7 @@
 
 
     
-    // wx.config();
+    wx.config(<?= json_encode(\Yii::$app->wechat->jsApiConfig(['jsApiList' => ['onMenuShareTimeline','onMenuShareAppMessage']])) ?>);
 
     // 配置微信分享
     // wx.ready(function () {
