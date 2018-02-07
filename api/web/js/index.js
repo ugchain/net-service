@@ -22,6 +22,8 @@ $(function(){
 		})
 	}
 
+
+
 	if(state == 0){
 		// 未领取
 		$('.tie').css({
@@ -134,33 +136,5 @@ $(function(){
 	// 		})
 	// 	});
 	// }, 1500); 
-
-	// 配置微信分享
-	wx.ready(function () {
-		wx.onMenuShareTimeline({
-		    title: 'UGC红包领取', 
-		    link: 't9-cname.ugchain.com', 
-		    imgUrl: '/img/logo.png', 
-		    success: function () {
-		   		console.log('票圈成功')
-			},
-			cancel: function () {
-			    
-			}
-		});
-
-		wx.onMenuShareAppMessage({
-			title: 'UGC红包领取', 
-			desc: '快来领取UGC红包', 
-			link: 't9-cname.ugchain.com', 
-			imgUrl: '/img/logo.png',
-			success: function () {
-				console.log('好友成功')
-			},
-			cancel: function () {
-				console.log('d')
-			}
-		})
-	})
 
 })
