@@ -120,7 +120,7 @@ class Operating
         //获取离线签名
         $sign_res = CurlRequest::curl($sign_host, $send_sign_data);
         //写log
-        OutputHelper::log("红包兑换api离线签名 ".json_encode($send_sign_data)." -- 签名返回信息: ".$sign_res, "internal_transfer");
+        OutputHelper::log("离线签名 ".json_encode($send_sign_data)." -- 签名返回信息: ".$sign_res, "internal_transfer");
 
         if(!$sign_res){
             return false;
@@ -134,7 +134,7 @@ class Operating
         $broadcasting = CurlRequest::ChainCurl($host, $function, [$sign_res_data['data']["raw_transaction"]]);
 
         //写log
-        OutputHelper::log("红包兑换api链上广播: ".$sign_res_data['data']["transaction_hash"]."-- 链上返回信息: ".$broadcasting, "internal_transfer");
+        OutputHelper::log("链上广播: ".$sign_res_data['data']["transaction_hash"]."-- 链上返回信息: ".$broadcasting, "internal_transfer");
 
         if(!$broadcasting){
             return false;
