@@ -263,5 +263,11 @@ class WeChatRedPacketController extends Controller
         return $str;
     }
 
+    public function actionTest()
+    {
+        $wechat = \Yii::$app->wechat;
+        $jsc = $wechat->jsApiConfig(['jsApiList' => ['onMenuShareTimeline','onMenuShareAppMessage']]);
+        echo "<pre>";var_dump($jsc);exit;
+    }
 }
 /* end of file for WeChatRedPacketController */
