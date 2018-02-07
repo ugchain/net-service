@@ -34,17 +34,8 @@ class AssetController extends  Controller
         $type = Yii::$app->request->post("type", self::ETHUG);
         //gasPrice
         $gasPrice = Yii::$app->request->post("gasPrice", 0);
-
-
-//        //检查地址位数及空
-//        if (!$address || strlen($address) != self::ADDRESSLEN) {
-//            outputHelper::ouputErrorcodeJson(\common\helpers\ErrorCodes::ADDRESS_NOT_EXIST);
-//        }
-//        //校验地址是否存在
-//        if (!$address_info = Address::getInfoByAddress($address)) {
-//            outputHelper::ouputErrorcodeJson(\common\helpers\ErrorCodes::ADDRESS_NOT_EXIST);
-//        }
-
+        //写入log
+        OutputHelper::log("跨链划转api信息:".json_encode(["txid" => $txid,"address" => $address,"amount" => $amount,"type" => $type == 1 ? "eth_ug" : "ug_eth"]),"cross_chain");
         //检验txid是否存在
         if ($txid_info = CenterBridge::getTxidInfo($txid)) {
             outputHelper::ouputErrorcodeJson(\common\helpers\ErrorCodes::TXID_EXIST);
@@ -68,12 +59,6 @@ class AssetController extends  Controller
         $txid = Yii::$app->request->post("txid", "");
         $page = Yii::$app->request->post("page", "1");
         $pageSize = Yii::$app->request->post("pageSize", "10");
-
-        //校验地址是否存在
-//        if (!$address_info = Address::getInfoByAddress($address)) {
-//            outputHelper::ouputErrorcodeJson(\common\helpers\ErrorCodes::ADDRESS_NOT_EXIST);
-//        }
-
         $result = [];
         $result = CenterBridge::getList($address, $page, $pageSize);
         outputHelper::ouputErrorcodeJson(\common\helpers\ErrorCodes::SUCCESS, $result);
@@ -97,11 +82,16 @@ class AssetController extends  Controller
         if ($txid_info = Trade::getTxidInfo($txid)) {
             outputHelper::ouputErrorcodeJson(\common\helpers\ErrorCodes::TXID_EXIST);
         }
+        //写入log
+        OutputHelper::log("ug划转api信息: ".json_encode(["txid" => $txid, "from" => $from, "to" => $to, "amount" => $amount]),"internal_transfer");
         if(!Trade::insertData($txid, $from, $to, $amount, Trade::CONFIRMED)){
             outputHelper::ouputErrorcodeJson(\common\helpers\ErrorCodes::FALL);
         }
         //确认转账成功
         $block_info = CurlRequest::ChainCurl(Yii::$app->params["ug"]["ug_host"], "eth_getTransactionReceipt", [$txid]);
+        //写入log
+        OutputHelper::log("ug划转链上确认信息: ".$txid."--".$block_info, "internal_transfer");
+
         if (!$block_info) {
             outputHelper::ouputErrorcodeJson(\common\helpers\ErrorCodes::FALL);
         }
