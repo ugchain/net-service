@@ -53,7 +53,7 @@ pipeline {
                 //Composer Build...
                 sh "composer install -vvv"
 
-                sh "composer update -vvv"
+                //sh "composer update -vvv"
 
                 //Yii2 重新初始化环境配置
                 script {
