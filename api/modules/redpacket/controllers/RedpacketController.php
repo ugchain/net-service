@@ -21,7 +21,7 @@ class RedpacketController extends  Controller
 
     //红包获取最大最小值
     const MAX = 1.4;
-    const MIN = 0.6;
+    const MIN = 0.01;
     public $REPACK_STATUS;
     /**
      * @inheritdoc
