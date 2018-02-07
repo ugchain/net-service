@@ -72,6 +72,8 @@ $(function(){
 	}else if(state == 1){
 		// 已领取
 		$('.received').show().css('opacity','1')
+		$('.top').css('background-size', '100% 76%');
+		$('.finished').hide()
 		$('#packet-open').hide()
 			.siblings('.get-ugc').hide()
 			.siblings('#packet-close').show()
@@ -108,6 +110,7 @@ $(function(){
 	}else if(state == 4){
 		// 已结束
 		var str = '于'+ finish_time +'结束'
+		$('.top').css('background-size', '100% 84%');
 		$('.finished').show()
 		$('.received').hide()
 		$('#packet-open').hide()
@@ -126,15 +129,37 @@ $(function(){
 		return false
 	}
 
+
 	// 模拟 加载领取详情
-	// setTimeout(function() {
-	// 	$('.weui-loadmore').on('click', function() {
-	// 		$('.weui-loading').show()
-	// 		$('.weui-loadmore__tips').text("正在加载")
-	// 		$('weui-panel__bd').css({
-	// 			'height': 'auto'
-	// 		})
-	// 	});
-	// }, 1500); 
+	var recond_height = $('.weui-panel__bd').height()
+	if(recond_height > 780 || recond_height== 780){
+		$('.weui-panel:after').css({
+			'border-bottom': '1px solid #e5e5e5'
+		})
+		$('.weui-panel__bd').css({
+			'height': '780px',
+			'overflow': 'hidden'
+		})
+		$('.weui-loadmore').show().find('.weui-loading').hide()
+		$('.weui-loadmore').on('click', function() {
+			$('.weui-loadmore__tips').text("正在加载")
+			$('.weui-loading').show()
+			setTimeout(function() {
+				$('.weui-panel__bd').css({
+					'height': 'auto',
+				})
+				$('.weui-loadmore').hide()
+			}, 1000)
+		});
+	}else{
+		$('.weui-panel__bd').css({
+			'height': 'auto',
+			'overflow': 'visible'
+		})
+		$('.weui-loadmore').hide()
+	}
+	
+	
+
 
 })

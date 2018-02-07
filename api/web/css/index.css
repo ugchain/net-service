@@ -50,6 +50,7 @@ canvas{
 	background: url('../img/top-bg.png') no-repeat;
 	background-size: 100%;
 	padding: 36px 0 25px 0;
+	overflow: hidden;
 }
 
 .top .packet-title{
@@ -68,7 +69,7 @@ canvas{
 	text-align: center;
 	width: 100%;
 	position: absolute;
-	top: 170px;
+	top: 145px;
 	left: 0;
 	font-size: 17px;
 	line-height: 25px;
@@ -217,17 +218,18 @@ canvas{
 .top .finished{
 	display: none;
 	position: relative;
-	margin-top: 65px;
+	padding-top: 65px;
 	padding-bottom: 30px;
+	overflow: hidden;
 }
 .top .finished .kl-bg{
 	width: 120%;
 	height: 200px;
 	position: absolute;
 	z-index: -888;
-	top: -100px;
+	top: -22px;
 	left: -15px;
-	overflow: hidden;
+	/*overflow: hidden;*/
 }
 .top .finished p:nth-child(2),
 .top .finished p:nth-child(3){
@@ -366,6 +368,7 @@ canvas{
 	width: 230px;
 	margin: 100px 50px 32px 50px;
 }
+
 .mask button{
 	width: 180px;
 	height: 60px;
@@ -377,6 +380,8 @@ canvas{
 	top: 300px;
 	left: 95px;
 }
+
+
 .mask .download-app {
 	position: absolute;
 	top: 208px;
@@ -401,4 +406,13 @@ canvas{
 }
 .mask .close{
 	width: 40px;
+}
+@media screen and (max-width:412px){
+	 .mask button{
+		left: 115px;
+	}
+	.mask .download-app {
+		left: 130px;
+		
+	}
 }
