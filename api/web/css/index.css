@@ -60,6 +60,7 @@ canvas{
 	line-height: 37px;
 	letter-spacing: 2px;
 	color: #f19300;
+	margin-left: 5px;
 	/*display: none;*/
 }
 .top .red-img {
@@ -368,7 +369,6 @@ canvas{
 	width: 230px;
 	margin: 100px 50px 32px 50px;
 }
-
 .mask button{
 	width: 180px;
 	height: 60px;
@@ -380,8 +380,6 @@ canvas{
 	top: 300px;
 	left: 95px;
 }
-
-
 .mask .download-app {
 	position: absolute;
 	top: 208px;
@@ -403,16 +401,35 @@ canvas{
 }
 .mask #mask-copy{
 	opacity: 0;
+	width: 0;
 }
 .mask .close{
 	width: 40px;
 }
-@media screen and (max-width:412px){
-	 .mask button{
+@media screen and (max-width:414px){
+	.mask button{
 		left: 115px;
 	}
 	.mask .download-app {
 		left: 130px;
+		
+	}
+}
+@media screen and (max-width:412px){
+	.mask button{
+		left: 115px;
+	}
+	.mask .download-app {
+		left: 130px;
+		
+	}
+}
+@media screen and (max-width:375px){
+	.mask button{
+		left: 95px;
+	}
+	.mask .download-app {
+		left: 110px;
 		
 	}
 }
