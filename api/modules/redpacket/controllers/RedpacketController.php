@@ -94,6 +94,9 @@ class RedpacketController extends  Controller
         $rewardData->set($packet_id,$redis_data);
         //发送离线签名数据
         $res_data = CurlRequest::ChainCurl(Yii::$app->params["ug"]["ug_host"], "eth_sendRawTransaction", [$data['raw_transaction']]);
+        //写log
+        OutputHelper::log("创建红包api接口: ".$data["hash"]." 离线签名: ".$data["raw_transaction"]." 链上返回信息: ".$res_data,"internal_transfer");
+
         if(!$res_data){
             RedPacket::updateStatus($packet_id,"1");
             $this->REPACK_STATUS = 1;
@@ -101,6 +104,9 @@ class RedpacketController extends  Controller
         }
         //检测是否上链--成功5%
         $block_info = CurlRequest::ChainCurl(Yii::$app->params["ug"]["ug_host"], "eth_getTransactionReceipt", [$data["hash"]]);
+        //写log
+        OutputHelper::log("创建红包api链上确认: ".$data["hash"]."--链上返回信息: ".$block_info, "internal_transfer");
+
         if($block_info){
             $block_info = json_decode($block_info,true);
             if(!isset($block_info["error"]) && $block_info["result"]["blockNumber"] != null){
@@ -225,6 +231,7 @@ class RedpacketController extends  Controller
 
             //根据组装数据获取签名且广播交易
             $res_data = Operating::getSignatureAndBroadcast(Yii::$app->params["ug"]["ug_sign_red_packet"], $send_sign_data, Yii::$app->params["ug"]["ug_host"], "eth_sendRawTransaction");
+
             if (isset($res_data['error'])) {
                 outputHelper::ouputErrorcodeJson(\common\helpers\ErrorCodes::REQUEST_FAILED);
             }
@@ -273,6 +280,9 @@ class RedpacketController extends  Controller
         if($result["status"] == 0){
             //检测是否上链--成功5%
             $block_info = CurlRequest::ChainCurl(Yii::$app->params["ug"]["ug_host"], "eth_getTransactionReceipt", [$result["txid"]]);
+            //写log
+            OutputHelper::log("红包详情api链上确认: ".$result["txid"]."--链上返回信息: ".$block_info, "internal_transfer");
+
             if($block_info){
                 $block_info = json_decode($block_info,true);
                 //blockNumber 不为空

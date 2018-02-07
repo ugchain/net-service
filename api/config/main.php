@@ -46,7 +46,24 @@ return [
             'targets' => [
                 [
                     'class' => 'yii\log\FileTarget',
-                    'levels' => ['error', 'warning'],
+                    'levels' => ['error', 'warning','info'],
+
+                ],
+                [
+                    'class' => 'yii\log\FileTarget',
+                    'levels' => ['info'],
+                    'categories' => ['cross_chain'],
+                    'logFile' => '@app/runtime/eth/cross_chain'.date("Ymd",time()).'log',
+                    'maxFileSize' => 1024 * 1024000,
+                    'maxLogFiles' => 200,
+                ],
+                [
+                    'class' => 'yii\log\FileTarget',
+                    'levels' => ['info'],
+                    'categories' => ['internal_transfer'],
+                    'logFile' => '@app/runtime/ug/internal_transfer'.date("Ymd",time()).'log',
+                    'maxFileSize' => 1024 * 102400,
+                    'maxLogFiles' => 200,
                 ],
             ],
         ],

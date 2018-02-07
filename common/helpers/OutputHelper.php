@@ -2,6 +2,7 @@
 namespace common\helpers;
 use Yii;
 use common\models\CenterBridge;
+use yii\log\Logger;
 
 class OutputHelper
 {
@@ -95,6 +96,16 @@ class OutputHelper
     public static function toWei($number)
     {
         return $number * pow(10,18);
+    }
+
+    /**
+     * log日志
+     */
+    public static function log($message = "", $filename, $level = Logger::LEVEL_INFO)
+    {
+        $date = "时间 : ".date("Y-m-d H:i:s",time())."---";
+        Yii::getLogger()->log($date.$message, $level,$filename);
+        return true;
     }
 
 }
