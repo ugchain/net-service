@@ -300,7 +300,38 @@
     //         'onMenuShareAppMessage',
     //     ] 
     // });
-    wx.config(<?= json_encode(\Yii::$app->wechat->jsApiConfig(['jsApiList' => ['onMenuShareTimeline','onMenuShareAppMessage']])) ?>);
+
+
+    
+    // wx.config(<?= json_encode(\Yii::$app->wechat->jsApiConfig(['jsApiList' => ['onMenuShareTimeline','onMenuShareAppMessage']])) ?>);
+
+    // 配置微信分享
+    // wx.ready(function () {
+    //     wx.onMenuShareTimeline({
+    //         title: 'UGC红包领取', 
+    //         link: 't9-cname.ugchain.com', 
+    //         imgUrl: '/img/logo.png', 
+    //         success: function () {
+    //             $.toast("分享成功", "text");
+    //         },
+    //         cancel: function () {
+                
+    //         }
+    //     });
+
+    //     wx.onMenuShareAppMessage({
+    //         title: 'UGC红包领取', 
+    //         desc: '快来领取UGC红包', 
+    //         link: 't9-cname.ugchain.com', 
+    //         imgUrl: '/img/logo.png',
+    //         success: function () {
+    //             $.toast("分享成功", "text");
+    //         },
+    //         cancel: function () {
+    //             console.log('d')
+    //         }
+    //     })
+    // })
 
 </script>
 </html>
