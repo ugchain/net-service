@@ -11,6 +11,7 @@ use Yii;
  * @property string $content
  * @property string $slogan
  * @property string $thumb_img
+ * @property string $banner_img
  * @property string $share_img
  * @property integer $addtime
  */
@@ -29,6 +30,8 @@ class RoseTheme extends \common\models\RoseTheme
         $this->thumb_img = $object;
         $object = self::uploadFile($this->banner_img);
         $this->banner_img = $object;
+        $object = self::uploadFile($this->share_img);
+        $this->share_img = $object;
     }
 
     /**

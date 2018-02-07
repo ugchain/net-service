@@ -21,7 +21,7 @@ class RedpacketController extends  Controller
 
     //红包获取最大最小值
     const MAX = 1.4;
-    const MIN = 0.6;
+    const MIN = 0.01;
     public $REPACK_STATUS;
     /**
      * @inheritdoc
@@ -83,6 +83,10 @@ class RedpacketController extends  Controller
             $max = $average_amount * self::MAX;
             $min = $average_amount * self::MIN;
             $redis_data = self::random_red($amount,$data["quantity"],$max,$min);
+        }
+        //红包金额过小时返回返回
+        if(!$redis_data){
+            outputHelper::ouputErrorcodeJson(\common\helpers\ErrorCodes::RED_PACKET_QUANTITY_EXCEEDED);
         }
         $this->REPACK_STATUS = 0;
         //存放redis
@@ -179,7 +183,7 @@ class RedpacketController extends  Controller
         $result_merge[1] = $result_merge[1] + $result_merge[0];
         $result_merge[0] = $max * 100;
         foreach ($result_merge as &$v) {
-            $v = floor($v) / 100;
+            $v = $v / 100;
         }
         return $result_merge;
     }

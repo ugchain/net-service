@@ -8,7 +8,9 @@ body{
 	font-stretch: normal;
 	overflow-x: hidden;
 }
-
+canvas{
+	
+}
 .top .weui-btn {
     width: 300px;
 }
@@ -48,6 +50,7 @@ body{
 	background: url('../img/top-bg.png') no-repeat;
 	background-size: 100%;
 	padding: 36px 0 25px 0;
+	overflow: hidden;
 }
 
 .top .packet-title{
@@ -66,7 +69,7 @@ body{
 	text-align: center;
 	width: 100%;
 	position: absolute;
-	top: 100px;
+	top: 145px;
 	left: 0;
 	font-size: 17px;
 	line-height: 25px;
@@ -76,13 +79,13 @@ body{
 	font-size: 21px;
 }
  #packet-close{
-	width: 97%; 
-	height: 550px; 
+	width: 100%; 
+	height: 500px; 
 	margin-top: -100px;
 }
 #packet-open{
 	width: 100%; 
-	height: 550px; 
+	height: 520px; 
 	margin-top: -100px;
 	display: none;
 }
@@ -90,6 +93,7 @@ body{
 .top .red-img .state-info {
 	margin-top: -12px;
 	margin-bottom: 10px;
+	display: none;
 }
 .top .red-img .state-info .state-tips{
 	font-size: 21px;
@@ -140,10 +144,10 @@ body{
 .top .received{
 	width: 100%;
 	position: relative;
-	padding-top: 65px;
+	padding-top: 35px;
 	opacity: 0;
 	overflow: hidden;
-	padding-bottom: 30px;
+	padding-bottom: 10px;
 }
 
 .top .received .kl-bg{
@@ -214,17 +218,18 @@ body{
 .top .finished{
 	display: none;
 	position: relative;
-	margin-top: 75px;
+	padding-top: 65px;
 	padding-bottom: 30px;
+	overflow: hidden;
 }
 .top .finished .kl-bg{
 	width: 120%;
 	height: 200px;
 	position: absolute;
 	z-index: -888;
-	top: -100px;
+	top: -22px;
 	left: -15px;
-	overflow: hidden;
+	/*overflow: hidden;*/
 }
 .top .finished p:nth-child(2),
 .top .finished p:nth-child(3){
@@ -363,6 +368,7 @@ body{
 	width: 230px;
 	margin: 100px 50px 32px 50px;
 }
+
 .mask button{
 	width: 180px;
 	height: 60px;
@@ -374,6 +380,8 @@ body{
 	top: 300px;
 	left: 95px;
 }
+
+
 .mask .download-app {
 	position: absolute;
 	top: 208px;
@@ -398,4 +406,13 @@ body{
 }
 .mask .close{
 	width: 40px;
+}
+@media screen and (max-width:412px){
+	 .mask button{
+		left: 115px;
+	}
+	.mask .download-app {
+		left: 130px;
+		
+	}
 }

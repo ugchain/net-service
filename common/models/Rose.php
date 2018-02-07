@@ -12,6 +12,7 @@ use yii\data\ActiveDataProvider;
  * @property string $token_id
  * @property string $theme_img
  * @property string $theme_thumb_img
+ * @property string $theme_share_img
  * @property string $rose_name
  * @property string $theme_name
  * @property integer $material_type
@@ -42,7 +43,7 @@ class Rose extends ActiveRecord
         return [
             [['theme_id','material_type', 'addtime'], 'integer'],
             [['theme_thumb_img','theme_img',"token_id",'address','rose_name','addtime'], 'required'],
-            [['token_id','theme_img','theme_thumb_img','rose_name','theme_name','amount','address'], 'string'],
+            [['token_id','theme_img','theme_thumb_img','rose_name','theme_name','amount','theme_share_img','address'], 'string'],
         ];
     }
 
