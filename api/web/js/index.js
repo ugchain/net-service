@@ -13,11 +13,6 @@ $(function(){
 
 	console.log(state)
 
-            
-    $('#packet-close').on('click', function() {
-    	mask()
-    });
-
 	// mask
 	function mask(){
 		$('.mask').show()
@@ -49,6 +44,11 @@ $(function(){
 			.siblings('.get-ugc').hide()
 			.siblings('.packet-close').show()
 		$('.state-info').hide()
+
+
+		$('#packet-close').on('click', function() {
+	    	mask()
+	    });	
 
 		// 获取口令 传入微信用户信息
 		$('#get-packet-btn').on('click',function(){
