@@ -190,6 +190,7 @@ class RedpacketController extends  Controller
         $result_merge[0] = $max * 100;
         foreach ($result_merge as &$v) {
             $v = $v / 100;
+            $v = round($v,2);
         }
         return $result_merge;
     }
