@@ -80,6 +80,8 @@ $(function(){
 		}).text('恭喜您抢到一个UGC红包').show()
 	}else if(state == 2){
 		// 已兑换
+		$('.top').css('background-size','100% 102%')
+		console.log($('.top'))
 		$('.exchanged').show()
 		$('.received').hide()
 		$('#packet-close').hide()
