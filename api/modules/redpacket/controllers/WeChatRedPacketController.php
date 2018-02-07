@@ -262,6 +262,5 @@ class WeChatRedPacketController extends Controller
             $str);
         return $str;
     }
-
 }
 /* end of file for WeChatRedPacketController */
