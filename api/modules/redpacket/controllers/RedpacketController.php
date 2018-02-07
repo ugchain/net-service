@@ -84,6 +84,10 @@ class RedpacketController extends  Controller
             $min = $average_amount * self::MIN;
             $redis_data = self::random_red($amount,$data["quantity"],$max,$min);
         }
+        //红包金额过小时返回返回
+        if(!$redis_data){
+            outputHelper::ouputErrorcodeJson(\common\helpers\ErrorCodes::RED_PACKET_QUANTITY_EXCEEDED);
+        }
         $this->REPACK_STATUS = 0;
         //存放redis
         $rewardData = new RewardData();
@@ -242,6 +246,15 @@ class RedpacketController extends  Controller
             if (!RedPacketRecord::updateStatusAndTxidByid($result['id'], $recordStatus, $res_data["result"], $address)) {
                 outputHelper::ouputErrorcodeJson(\common\helpers\ErrorCodes::FALL);
             }
+
+            //如果所有红包记录都兑换完成，更新红包状态
+           $exchangeCount = RedPacketRecord::find()->where(['rid' => $redPacketInfo['id'], 'status' => RedPacketRecord::EXCHANGE_SUCC])->count();
+            if ($redPacketInfo['quantity'] == $exchangeCount) {
+                if (!RedPacket::updateStatus($redPacketInfo['id'], RedPacket::REDPACKET_EXPIRED)) {
+                    outputHelper::ouputErrorcodeJson(\common\helpers\ErrorCodes::FALL);
+                }
+            }
+
             //插入内部交易表
             if (!Trade::insertData($res_data["result"], Yii::$app->params["ug"]["red_packet_address"], $address, $result["amount"], $tradeStatus, Trade::OPEN_REDPACKET, empty($trade_info['blockNumber'])?0:$trade_info['blockNumber'])) {
                 outputHelper::ouputErrorcodeJson(\common\helpers\ErrorCodes::FALL);
