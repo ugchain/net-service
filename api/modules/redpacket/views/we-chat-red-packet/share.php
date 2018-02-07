@@ -30,8 +30,8 @@
             <div id="packet-open"></div>
 
             <script>
-                // var theme_id = '<?= $redpacketInfo['theme_id'];?>'
-                var theme_id = 5
+                var theme_id = '<?= $redpacketInfo['theme_id'];?>'
+                // var theme_id = 5
                 var packet_name
                 if(theme_id == 1 ){
                     packet_name = 'putong'
@@ -280,8 +280,8 @@
 <script src="/js/index.js"></script>
 <script src="http://res.wx.qq.com/open/js/jweixin-1.2.0.js"></script>
 <script>
-    // var state = <?= $state ?>;
-    var state = 1;
+    var state = <?= $state ?>;
+    // var state = 1;
     var rid = "<?=$redpacketInfo['id'] ?>";
     var openid = "<?=$openid ?>";
     var nickname = "<?=$nickname ?>";
