@@ -4,6 +4,13 @@ size: 2048,512
 format: RGBA8888
 filter: Linear,Linear
 repeat: none
+chuai
+  rotate: false
+  xy: 1521, 157
+  size: 155, 160
+  orig: 155, 160
+  offset: 0, 0
+  index: -1
 denglong
   rotate: false
   xy: 1202, 9
@@ -13,7 +20,7 @@ denglong
   index: -1
 erduo
   rotate: false
-  xy: 1798, 240
+  xy: 1768, 101
   size: 43, 43
   orig: 43, 43
   offset: 0, 0
@@ -54,8 +61,8 @@ kuai
   offset: 0, 0
   index: -1
 le
-  rotate: true
-  xy: 1661, 170
+  rotate: false
+  xy: 1653, 9
   size: 113, 135
   orig: 113, 135
   offset: 0, 0
@@ -69,7 +76,7 @@ nian
   index: -1
 shenzi
   rotate: false
-  xy: 1695, 285
+  xy: 1857, 285
   size: 152, 113
   orig: 152, 113
   offset: 0, 0
@@ -90,14 +97,14 @@ xiankai
   index: -1
 xiaobao
   rotate: false
-  xy: 1849, 286
+  xy: 1678, 146
   size: 137, 112
   orig: 137, 112
   offset: 0, 0
   index: -1
 xin
-  rotate: false
-  xy: 1521, 157
+  rotate: true
+  xy: 1695, 260
   size: 138, 160
   orig: 138, 160
   offset: 0, 0
@@ -110,15 +117,15 @@ xuzi
   offset: 0, 0
   index: -1
 yanjing
-  rotate: true
-  xy: 2028, 461
+  rotate: false
+  xy: 2, 9
   size: 49, 8
   orig: 49, 8
   offset: 0, 0
   index: -1
 yanjing2
-  rotate: false
-  xy: 2, 13
+  rotate: true
+  xy: 1678, 260
   size: 57, 4
   orig: 57, 4
   offset: 0, 0

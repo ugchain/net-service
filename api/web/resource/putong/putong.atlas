@@ -4,6 +4,13 @@ size: 2048,512
 format: RGBA8888
 filter: Linear,Linear
 repeat: none
+chuai
+  rotate: false
+  xy: 1201, 140
+  size: 155, 160
+  orig: 155, 160
+  offset: 0, 0
+  index: -1
 gai
   rotate: false
   xy: 616, 96
