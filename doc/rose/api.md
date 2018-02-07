@@ -143,6 +143,7 @@ doc/api.md
                 "token_id": "0336D537CB4ECB4E3E3C1A943E3C1A9435F41A9435F45E2E35F45E2E9C0E5E2E",
                 "theme_img": "uploads/1517566795471.jpg",
                 "theme_thumb_img": "uploads/1517566795142.jpg",
+                "theme_share_img": "uploads/1517566795142.jpg",//分享图片
                 "rose_name": "银玫瑰4343",
                 "theme_name": "金金的打发开发了",
                 "material_type": "1",
@@ -158,6 +159,7 @@ doc/api.md
                 "token_id": "F3D7E0FC82518251C55A4F78C55A4F78B8AE4F78B8AE6B3BB8AE6B3BEC446B3B",
                 "theme_img": "uploads/1517566829626.jpg",
                 "theme_thumb_img": "uploads/1517566829325.jpg",
+                "theme_share_img": "uploads/1517566795142.jpg",//分享图片
                 "rose_name": "银玫瑰4343",
                 "theme_name": "金金的打发开发了",
                 "material_type": "1",
@@ -173,6 +175,7 @@ doc/api.md
                 "token_id": "9F6D858E035D035D4EDF008A4EDF008A479F008A479F945B479F945B4673945B",
                 "theme_img": "uploads/1517566852510.jpeg",
                 "theme_thumb_img": "uploads/1517566852995.jpeg",
+                "theme_share_img": "uploads/1517566795142.jpg",//分享图片
                 "rose_name": "银玫瑰4343",
                 "theme_name": "金金的打发开发了",
                 "material_type": "1",
@@ -188,6 +191,7 @@ doc/api.md
                 "token_id": "BF820A30475D475D78B5A49678B5A4960E38A4960E38CA2B0E38CA2BE736CA2B",
                 "theme_img": "uploads/1517566874394.jpeg",
                 "theme_thumb_img": "uploads/1517566874166.jpeg",
+                "theme_share_img": "uploads/1517566795142.jpg",//分享图片
                 "rose_name": "银玫瑰4343",
                 "theme_name": "金金的打发开发了",
                 "material_type": "1",

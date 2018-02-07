@@ -56,6 +56,7 @@ class RoseController extends  Controller
         }
         $Rose->theme_img = $theme_info["img"];
         $Rose->theme_thumb_img = $theme_info["thumb_img"];
+        $Rose->theme_share_img = $theme_info["thumb_img"];
         $Rose->addtime = time();
         $Rose->status = RoseGive::SUCCESS;
         $Rose->token_id = OutputHelper::guid();

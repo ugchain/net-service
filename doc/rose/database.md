@@ -9,6 +9,7 @@
       `token_id` varchar(255) NOT NULL DEFAULT '' COMMENT '唯一ID',
       `theme_img` varchar(255) NOT NULL DEFAULT '' COMMENT '主题图片',
       `theme_thumb_img` varchar(255) NOT NULL DEFAULT '' COMMENT '主题缩略图片',
+      `theme_share_img` varchar(255) NOT NULL DEFAULT '' COMMENT '主题分享图片',
       `rose_name` varchar(50) NOT NULL COMMENT '玫瑰名称',
       `theme_name` varchar(255) NOT NULL DEFAULT '' COMMENT '刻字',
       `material_type` tinyint(1) NOT NULL DEFAULT '1' COMMENT '1:钻石2:水晶3:金质4:银质5:铜质',
@@ -47,6 +48,7 @@
       `img` varchar(255) NOT NULL COMMENT '主题图片地址',
       `thumb_img` varchar(255) NOT NULL COMMENT '主题缩略图地址',
       `banner_img` varchar(255) NOT NULL COMMENT 'banner图',
+      `share_img` varchar(255) NOT NULL COMMENT '分享图',
       `addtime` int(11) NOT NULL COMMENT '创建时间',
       PRIMARY KEY (`id`)
     ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COMMENT='玫瑰主题表';
