@@ -62,7 +62,7 @@
                     $('.top').css('background-size','100% 80%')
                     $('#packet-close').css({
                         'height': '550px',
-                        'margin-top': '-60px',
+                        'margin-top': '-145px',
                         'margin-bottom': '-40px',
                     });
                     $('#packet-open').css({
@@ -134,7 +134,7 @@
     				<?= $record_amount;?>
     			</span>
                 <span class="ugc-unit">
-    					个UGC
+    					9999个UGC
     			</span>
                 <span class="state-time">
 
@@ -281,7 +281,7 @@
 <script src="http://res.wx.qq.com/open/js/jweixin-1.2.0.js"></script>
 <script>
     var state = <?= $state ?>;
-    // var state = 2;
+    // var state = 1;
     var rid = "<?=$redpacketInfo['id'] ?>";
     var openid = "<?=$openid ?>";
     var nickname = "<?=$nickname ?>";
