@@ -6,7 +6,7 @@
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
     <meta http-equiv="Pragma" content="no-cache" />
     <meta http-equiv="Expires" content="0" />
-    <title>UGC红包领取</title>
+    <title></title>
     <link rel="stylesheet" href="/css/weui.min.css">
     <link rel="stylesheet" href="/css/jquery-weui.min.css">
     <link rel="stylesheet" type="text/css" href="/css/index.css">
@@ -322,14 +322,16 @@
     // 接入wx_sdk
     wx.config(<?= json_encode(\Yii::$app->wechat->jsApiConfig(['jsApiList' => ['onMenuShareTimeline','onMenuShareAppMessage']], false)) ?>);
 
+
     // 配置微信分享
     wx.ready(function () {
         wx.onMenuShareTimeline({
-            title: 'UGC红包领取', 
-            link: 't9-cname.ugchain.com', 
-            imgUrl: '/img/logo.png', 
+            title: 'UGC', 
+            link: '', 
+            imgUrl: '', 
             success: function () {
-                $.toast("成功", "text");
+                // $.toast("成功", "text");
+                console.log('成功')
             },
             cancel: function () {
                 
@@ -337,12 +339,15 @@
         });
 
         wx.onMenuShareAppMessage({
-            title: 'UGC红包领取', 
-            desc: '快来领取UGC红包', 
-            link: 't9-cname.ugchain.com', 
-            imgUrl: '/img/logo.png',
+            title: '领取UGC', // 分享标题
+            desc: '快来领取', // 分享描述
+            link: '', // 分享链接，该链接域名或路径必须与当前页面对应的公众号JS安全域名一致
+            imgUrl: 't9-cname.ugchain.com/img/logo.png', // 分享图标
+            type: '', // 分享类型,music、video或link，不填默认为link
+            dataUrl: '', // 如果type是music或video，则要提供数据链接，默认为空
             success: function () {
-                $.toast("成功", "text");
+                // $.toast("成功", "text");
+                console.log('成功')
             },
             cancel: function () {
                 console.log('d')
