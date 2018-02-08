@@ -98,7 +98,7 @@ class RewardData
         sort($data);
 
         //重新保存
-        $this->set(self::REPACKET.$id,$data);
+        $this->set(self::REPACKET.$id,json_encode($data));
 
         return true;
     }
