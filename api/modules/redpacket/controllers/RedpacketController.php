@@ -43,33 +43,33 @@ class RedpacketController extends  Controller
         //接收参数&&验证参数
         $data = self::getParams();
         //创建红包
-//        $packet_id = RedPacket::saveRedPacket($data);
-//        if(!$packet_id){
-//            outputHelper::ouputErrorcodeJson(\common\helpers\ErrorCodes::FALL);
-//        }
+        $packet_id = RedPacket::saveRedPacket($data);
+        if(!$packet_id){
+            outputHelper::ouputErrorcodeJson(\common\helpers\ErrorCodes::FALL);
+        }
         //开启事务
         $transaction = Yii::$app->db->beginTransaction();
-//        try{
-//            //组装创建红包的签名数据
-//            $sign_data = [
-//                "packet_id" => $packet_id,
-//                "address" => $data["from_address"],
-//                "raw_transaction" => $data["raw_transaction"],
-//                "type" => "0",
-//            ];
-//            //保存创建红包的签名
-//            $sign_save_status = PacketOfflineSign::saveOfflineSign($sign_data);
-//            //保存交易历史记录
-//            $trade_save_status = Trade::insertData($data["hash"], $data["from_address"], $data["to_address"], $data["amount"],Trade::CONFIRMED,Trade::CREATE_REDPACKET);
-//            if(!$sign_save_status || !$trade_save_status){
-//                $transaction->rollBack();
-//            }
-//            //提交事务
-//            $transaction->commit();
-//        }catch (\Exception $e) {
-//            $transaction->rollBack();
-//            outputHelper::ouputErrorcodeJson(\common\helpers\ErrorCodes::FALL);
-//        }
+        try{
+            //组装创建红包的签名数据
+            $sign_data = [
+                "packet_id" => $packet_id,
+                "address" => $data["from_address"],
+                "raw_transaction" => $data["raw_transaction"],
+                "type" => "0",
+            ];
+            //保存创建红包的签名
+            $sign_save_status = PacketOfflineSign::saveOfflineSign($sign_data);
+            //保存交易历史记录
+            $trade_save_status = Trade::insertData($data["hash"], $data["from_address"], $data["to_address"], $data["amount"],Trade::CONFIRMED,Trade::CREATE_REDPACKET);
+            if(!$sign_save_status || !$trade_save_status){
+                $transaction->rollBack();
+            }
+            //提交事务
+            $transaction->commit();
+        }catch (\Exception $e) {
+            $transaction->rollBack();
+            outputHelper::ouputErrorcodeJson(\common\helpers\ErrorCodes::FALL);
+        }
         //事务结束
         //红包计算公示(红包ID：{2,3,4,5})
         $redis_data = [];
@@ -85,7 +85,6 @@ class RedpacketController extends  Controller
             $min = $average_amount * self::MIN;
             $redis_data = self::random_red($amount,$data["quantity"],$max,$min);
         }
-        var_dump($redis_data);die;
         //红包金额过小时返回返回
         if(!$redis_data){
             outputHelper::ouputErrorcodeJson(\common\helpers\ErrorCodes::RED_PACKET_QUANTITY_EXCEEDED);
@@ -173,10 +172,10 @@ class RedpacketController extends  Controller
             outputHelper::ouputErrorcodeJson(\common\helpers\ErrorCodes::PARAM_NOT_EXIST);
         }
         //解密参数
-//        $data['hash'] = Rsa::privDecrypt($data['hash']);
-//        $data['to_address'] = Rsa::privDecrypt($data['to_address']);
-//        $data['amount'] = Rsa::privDecrypt($data['amount']);
-//        $data['quantity'] = Rsa::privDecrypt($data['quantity']);
+        $data['hash'] = Rsa::privDecrypt($data['hash']);
+        $data['to_address'] = Rsa::privDecrypt($data['to_address']);
+        $data['amount'] = Rsa::privDecrypt($data['amount']);
+        $data['quantity'] = Rsa::privDecrypt($data['quantity']);
 
         return $data;
     }
