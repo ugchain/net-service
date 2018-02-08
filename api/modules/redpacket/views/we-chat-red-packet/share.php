@@ -326,9 +326,9 @@
     // 配置微信分享
     wx.ready(function () {
         wx.onMenuShareTimeline({
-            title: 'UGC', 
-            link: '领取UGC', 
-            imgUrl: '', 
+            title: '领取UGC', 
+            link: '快来领取UGC吧', 
+            imgUrl: 't9-cname.ugchain.com/img/logo.png', 
             success: function () {
                 // $.toast("成功", "text");
                 console.log('成功')
@@ -340,9 +340,9 @@
 
         wx.onMenuShareAppMessage({
             title: '领取UGC', // 分享标题
-            desc: '快来领取', // 分享描述
-            link: '', // 分享链接，该链接域名或路径必须与当前页面对应的公众号JS安全域名一致
-            imgUrl: '', // 分享图标
+            desc: '快来领取UGC吧', // 分享描述
+            link: 't9-cname.ugchain.com', // 分享链接，该链接域名或路径必须与当前页面对应的公众号JS安全域名一致
+            imgUrl: 't9-cname.ugchain.com/img/logo.png', // 分享图标
             type: '', // 分享类型,music、video或link，不填默认为link
             dataUrl: '', // 如果type是music或video，则要提供数据链接，默认为空
             success: function () {
