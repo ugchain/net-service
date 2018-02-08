@@ -11,15 +11,14 @@ $(function(){
 
 	var clipboard2 = new Clipboard('.btn2');
 	clipboard2.on('success', function(e) {
-			var num = 3
-			time = setInterval(function() {
-				$.toast("复制成功，" + num +"s后即将为您跳转", "text");
-	            num--;
-		        if(num==0){          
-		            clearInterval(time);
-		        }
-			}, 1000);
-
+		var num = 3
+		time = setInterval(function() {
+			$.toast("复制成功，" + num +"s后即将为您跳转", "text");
+            num--;
+	        if(num == 0){          
+	            clearInterval(time);
+	        }
+		}, 1000);
 		setTimeout(function() {
 			window.location.href = 'http://download.ugchain.com/ugcApp/'
 		}, 3000)  
@@ -39,8 +38,6 @@ $(function(){
 			window.location.reload()
 		})
 	}
-
-
 
 	if(state == 0){
 		// 未领取
@@ -69,7 +66,10 @@ $(function(){
 	    });	
 
 		// 获取口令 传入微信用户信息
-		$('#get-packet-btn').on('click',function(){
+		$('#get-packet-btn').one('click',function(){
+			$('#get-packet-btn').css({
+				'background':'rgba(255,255,255,.3)'
+			})
 	        $.ajax({
 	            url: 'grad-a-redpacket',
 	            type: 'post',
@@ -88,6 +88,9 @@ $(function(){
 	                }
 	            },
 	            error: function() {
+	            	$('#get-packet-btn').css({
+						'background':'#fcd588'
+					})
 	            	$.toast("您的网络有问题", "text");
 	            }
 	        })

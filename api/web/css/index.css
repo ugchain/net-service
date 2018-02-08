@@ -38,7 +38,9 @@ body{
         transform:scaleY(0.5);
     }
 }
-
+.weui-btn_default:not(.weui-btn_disabled):visited {
+    color: #fff;
+}
 /*
 	自定义
 */
