@@ -39,7 +39,7 @@ class EthLisenController extends Controller
         {
             $trade_info = Operating::txidByTransactionInfo(Yii::$app->params["eth"]["eth_host"], "eth_getTransactionReceipt", [$list["app_txid"]]);
             //写log
-            OutputHelper::log("eth-ug监听脚本: " . $list["app_txid"] . "--链上返回信息: " . $trade_info,"cross_chain");
+            OutputHelper::log("eth-ug监听脚本: " . $list["app_txid"] . "--链上返回信息: " . json_encode($trade_info),"cross_chain");
 
             if (!$trade_info) {
                 continue;
@@ -109,7 +109,7 @@ class EthLisenController extends Controller
             //根据txid去块上确认
             $trade_info = Operating::txidByTransactionInfo(Yii::$app->params["ug"]["ug_host"], "eth_getTransactionReceipt", [$res_data["result"]]);
             //写log
-            OutputHelper::log("ug确认上块监听脚本: " . $res_data["result"] . "--链上返回信息: " . $trade_info,"cross_chain");
+            OutputHelper::log("ug确认上块监听脚本: " . $res_data["result"] . "--链上返回信息: " . json_encode($trade_info),"cross_chain");
 
             if (!$trade_info) {
                 CenterBridge::updateStatus($v["app_txid"], CenterBridge::SEND_SUCCESS, $res_data["result"]);
@@ -165,7 +165,7 @@ class EthLisenController extends Controller
                 //根据owner_txid获取交易详细信息
                 $trade_info = Operating::txidByTransactionInfo(Yii::$app->params["eth"]["eth_host"], "eth_getTransactionByHash", [$owner["owner_txid"]]);
                 //写log
-                OutputHelper::log("ug-eth确认上块监听脚本: " . $owner["owner_txid"] . "--链上返回信息: " . $trade_info,"cross_chain");
+                OutputHelper::log("ug-eth确认上块监听脚本: " . $owner["owner_txid"] . "--链上返回信息: " . json_encode($trade_info),"cross_chain");
 
                 if (!$trade_info) {
                     continue;

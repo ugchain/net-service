@@ -47,7 +47,7 @@ class UgListenController extends Controller
             //根据交易id获取订单信息
             $block_info = Operating::txidByTransactionInfo(Yii::$app->params['ug']["ug_host"], "eth_getTransactionByHash", [$list["app_txid"]]);
             //写log
-            OutputHelper::log("ug-eth转账获取订单信息脚本: " . $list["app_txid"] . "--链上返回信息: " . $block_info,"cross_chain");
+            OutputHelper::log("ug-eth转账获取订单信息脚本: " . $list["app_txid"] . "--链上返回信息: " . json_encode($block_info),"cross_chain");
             if (!$block_info) {
                 continue;
             }
@@ -121,7 +121,7 @@ class UgListenController extends Controller
             $block_info = Operating::txidByTransactionInfo(Yii::$app->params['ug']["ug_host"],
                 "eth_getTransactionReceipt", [$info["app_txid"]]);
             //写log
-            OutputHelper::log("UG内部转账脚本: " . $info["app_txid"] . "--链上返回信息: " . $block_info,"internal_transfer");
+            OutputHelper::log("UG内部转账脚本: " . $info["app_txid"] . "--链上返回信息: " . json_encode($block_info),"internal_transfer");
             if (!$block_info) {
                 continue;
             }
@@ -167,7 +167,7 @@ class UgListenController extends Controller
             //根据交易id获取订单信息
             $block_info = Operating::txidByTransactionInfo(Yii::$app->params['ug']["ug_host"], "eth_getTransactionByHash", [$v["owner_txid"]]);
             //写log
-            OutputHelper::log("ETH-UG确认脚本: " . $v["owner_txid"] . "--链上返回信息: " . $block_info,"cross_chain");
+            OutputHelper::log("ETH-UG确认脚本: " . $v["owner_txid"] . "--链上返回信息: " . json_encode($block_info),"cross_chain");
             if (!$block_info) {
                 echo "监听失败".PHP_EOL;
                 continue;

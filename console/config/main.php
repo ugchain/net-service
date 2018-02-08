@@ -48,9 +48,6 @@ return [
                 ],
             ],
         ],
-        'errorHandler' => [
-            'errorAction' => 'site/error',
-        ],
     ],
     'params' => $params,
 ];

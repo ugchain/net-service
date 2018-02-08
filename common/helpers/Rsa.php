@@ -16,7 +16,6 @@ class Rsa
             self::$PRIVATE_KEY = Yii::$app->params["rsa"]["privatekey"];
         }
         $privKey = self::$PRIVATE_KEY;
-
         return openssl_pkey_get_private($privKey);
     }
 

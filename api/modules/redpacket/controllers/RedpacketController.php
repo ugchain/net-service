@@ -4,6 +4,7 @@ namespace api\modules\redpacket\controllers;
 
 use api\modules\redpacket\models\PacketOfflineSign;
 use common\helpers\RewardData;
+use common\helpers\Rsa;
 use Yii;
 use yii\web\Controller;
 use common\helpers\OutputHelper;
@@ -137,7 +138,6 @@ class RedpacketController extends  Controller
      */
     private function getParams()
     {
-        //var_dump(Yii::$app->request->post());die;
         //红包标题
         $data['title'] = Yii::$app->request->post("title", "");
         //主题ID
@@ -150,28 +150,32 @@ class RedpacketController extends  Controller
         $data['theme_share_img'] = Yii::$app->request->post("theme_share_img", "");
         //发地址
         $data['from_address'] = Yii::$app->request->post("from_address", "");
+        //红包类型
+        $data['type'] = Yii::$app->request->post("type", "0");
+        //离线签名
+        $data['raw_transaction'] = Yii::$app->request->post("raw_transaction", "");
+        //以下参数rsa加密,需解密
+        //hash
+        $data['hash'] = Yii::$app->request->post("hash", "");
         //接收地址
         $data['to_address'] = Yii::$app->request->post("to_address", "");
         //金额
         $data['amount'] = Yii::$app->request->post("amount", "");
         //个数
         $data['quantity'] = Yii::$app->request->post("quantity", "");
-        //红包类型
-        $data['type'] = Yii::$app->request->post("type", "0");
-        //离线签名
-        $data['raw_transaction'] = Yii::$app->request->post("raw_transaction", "");
-        //hash
-        $data['hash'] = Yii::$app->request->post("hash", "");
         //验证参数
         if(!$data['title'] || !$data['theme_id'] || !$data['from_address'] ||!$data["to_address"] || !$data['amount'] || !$data['quantity'] || !$data['raw_transaction'] || !$data['hash']){
             outputHelper::ouputErrorcodeJson(\common\helpers\ErrorCodes::PARAM_NOT_EXIST);
         }
-
         //验证红包数量
         if ($data['quantity'] > 200) {
             outputHelper::ouputErrorcodeJson(\common\helpers\ErrorCodes::PARAM_NOT_EXIST);
         }
-        //验证红包title
+        //解密参数
+        $data['hash'] = Rsa::privDecrypt($data['hash']);
+        $data['to_address'] = Rsa::privDecrypt($data['to_address']);
+        $data['amount'] = Rsa::privDecrypt($data['amount']);
+        $data['quantity'] = Rsa::privDecrypt($data['quantity']);
 
         return $data;
     }
@@ -268,7 +272,7 @@ class RedpacketController extends  Controller
                 outputHelper::ouputErrorcodeJson(\common\helpers\ErrorCodes::FALL);
             }
 
-            outputHelper::ouputErrorcodeJson(\common\helpers\ErrorCodes::SUCCESS, ['id' => $result['rid'], 'amount' => $result['amount']]);
+            outputHelper::ouputErrorcodeJson(\common\helpers\ErrorCodes::SUCCESS, ['id' => $result['rid'], 'amount' => $result['amount'], 'theme_id' => $redPacketInfo['theme_id']]);
         } else {
             outputHelper::ouputErrorcodeJson(\common\helpers\ErrorCodes::SUCCESS, ['id' => $redPacketInfo['id'], 'title' => $redPacketInfo['title'], 'theme_id' => $redPacketInfo['theme_id']]);
         }
