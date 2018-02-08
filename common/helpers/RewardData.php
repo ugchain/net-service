@@ -94,7 +94,7 @@ class RewardData
         unset($data[0]);
         //数据为空时直接删除
         if(empty($data)){
-            $this->delete($id);
+            $this->redis->del($id);
         }
         //重建索引
         sort($data);
