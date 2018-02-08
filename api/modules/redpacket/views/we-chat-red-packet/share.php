@@ -23,7 +23,7 @@
         <h1 class="packet-title">"<?= $redpacketInfo['title'];?>"</h1>
         <div class="red-img" >
             <div class="get-ugc" style="display: none;">
-                <p id="getugc-num"><?= $record_amount;?>44</p>
+                <p id="getugc-num"><?= $record_amount;?></p>
                 <p>UGC</p>
             </div>
             <div id="packet-close"> </div>
@@ -294,9 +294,10 @@
                 <img src="/img/logo.png">
                 <a href="http://download.ugchain.com/ugcApp/">点击下载“UGC”</a>
             </div>
+
             <button class="btn2" data-clipboard-action="copy" data-clipboard-target="#mask-copy">
             </button>
-            <input id="mask-copy" type="text" readonly="true">     
+            <input id="mask-copy" type="text" value="" readonly="true">     
         </div>
         <p><img src="/img/close.png" class="close"></p>
     </div>
