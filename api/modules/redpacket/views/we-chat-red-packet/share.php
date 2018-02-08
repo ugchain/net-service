@@ -31,7 +31,6 @@
 
             <script>
                 var theme_id = '<?= $redpacketInfo['theme_id'];?>'
-                // var theme_id = 2
                 var packet_name
                 if(theme_id == 1 ){
                     packet_name = 'putong'
@@ -143,7 +142,6 @@
                     atlas: "/resource/"+ packet_name +'/'+ packet_name  +".atlas",
                     animation: 'Close',
                     backgroundColor: "#00000000",
-                    // debug: true,
                 });
                
                 spineWidget = new spine.SpineWidget("packet-open", {
@@ -151,7 +149,6 @@
                     atlas: "/resource/"+ packet_name +'/'+ packet_name  +".atlas",
                     animation: 'Open',
                     backgroundColor: "#00000000",
-                    // debug: true,
                 });
             </script>
            
@@ -269,7 +266,6 @@
                     <?php } ?>
  
                 </div>
-                <!-- <div class="weui-panel__ft"></div> -->
             <?php } ?>
         </div>
         <!-- 滚动加载 -->
@@ -322,7 +318,6 @@
 
     // 接入wx_sdk
     wx.config(<?= json_encode(\Yii::$app->wechat->jsApiConfig(['jsApiList' => ['onMenuShareTimeline','onMenuShareAppMessage']], false)) ?>);
-
 
     // 配置微信分享
     var redpacket_title = '<?= $redpacketInfo['title'];?>'
