@@ -6,6 +6,8 @@ use Yii;
 use yii\web\Controller;
 use common\helpers\OutputHelper;
 use api\modules\user\models\Address;
+use api\modules\medal\models\Medal;
+use api\modules\rose\models\Rose;
 
 class UserController extends  Controller
 {
@@ -106,5 +108,55 @@ class UserController extends  Controller
 
         //返回值
         outputHelper::ouputErrorcodeJson(\common\helpers\ErrorCodes::SUCCESS, $result);
+    }
+
+    /**
+     * 我的所有虚拟资产
+     */
+    public function actionVirtualAssetsList()
+    {
+        //地址
+        $address = Yii::$app->request->post("address","");
+        $page = Yii::$app->request->post("page","1");
+        $pageSize = Yii::$app->request->post("pageSize","10");
+        if(!$address){
+            outputHelper::ouputErrorcodeJson(\common\helpers\ErrorCodes::PARAM_NOT_EXIST);
+        }
+
+        //查询勋章列表
+        $medal_list = Medal::getList($address, $page, $pageSize);
+        //查询玫瑰列表
+        $rose_list = Rose::getList($address, $page, $pageSize);
+
+        //数组合并
+        $list = array_merge($rose_list['list'], $medal_list['list']);
+
+        if (empty($list)) {
+            outputHelper::ouputErrorcodeJson(\common\helpers\ErrorCodes::SUCCESS, $list);
+        }
+        //排序字段
+        $sort = array(
+            'direction' => 'SORT_DESC', //排序顺序标志 SORT_DESC 降序；SORT_ASC 升序
+            'field'     => 'addtime',       //排序字段
+        );
+        $arrSort = array();
+        foreach($list AS $uniqid => $row){
+            foreach($row AS $key => $value){
+                $arrSort[$key][$uniqid] = $value;
+            }
+        }
+        if($sort['direction']){
+            array_multisort($arrSort[$sort['field']], constant($sort['direction']), $list);
+        }
+
+        foreach ($list as $k => $v) {
+            $list[$k]['type'] = isset($v['medal_name'])?"1":"2";
+        }
+
+        $result['list'] = $list;
+        $result['image_url'] = Yii::$app->params['image_url'];
+
+        outputHelper::ouputErrorcodeJson(\common\helpers\ErrorCodes::SUCCESS, $result);
+
     }
 }

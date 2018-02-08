@@ -23,7 +23,7 @@
         <h1 class="packet-title">"<?= $redpacketInfo['title'];?>"</h1>
         <div class="red-img" >
             <div class="get-ugc" style="display: none;">
-                <p id="getugc-num"><?= $record_amount;?>44</p>
+                <p id="getugc-num"><?= $record_amount;?></p>
                 <p>UGC</p>
             </div>
             <div id="packet-close"> </div>
@@ -31,7 +31,6 @@
 
             <script>
                 var theme_id = '<?= $redpacketInfo['theme_id'];?>'
-                // var theme_id = 2
                 var packet_name
                 if(theme_id == 1 ){
                     packet_name = 'putong'
@@ -143,7 +142,6 @@
                     atlas: "/resource/"+ packet_name +'/'+ packet_name  +".atlas",
                     animation: 'Close',
                     backgroundColor: "#00000000",
-                    // debug: true,
                 });
                
                 spineWidget = new spine.SpineWidget("packet-open", {
@@ -151,7 +149,6 @@
                     atlas: "/resource/"+ packet_name +'/'+ packet_name  +".atlas",
                     animation: 'Open',
                     backgroundColor: "#00000000",
-                    // debug: true,
                 });
             </script>
            
@@ -269,7 +266,6 @@
                     <?php } ?>
  
                 </div>
-                <!-- <div class="weui-panel__ft"></div> -->
             <?php } ?>
         </div>
         <!-- 滚动加载 -->
@@ -298,9 +294,10 @@
                 <img src="/img/logo.png">
                 <a href="http://download.ugchain.com/ugcApp/">点击下载“UGC”</a>
             </div>
+
             <button class="btn2" data-clipboard-action="copy" data-clipboard-target="#mask-copy">
             </button>
-            <input id="mask-copy" type="text" value="test" readonly="true">     
+            <input id="mask-copy" type="text" value="" readonly="true">     
         </div>
         <p><img src="/img/close.png" class="close"></p>
     </div>
@@ -322,7 +319,6 @@
 
     // 接入wx_sdk
     wx.config(<?= json_encode(\Yii::$app->wechat->jsApiConfig(['jsApiList' => ['onMenuShareTimeline','onMenuShareAppMessage']], false)) ?>);
-
 
     // 配置微信分享
     var redpacket_title = '<?= $redpacketInfo['title'];?>'
