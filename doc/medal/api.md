@@ -495,3 +495,66 @@ doc/api.md
 ```
 
 --
+--
+
+### 我的全部虚拟资产
+**请求URL：** 
+- `/user/user/virtual-assets-list`
+  
+**请求方式：**
+- POST 
+
+**参数：** 
+
+|参数名|必选|类型|说明|
+|:----    |:---|:----- |-----   |
+|address |是  |string | 账户地址 |
+
+ **返回示例**
+
+``` 
+{
+  "code": 0,
+  "message": "success",
+  "data": {
+       "list": [
+           {
+                "id": "1",
+                "type": "1", //1勋章；2玫瑰
+                "theme_id": "2",
+                "token_id": "0336D537CB4ECB4E3E3C1A943E3C1A9435F41A9435F45E2E35F45E2E9C0E5E2E",
+                "theme_img": "uploads/1517566795471.jpg",
+                "theme_thumb_img": "uploads/1517566795142.jpg",
+                "theme_share_img": "uploads/1517566795142.jpg",//分享图片
+                "name": "2018勋章",
+                "theme_name": "金金的打发开发了",
+                "material_type": "1",
+                "amount": "5000",
+                "address": "0x46683c946c4970b0d3f6f2ed18771a1ae34e9683",
+                "status": "1",
+                "addtime": "1517567091",
+                "update_time": "0"
+           },
+           {
+                "id": "1",
+                "type": "1", //1勋章；2玫瑰
+                "theme_id": "2",
+                "token_id": "0336D537CB4ECB4E3E3C1A943E3C1A9435F41A9435F45E2E35F45E2E9C0E5E2E",
+                "theme_img": "uploads/1517566795471.jpg",
+                "theme_thumb_img": "uploads/1517566795142.jpg",
+                "theme_share_img": "uploads/1517566795142.jpg",//分享图片
+                "name": "银玫瑰4343",
+                "theme_name": "金金的打发开发了",
+                "material_type": "1",
+                "amount": "5000",
+                "address": "0x46683c946c4970b0d3f6f2ed18771a1ae34e9683",
+                "status": "1",
+                "addtime": "1517567090",
+                "update_time": "0"
+           }
+       ],
+      }
+  }
+```
+
+--
