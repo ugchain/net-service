@@ -10,12 +10,12 @@
     <link rel="stylesheet" href="/css/weui.min.css">
     <link rel="stylesheet" href="/css/jquery-weui.min.css">
     <link rel="stylesheet" type="text/css" href="/css/index.css">
-    <script src="/js/vconsole.min.js"></script>
+    <!-- <script src="/js/vconsole.min.js"></script> -->
     <script src="/js/spine-widget.js"></script>
     <script src="/js/jquery-3.3.1.min.js"></script>
-    <script>
+  <!--   <script>
         var vConsole = new VConsole();
-    </script>
+    </script> -->
 </head>
 <body>
     <!-- 头部红包 -->
