@@ -217,8 +217,8 @@ class UgListenController extends Controller
         }
 
         foreach ($unsucc_info as $info) {
-            //create_succ_time + 24小时 < time() 过期
-            if (date('Y-m-d H:i:s', $info['create_succ_time'] + 86400) < time()) {
+            //create_succ_time + 86400 < time() 过期
+            if (($info['create_succ_time'] + 86400) <= time()) {
                 //检索该红包是否存在记录
                 $list = RedPacketRecord::find()->where(['rid' => $info['id']])->andWhere(['!=', 'status', RedPacketRecord::EXCHANGE_SUCC])->asArray()->all();
                 if (count($list) > 0) {
