@@ -68,20 +68,20 @@ class RoseGive extends \common\models\RoseGive
         $list = $commond->queryAll();
 
         $arr = [];
-        $new_list = [];
-        foreach ($list as $k => $v) {
-            if(!in_array($v['rose_id'], $arr)) {
-                $arr[] = $v['rose_id'];
-                $new_list[] = $v;
-            }
-        }
-        $count = count($new_list);
+//        $new_list = [];
+//        foreach ($list as $k => $v) {
+//            if(!in_array($v['rose_id'], $arr)) {
+//                $arr[] = $v['rose_id'];
+//                $new_list[] = $v;
+//            }
+//        }
+        $count = count($list);
         //默认无下一页
         $is_next_page = "0";
         if ($count - ($page * $pageSize) >= 0) {
             $is_next_page = "1";//有下一页
         }
-        return ['list' => $new_list, 'is_next_page' => $is_next_page,"count"=> $count];
+        return ['list' => $list, 'is_next_page' => $is_next_page,"count"=> $count];
     }
 
 

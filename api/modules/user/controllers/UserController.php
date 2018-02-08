@@ -151,6 +151,7 @@ class UserController extends  Controller
 
         foreach ($list as $k => $v) {
             $list[$k]['type'] = isset($v['medal_name'])?"1":"2";
+            $list[$k]['name'] = isset($v['medal_name'])?$v['medal_name']:$v['rose_name'];
         }
 
         $result['list'] = $list;

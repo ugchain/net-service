@@ -67,15 +67,15 @@ class MedalGive extends \common\models\MedalGive
         $commond = $query->createCommand($sql);
         $list = $commond->queryAll();
 
-        $arr = [];
-        $new_list = [];
-        foreach ($list as $k => $v) {
-            if(!in_array($v['medal_id'], $arr)) {
-                $arr[] = $v['medal_id'];
-                $new_list[] = $v;
-            }
-        }
-        $count = count($new_list);
+//        $arr = [];
+//        $new_list = [];
+//        foreach ($list as $k => $v) {
+//            if(!in_array($v['medal_id'], $arr)) {
+//                $arr[] = $v['medal_id'];
+//                $new_list[] = $v;
+//            }
+//        }
+        $count = count($list);
         //默认无下一页
         $is_next_page = "0";
         if ($count - ($page * $pageSize) >= 0) {
