@@ -324,13 +324,19 @@
 
 
     // 配置微信分享
+    var redpacket_title = '<?= $redpacketInfo['title'];?>'
+    var wx_title = '快来领取UGC红包' + "‘"+ redpacket_title + "‘"
+
+    var wx_desc = ["会升值的红包才是真爱！","每一个红包都有惊喜哦~","领了数字资产红包才叫过年！","领个红包旺一年！"]; 
+
+    var desc = wx_desc[Math.floor(Math.random()*wx_desc.length)]
+
     wx.ready(function () {
         wx.onMenuShareTimeline({
-            title: 'UGC', 
+            title: wx_title, 
             link: '', 
             imgUrl: '', 
             success: function () {
-                // $.toast("成功", "text");
                 console.log('成功')
             },
             cancel: function () {
@@ -339,14 +345,13 @@
         });
 
         wx.onMenuShareAppMessage({
-            title: '领取UGC', // 分享标题
-            desc: '快来领取', // 分享描述
-            link: '', // 分享链接，该链接域名或路径必须与当前页面对应的公众号JS安全域名一致
-            imgUrl: 't9-cname.ugchain.com/img/logo.png', // 分享图标
-            type: '', // 分享类型,music、video或link，不填默认为link
-            dataUrl: '', // 如果type是music或video，则要提供数据链接，默认为空
+            title: wx_title, 
+            desc: desc,
+            link: '', 
+            imgUrl: 'http://t9-cname.ugchain.com/img/logo.png',
+            type: '',
+            dataUrl: '', 
             success: function () {
-                // $.toast("成功", "text");
                 console.log('成功')
             },
             cancel: function () {
