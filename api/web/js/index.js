@@ -11,8 +11,6 @@ $(function(){
 
 	var clipboard2 = new Clipboard('.btn2');
 	clipboard2.on('success', function(e) {
-
-		
 			var num = 3
 			time = setInterval(function() {
 				$.toast("复制成功，" + num +"s后即将为您跳转", "text");
@@ -30,7 +28,7 @@ $(function(){
 	clipboard2.on('error', function(e) {
 	    $.toast("复制失败", "text");
 	})
-	
+
 	console.log(state)
 
 	// mask

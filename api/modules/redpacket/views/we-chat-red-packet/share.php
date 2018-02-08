@@ -300,7 +300,7 @@
             </div>
             <button class="btn2" data-clipboard-action="copy" data-clipboard-target="#mask-copy">
             </button>
-            <input id="mask-copy" type="text" value="test" readonly="true">     
+            <input id="mask-copy" type="text" readonly="true">     
         </div>
         <p><img src="/img/close.png" class="close"></p>
     </div>
