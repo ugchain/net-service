@@ -32,42 +32,50 @@ class RoseController extends  Controller
      */
     public function actionCreateRose()
     {
-        $Rose = new Rose();
+
         //主题ID
-        $Rose->theme_id = Yii::$app->request->post("theme_id","1");
+        $theme_id = Yii::$app->request->post("theme_id","1");
         //勋章名称
-        $Rose->rose_name	 = Yii::$app->request->post("rose_name");
+        $rose_name	 = Yii::$app->request->post("rose_name");
         //刻字内容
-        $Rose->theme_name = Yii::$app->request->post("theme_name","");
+        $theme_name = Yii::$app->request->post("theme_name","");
         //勋章材质
-        $Rose->material_type = Yii::$app->request->post("material_type","5");
+        $material_type = Yii::$app->request->post("material_type","5");
         //价格
-        $Rose->amount = Yii::$app->request->post("amount");
+        $amount = Yii::$app->request->post("amount");
         //地址
-        $Rose->address = Yii::$app->request->post("address");
+        $address = Yii::$app->request->post("address");
         //判断参数
-        if(!$Rose->theme_id || !$Rose->rose_name || !$Rose->amount || !$Rose->address){
+        if(!$theme_id|| !$rose_name || !$amount || !$address){
             outputHelper::ouputErrorcodeJson(\common\helpers\ErrorCodes::PARAM_NOT_EXIST);
         }
         //获取主题图片
-        $theme_info = RoseTheme::getInfoById($Rose->theme_id);
+        $theme_info = RoseTheme::getInfoById($theme_id);
         if(!$theme_info){
             outputHelper::ouputErrorcodeJson(\common\helpers\ErrorCodes::ROSE_THEME_NOT_EXISTS);
         }
-        $Rose->theme_img = $theme_info["img"];
-        $Rose->theme_thumb_img = $theme_info["thumb_img"];
-        $Rose->theme_share_img = $theme_info["share_img"];
-        $Rose->addtime = time();
-        $Rose->status = RoseGive::SUCCESS;
-        $Rose->token_id = OutputHelper::guid();
-        //保存玫瑰表
-        $status = $Rose->save();
-        if(!$status){
-            outputHelper::ouputErrorcodeJson(\common\helpers\ErrorCodes::FALL);
+        $addresss = explode(",",$address);
+        $status = $give_status = [];
+        foreach ($addresss as $val){
+            $Rose = new Rose();
+            $Rose->theme_id = $theme_id;
+            $Rose->rose_name = $rose_name;
+            $Rose->theme_name = $theme_name;
+            $Rose->material_type = $material_type;
+            $Rose->amount = $amount;
+            $Rose->address = $val;
+            $Rose->theme_img = $theme_info["img"];
+            $Rose->theme_thumb_img = $theme_info["thumb_img"];
+            $Rose->theme_share_img = $theme_info["share_img"];
+            $Rose->addtime = time();
+            $Rose->status = RoseGive::SUCCESS;
+            $Rose->token_id = OutputHelper::guid();
+            //保存玫瑰表
+            $status[] = $Rose->save();
+            //初始化玫瑰转赠表
+            $give_status[] = RoseGive::insertData($Rose->address,$Rose->id,$Rose->address,RoseGive::SUCCESS);
         }
-        //初始化玫瑰转赠表
-        $give_status = RoseGive::insertData($Rose->address,$Rose->id,$Rose->address,RoseGive::SUCCESS);
-        if(!$give_status){
+        if(in_array(false,$status) || in_array(false,$give_status)){
             outputHelper::ouputErrorcodeJson(\common\helpers\ErrorCodes::FALL);
         }
         outputHelper::ouputErrorcodeJson(\common\helpers\ErrorCodes::SUCCESS);
