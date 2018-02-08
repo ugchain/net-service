@@ -4,6 +4,7 @@ namespace api\modules\redpacket\controllers;
 
 use api\modules\redpacket\models\PacketOfflineSign;
 use common\helpers\RewardData;
+use common\helpers\Rsa;
 use Yii;
 use yii\web\Controller;
 use common\helpers\OutputHelper;
@@ -21,7 +22,7 @@ class RedpacketController extends  Controller
 
     //红包获取最大最小值
     const MAX = 1.4;
-    const MIN = 0.6;
+    const MIN = 0.01;
     public $REPACK_STATUS;
     /**
      * @inheritdoc
@@ -84,12 +85,19 @@ class RedpacketController extends  Controller
             $min = $average_amount * self::MIN;
             $redis_data = self::random_red($amount,$data["quantity"],$max,$min);
         }
+        //红包金额过小时返回返回
+        if(!$redis_data){
+            outputHelper::ouputErrorcodeJson(\common\helpers\ErrorCodes::RED_PACKET_QUANTITY_EXCEEDED);
+        }
         $this->REPACK_STATUS = 0;
         //存放redis
         $rewardData = new RewardData();
         $rewardData->set($packet_id,$redis_data);
         //发送离线签名数据
         $res_data = CurlRequest::ChainCurl(Yii::$app->params["ug"]["ug_host"], "eth_sendRawTransaction", [$data['raw_transaction']]);
+        //写log
+        OutputHelper::log("创建红包api接口: ".$data["hash"]." 离线签名: ".$data["raw_transaction"]." 链上返回信息: ".$res_data,"internal_transfer");
+
         if(!$res_data){
             RedPacket::updateStatus($packet_id,"1");
             $this->REPACK_STATUS = 1;
@@ -97,6 +105,9 @@ class RedpacketController extends  Controller
         }
         //检测是否上链--成功5%
         $block_info = CurlRequest::ChainCurl(Yii::$app->params["ug"]["ug_host"], "eth_getTransactionReceipt", [$data["hash"]]);
+        //写log
+        OutputHelper::log("创建红包api链上确认: ".$data["hash"]."--链上返回信息: ".$block_info, "internal_transfer");
+
         if($block_info){
             $block_info = json_decode($block_info,true);
             if(!isset($block_info["error"]) && $block_info["result"]["blockNumber"] != null){
@@ -127,7 +138,6 @@ class RedpacketController extends  Controller
      */
     private function getParams()
     {
-        //var_dump(Yii::$app->request->post());die;
         //红包标题
         $data['title'] = Yii::$app->request->post("title", "");
         //主题ID
@@ -140,28 +150,32 @@ class RedpacketController extends  Controller
         $data['theme_share_img'] = Yii::$app->request->post("theme_share_img", "");
         //发地址
         $data['from_address'] = Yii::$app->request->post("from_address", "");
+        //红包类型
+        $data['type'] = Yii::$app->request->post("type", "0");
+        //离线签名
+        $data['raw_transaction'] = Yii::$app->request->post("raw_transaction", "");
+        //以下参数rsa加密,需解密
+        //hash
+        $data['hash'] = Yii::$app->request->post("hash", "");
         //接收地址
         $data['to_address'] = Yii::$app->request->post("to_address", "");
         //金额
         $data['amount'] = Yii::$app->request->post("amount", "");
         //个数
         $data['quantity'] = Yii::$app->request->post("quantity", "");
-        //红包类型
-        $data['type'] = Yii::$app->request->post("type", "0");
-        //离线签名
-        $data['raw_transaction'] = Yii::$app->request->post("raw_transaction", "");
-        //hash
-        $data['hash'] = Yii::$app->request->post("hash", "");
         //验证参数
         if(!$data['title'] || !$data['theme_id'] || !$data['from_address'] ||!$data["to_address"] || !$data['amount'] || !$data['quantity'] || !$data['raw_transaction'] || !$data['hash']){
             outputHelper::ouputErrorcodeJson(\common\helpers\ErrorCodes::PARAM_NOT_EXIST);
         }
-
         //验证红包数量
         if ($data['quantity'] > 200) {
             outputHelper::ouputErrorcodeJson(\common\helpers\ErrorCodes::PARAM_NOT_EXIST);
         }
-        //验证红包title
+        //解密参数
+        $data['hash'] = Rsa::privDecrypt($data['hash']);
+        $data['to_address'] = Rsa::privDecrypt($data['to_address']);
+        $data['amount'] = Rsa::privDecrypt($data['amount']);
+        $data['quantity'] = Rsa::privDecrypt($data['quantity']);
 
         return $data;
     }
@@ -179,7 +193,8 @@ class RedpacketController extends  Controller
         $result_merge[1] = $result_merge[1] + $result_merge[0];
         $result_merge[0] = $max * 100;
         foreach ($result_merge as &$v) {
-            $v = floor($v) / 100;
+            $v = $v / 100;
+            $v = round($v,2);
         }
         return $result_merge;
     }
@@ -221,6 +236,7 @@ class RedpacketController extends  Controller
 
             //根据组装数据获取签名且广播交易
             $res_data = Operating::getSignatureAndBroadcast(Yii::$app->params["ug"]["ug_sign_red_packet"], $send_sign_data, Yii::$app->params["ug"]["ug_host"], "eth_sendRawTransaction");
+
             if (isset($res_data['error'])) {
                 outputHelper::ouputErrorcodeJson(\common\helpers\ErrorCodes::REQUEST_FAILED);
             }
@@ -242,12 +258,21 @@ class RedpacketController extends  Controller
             if (!RedPacketRecord::updateStatusAndTxidByid($result['id'], $recordStatus, $res_data["result"], $address)) {
                 outputHelper::ouputErrorcodeJson(\common\helpers\ErrorCodes::FALL);
             }
+
+            //如果所有红包记录都兑换完成，更新红包状态
+           $exchangeCount = RedPacketRecord::find()->where(['rid' => $redPacketInfo['id'], 'status' => RedPacketRecord::EXCHANGE_SUCC])->count();
+            if ($redPacketInfo['quantity'] == $exchangeCount) {
+                if (!RedPacket::updateStatus($redPacketInfo['id'], RedPacket::REDPACKET_EXPIRED)) {
+                    outputHelper::ouputErrorcodeJson(\common\helpers\ErrorCodes::FALL);
+                }
+            }
+
             //插入内部交易表
             if (!Trade::insertData($res_data["result"], Yii::$app->params["ug"]["red_packet_address"], $address, $result["amount"], $tradeStatus, Trade::OPEN_REDPACKET, empty($trade_info['blockNumber'])?0:$trade_info['blockNumber'])) {
                 outputHelper::ouputErrorcodeJson(\common\helpers\ErrorCodes::FALL);
             }
 
-            outputHelper::ouputErrorcodeJson(\common\helpers\ErrorCodes::SUCCESS, ['id' => $result['rid'], 'amount' => $result['amount']]);
+            outputHelper::ouputErrorcodeJson(\common\helpers\ErrorCodes::SUCCESS, ['id' => $result['rid'], 'amount' => $result['amount'], 'theme_id' => $redPacketInfo['theme_id']]);
         } else {
             outputHelper::ouputErrorcodeJson(\common\helpers\ErrorCodes::SUCCESS, ['id' => $redPacketInfo['id'], 'title' => $redPacketInfo['title'], 'theme_id' => $redPacketInfo['theme_id']]);
         }
@@ -269,6 +294,9 @@ class RedpacketController extends  Controller
         if($result["status"] == 0){
             //检测是否上链--成功5%
             $block_info = CurlRequest::ChainCurl(Yii::$app->params["ug"]["ug_host"], "eth_getTransactionReceipt", [$result["txid"]]);
+            //写log
+            OutputHelper::log("红包详情api链上确认: ".$result["txid"]."--链上返回信息: ".$block_info, "internal_transfer");
+
             if($block_info){
                 $block_info = json_decode($block_info,true);
                 //blockNumber 不为空

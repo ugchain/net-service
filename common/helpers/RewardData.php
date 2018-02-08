@@ -13,6 +13,7 @@ class RewardData
 {
     //实例化
     public $redis;
+    const REPACKET = "ugc_repacket_activity_";
 
     /**
      * RewardData 初始化
@@ -36,7 +37,7 @@ class RewardData
         //todo 过期时间暂无处理
         $data = json_encode($data);
         //存放数据
-        $this->redis->set($id,$data);
+        $this->redis->set(self::REPACKET.$id,$data);
         return true;
     }
 
@@ -50,7 +51,7 @@ class RewardData
         if(!$this->redis){
             return false;
         }
-        $data = $this->redis->get($id);
+        $data = $this->redis->get(self::REPACKET.$id);
 
         if(!$data){
             return false;
@@ -78,7 +79,7 @@ class RewardData
         if(!$this->redis){
             return false;
         }
-        $data = $this->redis->get($id);
+        $data = $this->redis->get(self::REPACKET.$id);
 
         if(!$data){
             return false;
@@ -97,7 +98,7 @@ class RewardData
         sort($data);
 
         //重新保存
-        $this->set($id,$data);
+        $this->set(self::REPACKET.$id,$data);
 
         return true;
     }

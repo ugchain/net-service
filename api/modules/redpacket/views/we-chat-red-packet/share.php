@@ -6,7 +6,7 @@
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
     <meta http-equiv="Pragma" content="no-cache" />
     <meta http-equiv="Expires" content="0" />
-    <title>红包领取</title>
+    <title>UGC红包领取</title>
     <link rel="stylesheet" href="/css/weui.min.css">
     <link rel="stylesheet" href="/css/jquery-weui.min.css">
     <link rel="stylesheet" type="text/css" href="/css/index.css">
@@ -23,7 +23,7 @@
         <h1 class="packet-title">"<?= $redpacketInfo['title'];?>"</h1>
         <div class="red-img" >
             <div class="get-ugc" style="display: none;">
-                <p id="getugc-num"><?= $record_amount;?></p>
+                <p id="getugc-num"><?= $record_amount;?>44</p>
                 <p>UGC</p>
             </div>
             <div id="packet-close"> </div>
@@ -31,14 +31,16 @@
 
             <script>
                 var theme_id = '<?= $redpacketInfo['theme_id'];?>'
-                // var theme_id = 5
+                // var theme_id = 2
                 var packet_name
                 if(theme_id == 1 ){
                     packet_name = 'putong'
+                    $('.top').css('background-size','100% 70%')
                     $('#packet-close').css({
                         'height': '400px',
-                        'margin-top': '-20px',
-                        'margin-bottom': '20px'
+                        'margin-top': '0px',
+                        'margin-bottom': '10px',
+                        'margin-left': '10px'
                     });
                     $('.top').css('background-size','100% 80%')
                     $('#packet-open').css({
@@ -46,6 +48,10 @@
                         'padding-top': '20px',
                         'margin-bottom': '20px'
                     });
+                    $('.get-ugc').css({
+                        'top': '135px',
+                        'left': '-2px'
+                    })
                 }else if(theme_id == 2 ){
                     packet_name = 'xinnian'
                     $('.top').css('background-size','100% 80%')
@@ -57,6 +63,10 @@
                         'height': '470px',
                         'margin-top': '-60px'
                     });
+                    $('.get-ugc').css({
+                        'top': '162px',
+                        'left': '2px'
+                    })
                 }else if(theme_id == 3 ){
                     packet_name = 'yuhaihai'
                     $('.top').css('background-size','100% 80%')
@@ -70,6 +80,10 @@
                         'margin-top': '-60px',
                         'margin-bottom': '-40px',
                     });
+                    $('.get-ugc').css({
+                        'top': '150px',
+                        'left': '5px'
+                    })
                 }else if(theme_id == 4 ){
                     packet_name = 'jiucai'
                     $('.top').css('background-size','100% 80%')
@@ -83,19 +97,31 @@
                         'margin-top': '-80px',
                         'margin-bottom': '-40px',
                     });
+                    $('.get-ugc').css({
+                        'top': '166px',
+                        'left': '6px'
+                    })
                 }else if(theme_id == 5 ){
                     packet_name = 'baoerye'
+                    $('.top').css('background-size','100% 76%')
                     $('#packet-close').css({
                         'height': '440px',
                         'margin-top': '-40px',
                         'margin-bottom': '10px',
+                        'margin-left': '15px',
                     });
                     $('#packet-open').css({
                         'height': '440px',
                         'margin-top': '-10px',
                         'margin-bottom': '10px',
+                        'margin-left': '15px',
                     });
+                    $('.get-ugc').css({
+                        'top': '150px',
+                        'left': '6px'
+                    })
                 }else if(theme_id == 6 ){
+                    $('.top').css('background-size','100% 77%')
                     packet_name = 'yifeichongtian'
                     $('#packet-close').css({
                         'height': '440px',
@@ -107,6 +133,10 @@
                         'margin-top': '-0px',
                         'margin-bottom': '-10px',
                     });
+                     $('.get-ugc').css({
+                        'top': '140px',
+                        'left': '2px'
+                    })
                 }
                 spineWidget = new spine.SpineWidget("packet-close", {
                     json: "/resource/" + packet_name +'/'+ packet_name +".json",
@@ -131,7 +161,7 @@
 					恭喜您抢到
 				</span>
                 <span class="state-getugc">
-    				<?= $record_amount;?>
+    				<?= $record_amount;?>44
     			</span>
                 <span class="ugc-unit">
     					个UGC
@@ -237,7 +267,7 @@
                         </div>
                     </a>
                     <?php } ?>
-
+ 
                 </div>
                 <!-- <div class="weui-panel__ft"></div> -->
             <?php } ?>
@@ -245,7 +275,7 @@
         <!-- 滚动加载 -->
         <div class="weui-loadmore">
             <i class="weui-loading"></i> 
-            <span class="weui-loadmore__tips">加载更多</span>
+            <span class="weui-loadmore__tips">点击加载更多</span>
         </div>
     </div>
     <!-- 底部二维码 -->
@@ -281,57 +311,44 @@
 <script src="http://res.wx.qq.com/open/js/jweixin-1.2.0.js"></script>
 <script>
     var state = <?= $state ?>;
-    // var state = 1;
+    // var state = 4;
     var rid = "<?=$redpacketInfo['id'] ?>";
     var openid = "<?=$openid ?>";
     var nickname = "<?=$nickname ?>";
     var headimgurl = "<?=$headimgurl ?>";
     var expire_time = "<?=$redpacketInfo['expire_time']?>"
     var finish_time = '<?=$redpacketInfo['finish_time']?>'
+
     // 接入wx_sdk
-    // wx.config({
-    //     debug: true, 
-    //     appId: '', 
-    //     timestamp: ,
-    //     nonceStr: '', 
-    //     signature: '',
-    //     jsApiList: [
-    //         'onMenuShareTimeline',
-    //         'onMenuShareAppMessage',
-    //     ] 
-    // });
-
-
-    
     wx.config(<?= json_encode(\Yii::$app->wechat->jsApiConfig(['jsApiList' => ['onMenuShareTimeline','onMenuShareAppMessage']], false)) ?>);
 
     // 配置微信分享
-    // wx.ready(function () {
-    //     wx.onMenuShareTimeline({
-    //         title: 'UGC红包领取', 
-    //         link: 't9-cname.ugchain.com', 
-    //         imgUrl: '/img/logo.png', 
-    //         success: function () {
-    //             $.toast("分享成功", "text");
-    //         },
-    //         cancel: function () {
+    wx.ready(function () {
+        wx.onMenuShareTimeline({
+            title: 'UGC红包领取', 
+            link: 't9-cname.ugchain.com', 
+            imgUrl: '/img/logo.png', 
+            success: function () {
+                $.toast("成功", "text");
+            },
+            cancel: function () {
                 
-    //         }
-    //     });
+            }
+        });
 
-    //     wx.onMenuShareAppMessage({
-    //         title: 'UGC红包领取', 
-    //         desc: '快来领取UGC红包', 
-    //         link: 't9-cname.ugchain.com', 
-    //         imgUrl: '/img/logo.png',
-    //         success: function () {
-    //             $.toast("分享成功", "text");
-    //         },
-    //         cancel: function () {
-    //             console.log('d')
-    //         }
-    //     })
-    // })
+        wx.onMenuShareAppMessage({
+            title: 'UGC红包领取', 
+            desc: '快来领取UGC红包', 
+            link: 't9-cname.ugchain.com', 
+            imgUrl: '/img/logo.png',
+            success: function () {
+                $.toast("成功", "text");
+            },
+            cancel: function () {
+                console.log('d')
+            }
+        })
+    })
 
 </script>
 </html>

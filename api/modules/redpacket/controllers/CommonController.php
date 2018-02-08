@@ -2,11 +2,13 @@
 
 namespace api\modules\redpacket\controllers;
 
-use api\modules\redpacket\models\RedPacketTheme;
+
 use Yii;
 use yii\web\Controller;
 use common\helpers\OutputHelper;
 use yii\web\UploadedFile;
+use api\modules\redpacket\models\RedPacketTheme;
+use common\helpers\Rsa;
 
 class CommonController extends  Controller
 {
@@ -31,7 +33,9 @@ class CommonController extends  Controller
     public function actionCenterAddress()
     {
        //组装数据
-        $data = ["address"=>Yii::$app->params["ug"]["red_packet_address"]];
+       $address = Yii::$app->params["ug"]["red_packet_address"];
+      // $data = Rsa::privDecrypt($data);
+       $data["address"] = Rsa::privEncrypt($address);
        outputHelper::ouputErrorcodeJson(\common\helpers\ErrorCodes::SUCCESS,$data);
     }
 

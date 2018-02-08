@@ -46,11 +46,15 @@ class UgListenController extends Controller
         {
             //根据交易id获取订单信息
             $block_info = Operating::txidByTransactionInfo(Yii::$app->params['ug']["ug_host"], "eth_getTransactionByHash", [$list["app_txid"]]);
+            //写log
+            OutputHelper::log("ug-eth转账获取订单信息脚本: " . $list["app_txid"] . "--链上返回信息: " . json_encode($block_info),"cross_chain");
             if (!$block_info) {
                 continue;
             }
             //多次判断是否上块
             $receipt_info = CurlRequest::ChainCurl(Yii::$app->params['ug']["ug_host"],"eth_getTransactionReceipt",[$list["app_txid"]]);
+            //写log
+            OutputHelper::log("ug-eth转账确认上块脚本: " . $list["app_txid"] . "--链上返回信息: " . $receipt_info,"cross_chain");
             if(!$receipt_info){
                 continue;
             }
@@ -116,6 +120,8 @@ class UgListenController extends Controller
             //根据交易id获取订单信息
             $block_info = Operating::txidByTransactionInfo(Yii::$app->params['ug']["ug_host"],
                 "eth_getTransactionReceipt", [$info["app_txid"]]);
+            //写log
+            OutputHelper::log("UG内部转账脚本: " . $info["app_txid"] . "--链上返回信息: " . json_encode($block_info),"internal_transfer");
             if (!$block_info) {
                 continue;
             }
@@ -160,12 +166,16 @@ class UgListenController extends Controller
         {
             //根据交易id获取订单信息
             $block_info = Operating::txidByTransactionInfo(Yii::$app->params['ug']["ug_host"], "eth_getTransactionByHash", [$v["owner_txid"]]);
+            //写log
+            OutputHelper::log("ETH-UG确认脚本: " . $v["owner_txid"] . "--链上返回信息: " . json_encode($block_info),"cross_chain");
             if (!$block_info) {
                 echo "监听失败".PHP_EOL;
                 continue;
             }
             //多次判断是否上块
             $receipt_info = CurlRequest::ChainCurl(Yii::$app->params['ug']["ug_host"],"eth_getTransactionReceipt",[$v["owner_txid"]]);
+            //写log
+            OutputHelper::log("ETH-UG多次确认脚本: " . $v["owner_txid"] . "--链上返回信息: " . $receipt_info,"cross_chain");
             if(!$receipt_info){
                 echo "监听确认失败".PHP_EOL;
                 continue;
@@ -238,6 +248,7 @@ class UgListenController extends Controller
 
                     //根据组装数据获取签名且广播交易
                     $res_data = Operating::getSignatureAndBroadcast(Yii::$app->params["ug"]["ug_sign_red_packet"], $send_sign_data, Yii::$app->params["ug"]["ug_host"], "eth_sendRawTransaction");
+
                     if (isset($res_data['error'])) {
                         echo "广播交易失败".PHP_EOL;
                         continue;

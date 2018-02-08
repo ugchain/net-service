@@ -50,6 +50,7 @@ canvas{
 	background: url('../img/top-bg.png') no-repeat;
 	background-size: 100%;
 	padding: 36px 0 25px 0;
+	overflow: hidden;
 }
 
 .top .packet-title{
@@ -59,6 +60,7 @@ canvas{
 	line-height: 37px;
 	letter-spacing: 2px;
 	color: #f19300;
+	margin-left: 5px;
 	/*display: none;*/
 }
 .top .red-img {
@@ -68,7 +70,7 @@ canvas{
 	text-align: center;
 	width: 100%;
 	position: absolute;
-	top: 170px;
+	top: 145px;
 	left: 0;
 	font-size: 17px;
 	line-height: 25px;
@@ -217,17 +219,18 @@ canvas{
 .top .finished{
 	display: none;
 	position: relative;
-	margin-top: 65px;
+	padding-top: 65px;
 	padding-bottom: 30px;
+	overflow: hidden;
 }
 .top .finished .kl-bg{
 	width: 120%;
 	height: 200px;
 	position: absolute;
 	z-index: -888;
-	top: -100px;
+	top: -22px;
 	left: -15px;
-	overflow: hidden;
+	/*overflow: hidden;*/
 }
 .top .finished p:nth-child(2),
 .top .finished p:nth-child(3){
@@ -398,7 +401,35 @@ canvas{
 }
 .mask #mask-copy{
 	opacity: 0;
+	/*width: 0;*/
 }
 .mask .close{
 	width: 40px;
+}
+@media screen and (max-width:414px){
+	.mask button{
+		left: 115px;
+	}
+	.mask .download-app {
+		left: 130px;
+		
+	}
+}
+@media screen and (max-width:412px){
+	.mask button{
+		left: 115px;
+	}
+	.mask .download-app {
+		left: 130px;
+		
+	}
+}
+@media screen and (max-width:375px){
+	.mask button{
+		left: 95px;
+	}
+	.mask .download-app {
+		left: 110px;
+		
+	}
 }
