@@ -495,3 +495,48 @@ doc/api.md
 ```
 
 --
+--
+
+### 我的全部虚拟资产
+**请求URL：** 
+- `/user/user/virtual-assets-list`
+  
+**请求方式：**
+- POST 
+
+**参数：** 
+
+|参数名|必选|类型|说明|
+|:----    |:---|:----- |-----   |
+|address |是  |string | 账户地址 |
+
+ **返回示例**
+
+``` 
+{
+  "code": 0,
+  "message": "success",
+  "data": {
+       "list": [
+           {
+               "id": "1",
+               "type": "1", //1勋章；2玫瑰
+               "address":"y7y7y7y7y7u8u8u8i9i9io0",
+               "icon": "/inamge/aadasd.jpg",
+               "name": "阿瓦隆大狗币",
+               "create_time": "1516006696",
+           },
+           {
+                "id": "1",
+                "type": "1", //1勋章；2玫瑰
+                "address":"y7y7y7y7y7u8u8u8i9i9io0",
+                "icon": "/inamge/aadasd.jpg",
+                "name": "阿瓦隆大狗币",
+                "create_time": "1516006696",
+           }
+       ],
+      }
+  }
+```
+
+--
