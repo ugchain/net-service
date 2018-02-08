@@ -3,13 +3,31 @@ $(function(){
 	var clipboard = new Clipboard('.btn');
 	clipboard.on('success', function(e) {
 	    $.toast("复制成功", "text");
-	    console.log(e)
 	});
 
 	clipboard.on('error', function(e) {
 	    $.toast("复制失败", "text");
-	    console.log(e)
 	});
+
+	var clipboard2 = new Clipboard('.btn2');
+	clipboard2.on('success', function(e) {
+			var num = 3
+			time = setInterval(function() {
+				$.toast("复制成功，" + num +"s后即将为您跳转", "text");
+	            num--;
+		        if(num==0){          
+		            clearInterval(time);
+		        }
+			}, 1000);
+
+		setTimeout(function() {
+			window.location.href = 'http://download.ugchain.com/ugcApp/'
+		}, 3000)  
+	})
+
+	clipboard2.on('error', function(e) {
+	    $.toast("复制失败", "text");
+	})
 
 	console.log(state)
 
@@ -90,7 +108,6 @@ $(function(){
 	}else if(state == 2){
 		// 已兑换
 		$('.top').css('background-size','100% 102%')
-		console.log($('.top'))
 		$('.exchanged').show()
 		$('.received').hide()
 		$('#packet-close').hide()

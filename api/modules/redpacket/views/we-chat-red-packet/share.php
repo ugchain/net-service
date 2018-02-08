@@ -283,7 +283,7 @@
         <div class="qr-code">
             <img src="/img/qr-code.png">
         </div>
-        <a href="javascript:;" class="download-btn weui-btn weui-btn_default">
+        <a href="http://download.ugchain.com/ugcApp/" class="download-btn weui-btn weui-btn_default">
             下载“UGC”应用
         </a>
         <p class="download-info">
@@ -296,11 +296,11 @@
             <img src="/img/mask.png" class="mask-img">
             <div class="download-app">
                 <img src="/img/logo.png">
-                <a href="#">点击下载“UGC”</a>
+                <a href="http://download.ugchain.com/ugcApp/">点击下载“UGC”</a>
             </div>
-            <button class="btn" data-clipboard-action="copy" data-clipboard-target="#mask-copy">
+            <button class="btn2" data-clipboard-action="copy" data-clipboard-target="#mask-copy">
             </button>
-            <input id="mask-copy" type="text" value="test" readonly="true">     
+            <input id="mask-copy" type="text" readonly="true">     
         </div>
         <p><img src="/img/close.png" class="close"></p>
     </div>
@@ -318,6 +318,7 @@
     var headimgurl = "<?=$headimgurl ?>";
     var expire_time = "<?=$redpacketInfo['expire_time']?>"
     var finish_time = '<?=$redpacketInfo['finish_time']?>'
+    var small_img = '<?=$redpacketInfo['theme_thumb_img_url']?>'
 
     // 接入wx_sdk
     wx.config(<?= json_encode(\Yii::$app->wechat->jsApiConfig(['jsApiList' => ['onMenuShareTimeline','onMenuShareAppMessage']], false)) ?>);
@@ -325,22 +326,20 @@
 
     // 配置微信分享
     var redpacket_title = '<?= $redpacketInfo['title'];?>'
-    var wx_title = '快来领取UGC红包' + "‘"+ redpacket_title + "‘"
-
+    var wx_title = '快来领取UGC红包' + "“" + redpacket_title + "”"
     var wx_desc = ["会升值的红包才是真爱！","每一个红包都有惊喜哦~","领了数字资产红包才叫过年！","领个红包旺一年！"]; 
-
     var desc = wx_desc[Math.floor(Math.random()*wx_desc.length)]
 
     wx.ready(function () {
         wx.onMenuShareTimeline({
             title: wx_title, 
             link: '', 
-            imgUrl: '', 
+            imgUrl: 'http://' + small_img,
             success: function () {
-                console.log('成功')
+                $.toast("分享成功", "text");
             },
             cancel: function () {
-                
+                $.toast("取消分享", "text");
             }
         });
 
@@ -348,14 +347,14 @@
             title: wx_title, 
             desc: desc,
             link: '', 
-            imgUrl: 'http://t9-cname.ugchain.com/img/logo.png',
+            imgUrl: 'http://' + small_img,
             type: '',
             dataUrl: '', 
             success: function () {
-                console.log('成功')
+                $.toast("分享成功", "text");
             },
             cancel: function () {
-                console.log('d')
+                $.toast("取消分享", "text");
             }
         })
     })

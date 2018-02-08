@@ -8,9 +8,6 @@ body{
 	font-stretch: normal;
 	overflow-x: hidden;
 }
-canvas{
-	
-}
 .top .weui-btn {
     width: 300px;
 }
@@ -384,7 +381,6 @@ canvas{
 	position: absolute;
 	top: 208px;
 	left: 110px;
-	/*display: none;*/
 }
 .mask .download-app img{
 	height: 27px;

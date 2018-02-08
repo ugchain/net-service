@@ -77,6 +77,7 @@ class RedPacket extends \common\models\RedPacket
         $redpacketInfo['already_received_amount'] =  !$type ? OutputHelper::fromWei($alreadyReceivedAmount) : OutputHelper::NumToString($alreadyReceivedAmount);
         $redpacketInfo['theme_img'] = !empty($redPacketTheme->img) ? $redPacketTheme->img : '';
         $redpacketInfo['theme_thumb_img'] = !empty($redPacketTheme->thumb_img) ? $redPacketTheme->thumb_img : '';
+        $redpacketInfo['theme_thumb_img_url'] = !empty($redPacketTheme->thumb_img) ? $_SERVER['HTTP_HOST']."/".$redPacketTheme->thumb_img : '';
         $redpacketInfo['theme_share_img'] = !empty($redPacketTheme->share_img) ? $redPacketTheme->share_img : '';
         $redpacketInfo['redPacketRecordList'] = $redPacketRecordList;
         $redpacketInfo['image_url'] = Yii::$app->params['image_url'];

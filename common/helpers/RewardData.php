@@ -37,7 +37,7 @@ class RewardData
         //todo 过期时间暂无处理
         $data = json_encode($data);
         //存放数据
-        $this->redis->set(self::REPACKET.$id,$data);
+        $this->redis->set($id,$data);
         return true;
     }
 
@@ -51,7 +51,7 @@ class RewardData
         if(!$this->redis){
             return false;
         }
-        $data = $this->redis->get(self::REPACKET.$id);
+        $data = $this->redis->get($id);
 
         if(!$data){
             return false;
@@ -79,7 +79,7 @@ class RewardData
         if(!$this->redis){
             return false;
         }
-        $data = $this->redis->get(self::REPACKET.$id);
+        $data = $this->redis->get($id);
 
         if(!$data){
             return false;
@@ -87,18 +87,20 @@ class RewardData
         $data = json_decode($data,true);
 
         //获取第一个元素值
-        if(!$data){
+        if(!$data || !is_array($data)){
             return false;
         }
-
         //删除元素key
         unset($data[0]);
-
+        //数据为空时直接删除
+        if(empty($data)){
+            $this->delete($id);
+        }
         //重建索引
         sort($data);
 
         //重新保存
-        $this->set(self::REPACKET.$id,$data);
+        $this->set($id,$data);
 
         return true;
     }
