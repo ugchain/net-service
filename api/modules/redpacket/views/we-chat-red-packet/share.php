@@ -158,7 +158,7 @@
 					恭喜您抢到
 				</span>
                 <span class="state-getugc">
-    				<?= $record_amount;?>44
+    				<?= $record_amount;?>
     			</span>
                 <span class="ugc-unit">
     					个UGC
