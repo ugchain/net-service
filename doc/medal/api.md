@@ -509,6 +509,8 @@ doc/api.md
 |参数名|必选|类型|说明|
 |:----    |:---|:----- |-----   |
 |address |是  |string | 账户地址 |
+|page |否  |string | 当前页;1 |
+|pageSize |否  |string |每页展示数据;10 |
 
  **返回示例**
 
