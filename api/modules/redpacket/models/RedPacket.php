@@ -89,7 +89,7 @@ class RedPacket extends \common\models\RedPacket
     public function getRedPacketRecords()
     {
         return $this->hasMany(RedPacketRecord::className(), ['rid' => 'id'])
-            ->orderBy('id');
+            ->orderBy('id');;
     }
 
     public function getRedPacketTheme()
@@ -146,7 +146,7 @@ class RedPacket extends \common\models\RedPacket
         $query = Yii::$app->db;
         $offset = ($page - 1) * $pageSize;
         if ($type == self::I_RECEIVED) {
-            $sql = "SELECT `rr`.status, `rr`.to_address, `rr`.exchange_time, `rr`.expire_time, `rr`.rid, `rr`.amount, `rp`.theme_id, `rp`.title, `rp`.id FROM `ug_red_packet_record` as rr LEFT JOIN `ug_red_packet` as rp on rr.rid = rp.id 
+            $sql = "SELECT `rr`.status, `rr`.addtime as finish_time, `rr`.to_address, `rr`.exchange_time, `rr`.expire_time, `rr`.rid, `rr`.amount, `rp`.theme_id, `rp`.title, `rp`.id FROM `ug_red_packet_record` as rr LEFT JOIN `ug_red_packet` as rp on rr.rid = rp.id 
                   where rr.to_address = '" . $address . "' and `rr`.status in ('" . RedPacketRecord::EXCHANGE_SUCC . "','". RedPacketRecord::REDEMPTION . "') order by id desc limit " . $pageSize . " offset " . $offset;
         } else {
             $sql = "SELECT * FROM `ug_red_packet` where address = '" . $address . "' order by id desc limit " . $pageSize . " offset " . $offset;
