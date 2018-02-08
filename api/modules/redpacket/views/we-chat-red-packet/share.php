@@ -6,7 +6,7 @@
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
     <meta http-equiv="Pragma" content="no-cache" />
     <meta http-equiv="Expires" content="0" />
-    <title>UGC红包领取</title>
+    <title></title>
     <link rel="stylesheet" href="/css/weui.min.css">
     <link rel="stylesheet" href="/css/jquery-weui.min.css">
     <link rel="stylesheet" type="text/css" href="/css/index.css">
@@ -322,14 +322,22 @@
     // 接入wx_sdk
     wx.config(<?= json_encode(\Yii::$app->wechat->jsApiConfig(['jsApiList' => ['onMenuShareTimeline','onMenuShareAppMessage']], false)) ?>);
 
+
     // 配置微信分享
+    var redpacket_title = '<?= $redpacketInfo['title'];?>'
+    var wx_title = '快来领取UGC红包' + "‘"+ redpacket_title + "‘"
+
+    var wx_desc = ["会升值的红包才是真爱！","每一个红包都有惊喜哦~","领了数字资产红包才叫过年！","领个红包旺一年！"]; 
+
+    var desc = wx_desc[Math.floor(Math.random()*wx_desc.length)]
+
     wx.ready(function () {
         wx.onMenuShareTimeline({
-            title: 'UGC红包领取', 
-            link: 't9-cname.ugchain.com', 
-            imgUrl: '/img/logo.png', 
+            title: wx_title, 
+            link: '', 
+            imgUrl: '', 
             success: function () {
-                $.toast("成功", "text");
+                console.log('成功')
             },
             cancel: function () {
                 
@@ -337,12 +345,14 @@
         });
 
         wx.onMenuShareAppMessage({
-            title: 'UGC红包领取', 
-            desc: '快来领取UGC红包', 
-            link: 't9-cname.ugchain.com', 
-            imgUrl: '/img/logo.png',
+            title: wx_title, 
+            desc: desc,
+            link: '', 
+            imgUrl: 'http://t9-cname.ugchain.com/img/logo.png',
+            type: '',
+            dataUrl: '', 
             success: function () {
-                $.toast("成功", "text");
+                console.log('成功')
             },
             cancel: function () {
                 console.log('d')
