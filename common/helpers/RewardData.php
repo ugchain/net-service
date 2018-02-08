@@ -87,7 +87,7 @@ class RewardData
         $data = json_decode($data,true);
 
         //获取第一个元素值
-        if(!$data){
+        if(!$data || !is_array($data)){
             return false;
         }
 
@@ -98,7 +98,7 @@ class RewardData
         sort($data);
 
         //重新保存
-        $this->set($id,json_encode($data));
+        $this->set($id,$data);
 
         return true;
     }
