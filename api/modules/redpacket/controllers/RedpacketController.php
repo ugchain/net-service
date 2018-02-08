@@ -22,7 +22,6 @@ class RedpacketController extends  Controller
 
     //红包获取最小值和
     const MIN = 0.01;
-    const MEDIAN = 0.8;
     public $REPACK_STATUS;
     /**
      * @inheritdoc
@@ -82,7 +81,7 @@ class RedpacketController extends  Controller
         }else{
             $min = self::MIN;
             if($average_amount > self::MIN){
-                $min = $average_amount * self::MEDIAN;
+                $min = mt_rand(self::MIN,$average_amount);
             }
             //随机红包分配
             $redis_data = self::rankRedpacket($amount,$data["quantity"],$min);
