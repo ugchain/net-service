@@ -6,7 +6,7 @@ return [
         "gas_price"=>0,
         "gas_limit"=>150000,
         "ug_host"    => "http://chain.ugchain.org",
-        "ug_sign_url" =>"http://118.190.137.150:10000/ug/defreeze",//ug签名
+        "ug_sign_url" =>"http://118.190.42.238:10000/ug/defreeze",//ug签名
         "owner_address" => "0x69de549161a1965102f64d07ce39e9b2780998c1",
         "red_packet_address" => "0x65db09380ec85f40c1551f84d5febdaac6ca53c0",//红包平台地址
         "ug_sign_red_packet" => "http://118.190.137.150:10000/ug/transfer",//ug红包签名
@@ -15,7 +15,7 @@ return [
         "gas_price"=>0,
         "gas_limit"=>"90000",
         "eth_host" => "http://mainnet.ugchain.org",
-        "eth_sign_url"  => "http://118.190.137.150:10000/eth/defreeze",//eth签名
+        "eth_sign_url"  => "http://118.190.42.238:10000/eth/defreeze",//eth签名
         "owner_address" => "0xd63397d3515e2748e73fcaa542444a963d7ab7ee",
     ],
     "rsa"=>[
