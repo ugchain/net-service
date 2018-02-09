@@ -31,7 +31,7 @@
 
             <script>
                 var theme_id = '<?= $redpacketInfo['theme_id'];?>'
-                // var theme_id = 4
+                // var theme_id = 5
                 var packet_name
                 if(theme_id == 1 ){
                     packet_name = 'putong'
@@ -246,7 +246,9 @@
                         </div>
                         <div class="weui-media-box__bd">
                             <div class="info-l">
-                                <p id="username"><?=$redPacketRecord['wx_name'] ?></p>
+                                <p id="username">
+                                    <?=$redPacketRecord['wx_name'] ?>    
+                                </p>
                                 <p class="time">
                                     <?=$redPacketRecord['time'] ?>
                                 </p>
@@ -256,7 +258,7 @@
                                     <?php if ($redPacketRecord['status'] == \api\modules\redpacket\models\RedPacketRecord::REDPACKET_RECORD_STATUS_EXCHANGESUCCESS){ ?>
                                         得到
                                         <span><?=$redPacketRecord['amount'] ?></span>
-                                        个ugc
+                                        个UGC 
                                     <?php }else{ ?>
                                         领取了一个UGC红包
                                     <?php } ?>
