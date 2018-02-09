@@ -41,6 +41,10 @@ class RedpacketController extends  Controller
     {
         //接收参数&&验证参数
         $data = self::getParams();
+        //检查是否有重复的txid
+        if(RedPacket::getRedListByTxid($data["hash"])){
+            outputHelper::ouputErrorcodeJson(\common\helpers\ErrorCodes::RED_PACKET_REPEAT);
+        }
         //创建红包
         $packet_id = RedPacket::saveRedPacket($data);
         if(!$packet_id){
@@ -79,18 +83,15 @@ class RedpacketController extends  Controller
                 $redis_data[$i] = $average_amount;
             }
         }else{
-            $min = self::MIN;
-            if($average_amount > self::MIN){
-                $min = mt_rand(self::MIN,round($average_amount ,2));
-                $min =  $min ? $min : self::MIN;
-            }
             //随机红包分配
-            $redis_data = self::rankRedpacket($amount,$data["quantity"],$min);
+            $redis_data = self::rankRedpacket($amount,$data["quantity"]);
         }
         //红包金额过小时返回返回
         if(!$redis_data){
             outputHelper::ouputErrorcodeJson(\common\helpers\ErrorCodes::RED_PACKET_QUANTITY_EXCEEDED);
         }
+        //打乱排序规则
+        shuffle($redis_data);
         $this->REPACK_STATUS = 0;
         //存放redis
         $rewardData = new RewardData();
@@ -185,10 +186,15 @@ class RedpacketController extends  Controller
     /**
      * 批量生成红包值
      */
-    private function rankRedpacket($remainMoney,$remainSize,$min)
+    private function rankRedpacket($remainMoney,$remainSize)
     {
         $size = $remainSize;
         for ($i = 0; $i < $size; $i++) {
+            $arv = round($remainMoney / $remainSize, 2);
+            $min = mt_rand(self::MIN,$arv);
+            if($min <= self::MIN){
+                $min = self::MIN;
+            }
             $data[$i] = self::random_red($remainMoney,$remainSize,$min);
             // 红包中剩余的钱数
             $remainMoney = round($remainMoney - $data[$i], 2);
