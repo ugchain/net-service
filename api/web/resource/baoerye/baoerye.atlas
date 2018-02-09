@@ -1,0 +1,97 @@
+
+baoerye.png
+size: 2048,1024
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+chuai
+  rotate: true
+  xy: 691, 239
+  size: 155, 166
+  orig: 155, 166
+  offset: 0, 0
+  index: -1
+duzi2
+  rotate: false
+  xy: 1529, 914
+  size: 330, 93
+  orig: 330, 93
+  offset: 0, 0
+  index: -1
+gai
+  rotate: false
+  xy: 2, 189
+  size: 491, 191
+  orig: 491, 191
+  offset: 0, 0
+  index: -1
+guangshu
+  rotate: true
+  xy: 2, 77
+  size: 110, 331
+  orig: 110, 331
+  offset: 0, 0
+  index: -1
+hognbao
+  rotate: false
+  xy: 691, 396
+  size: 258, 212
+  orig: 258, 212
+  offset: 0, 0
+  index: -1
+hongbao
+  rotate: false
+  xy: 2, 382
+  size: 687, 625
+  orig: 687, 625
+  offset: 0, 0
+  index: -1
+jiy
+  rotate: false
+  xy: 951, 463
+  size: 232, 145
+  orig: 232, 145
+  offset: 0, 0
+  index: -1
+jiz
+  rotate: false
+  xy: 1529, 767
+  size: 232, 145
+  orig: 232, 145
+  offset: 0, 0
+  index: -1
+tou
+  rotate: false
+  xy: 1276, 684
+  size: 251, 323
+  orig: 251, 323
+  offset: 0, 0
+  index: -1
+tui1
+  rotate: true
+  xy: 495, 236
+  size: 144, 194
+  orig: 144, 194
+  offset: 0, 0
+  index: -1
+xiankai
+  rotate: false
+  xy: 691, 610
+  size: 583, 397
+  orig: 583, 397
+  offset: 0, 0
+  index: -1
+yer
+  rotate: false
+  xy: 2, 2
+  size: 106, 73
+  orig: 106, 73
+  offset: 0, 0
+  index: -1
+zer
+  rotate: false
+  xy: 1276, 614
+  size: 135, 68
+  orig: 135, 68
+  offset: 0, 0
+  index: -1

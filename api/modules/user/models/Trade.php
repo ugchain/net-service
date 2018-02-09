@@ -6,7 +6,7 @@ use Yii;
 class Trade extends \common\models\Trade
 {
     //创建数据
-    public static function insertData($txid, $from, $to, $amount, $status)
+    public static function insertData($txid, $from, $to, $amount, $status, $type = self::INTERNAL, $blocknumber = 0)
     {
         $time = time();
         $model = new self();
@@ -15,6 +15,8 @@ class Trade extends \common\models\Trade
         $model->to_address = $to;
         $model->amount = $amount;
         $model->status = $status;
+        $model->type = $type;
+        $model->blocknumber = $blocknumber;
         $model->addtime = $time;
         return $model->save();
     }
@@ -45,5 +47,14 @@ class Trade extends \common\models\Trade
     {
         return Trade::find()->select("*")->where(["app_txid" => $txid])->asArray()->one();
     }
+
+    /**
+     * 更新交易记录状态
+     */
+    public static function updateStatus($app_txid,$status = Trade::SUCCESS)
+    {
+        return Trade::updateAll(["status"=>$status],["app_txid"=>$app_txid]);
+    }
+
 
 }

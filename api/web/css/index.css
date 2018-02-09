@@ -1,0 +1,446 @@
+/*
+	common
+*/
+body{
+	font-family: YaHei;
+	font-size: 13px;
+	font-weight: normal;
+	font-stretch: normal;
+	overflow-x: hidden;
+}
+.top .weui-btn {
+    width: 300px;
+}
+.content .weui-panel:before {
+    border-top: none;
+}
+.border-1px{
+    position:relative;
+}
+.border-1px::after{
+    position:absolute;
+    bottom:0;
+    left:0;
+    width:100%;
+    display:block;
+    content:'';
+    border-top:1px solid #bdbdbd;
+}
+@media(-webkit-min-device-pixel-ratio:1.5),(min-device-pixel-ratio:1.5){
+    .border-1px::after{
+        -webkit-transform:scaleY(0.7);
+        transform:scaleY(0.7);
+    }
+}
+@media(-webkit-min-device-pixel-ratio:2),(min-device-pixel-ratio:2){
+    .border-1px::after{
+        -webkit-transform:scaleY(0.5);
+        transform:scaleY(0.5);
+    }
+}
+.weui-btn_default:not(.weui-btn_disabled):visited {
+    color: #fff;
+}
+/*
+	自定义
+*/
+.top{
+	text-align: center;
+	background: url('../img/top-bg.png') no-repeat;
+	background-size: 100%;
+	padding: 15px 0 25px 0;
+	overflow: hidden;
+}
+
+.top .packet-title{
+	font-size: 21px;
+	font-weight: normal;
+	font-stretch: normal;
+	line-height: 37px;
+	letter-spacing: 2px;
+	color: #f19300;
+	margin-left: 5px;
+	/*display: none;*/
+}
+.top .red-img {
+	position: relative;
+}
+.top .red-img .get-ugc{
+	text-align: center;
+	width: 100%;
+	position: absolute;
+	top: 145px;
+	left: 0;
+	font-size: 17px;
+	line-height: 25px;
+	color: rgb(238,55,62);
+}
+.top .red-img .get-ugc #getugc-num{
+	font-size: 21px;
+}
+ #packet-close{
+	width: 100%; 
+	height: 500px; 
+	margin-top: -100px;
+}
+#packet-open{
+	width: 100%; 
+	height: 520px; 
+	margin-top: -100px;
+	display: none;
+}
+
+.top .red-img .state-info {
+	margin-top: -12px;
+	margin-bottom: 10px;
+	margin-left: 10px;
+	display: none;
+}
+.top .red-img .state-info .state-tips{
+	font-size: 21px;
+	/*color: #ffffff;*/
+	color: rgba(255,255,255,0.6);
+}
+.top .red-img .state-info .state-getugc{
+	font-size: 36px;
+	color: #f3be56;
+}
+.top .red-img .state-info .ugc-unit{
+	font-size: 21px;
+	color: rgba(255,255,255,0.6);
+}
+.top .red-img .state-info .state-time{
+	font-size: 13px;
+	color: rgba(255,255,255,0.54);
+	margin-left: 10px;
+}
+
+/*未领取*/
+.top .unreceived{
+	display: none;
+}
+.top .unreceived #get-packet-btn{
+	width: 265px;
+	height: 41px;
+	background-color: #fcd588;
+	border-radius: 20px;
+	font-size: 18px;
+	font-weight: normal;
+	font-stretch: normal;
+	line-height: 41px;
+	letter-spacing: 1px;
+	color: #cf3a3f;
+}
+.top .unreceived .runtime{
+	font-size: 12px;
+	font-weight: normal;
+	font-stretch: normal;
+	line-height: 12px;
+	letter-spacing: 1px;
+	color: rgba(255,255,255,0.6);
+	margin-top: 9px;
+}
+
+/*已领取*/
+.top .received{
+	width: 100%;
+	position: relative;
+	padding-top: 15px;
+	opacity: 0;
+	overflow: hidden;
+	padding-bottom: 13px;
+}
+
+.top .received .kl-bg{
+	width: 120%;
+	position: absolute;
+	z-index: -888;
+	top: 0;
+	left: -15px;
+}
+.top .received .kl-title{
+	font-size: 18px;
+	color: #f3be56;
+	margin-top: 20px;
+}
+.top .received  .kl-title-bg{
+	width: 110px;
+	height: 10px;
+}
+.tie{
+	width: 100%;
+	margin-top: -60px;
+}
+.top .received .kl{
+	height: 35px;
+	width: 300px;
+	line-height: 35px;
+	margin: 8px auto;
+	background: #f3be56;
+}
+
+.top .received #kl-txt{
+	background:  #f3be56;
+	border: 0;
+	width: 170px;
+	padding: 0;
+	margin: 0;
+	height: 30px;
+	font-size: 15px;
+	color: #fff;
+	text-align: center;
+}
+.top .received button{
+	background: #fff;
+	border: 0;
+	width: 123px;
+	height: 33px;
+	padding: 0;
+	margin: 0;
+	color: rgba(0,0,0,.66);
+	font-size: 15px;
+	margin-top: 1px;
+	margin-right: -1px;
+}
+.top .received .kl-tips{
+	width: 300px;
+	margin: 0 auto;
+	font-size: 11px;
+	line-height: 16px;
+	margin-top: 10px;
+	color: rgba(0,0,0,.52);
+}
+/*已兑换*/
+.top .exchanged{
+	display: none;
+
+}
+/*已结束*/
+.top .finished{
+	display: none;
+	position: relative;
+	padding-top: 65px;
+	padding-bottom: 30px;
+	overflow: hidden;
+}
+.top .finished .kl-bg{
+	width: 120%;
+	height: 200px;
+	position: absolute;
+	z-index: -888;
+	top: -22px;
+	left: -15px;
+	/*overflow: hidden;*/
+}
+.top .finished p:nth-child(2),
+.top .finished p:nth-child(3){
+	font-size: 15px;
+	text-align: left;
+	color: rgba(0,0,0,.6);
+	margin-left: 90px;
+}
+
+.top .finished p:nth-child(2) span,
+.top .finished p:nth-child(3) span{
+	color: #f19300;
+	/*margin-left: 10px;*/
+}
+
+.top .finished p:nth-child(2) span:nth-child(1),
+.top .finished p:nth-child(3) span:nth-child(1){
+	margin-left: 30px;
+}
+
+/*
+	领取详情
+*/
+.content{
+	/*display: none;*/
+	margin-top: -6px;
+}
+.content .no-one{
+    font-size: 12px;
+    color: rgba(0,0,0,0.32);
+    text-align: center;
+    margin: 30px auto 0 auto;
+    /*display: none;*/
+}
+.content .weui-panel__hd {
+    padding: 0px 10px 10px 19px;
+    font-size: 12px;
+}
+.content .weui-media-box {
+    padding: 15px 13.5px;
+}
+.content .weui-media-box__hd {
+    margin-right: 12px;
+    width: 41px;
+    height: 41px;
+ 	overflow: hidden;
+ 	border-radius: 50%;
+}
+.content .weui-panel__bd{
+	/*display: none;*/
+}
+
+.content .weui-panel__bd .info-l{
+	float: left;
+}
+.content .weui-panel__bd .info-r{
+	float: right;
+	line-height: 48px;
+}
+
+
+
+
+.content .weui-panel:after {
+    border-bottom: none;
+}
+.content .weui-panel__hd:after {
+     left: 0px; 
+}
+.content .weui-media-box:before {
+     left: 0px; 
+}
+.content .weui-media-box #username{
+    font-size: 15px;	
+    height: 20px;
+    line-height: 20px;
+    color: rgba(0,0,0,.87);
+}
+.content .weui-media-box .time{
+    font-size: 13px;
+    color: rgba(0,0,0,.48);	
+}
+.content .weui-media-box #time{
+    font-size: 13px;	
+}
+.content .weui-media-box .get-ugc{
+    font-size: 13px;
+    color: rgba(0,0,0,.48);		
+}
+.content .weui-loadmore{
+    font-size: 13px;
+    margin: 17px auto 0px auto;
+    display: none;	
+}
+/*
+	下载宣传
+*/
+.foot{
+	text-align: center;
+}
+.foot .qr-code img{
+	height: 122px;
+	width: 123.5px;
+	margin: 35px auto 13px auto;
+}
+.foot .download-btn{
+	width: 186px;
+    height: 36.5px;
+    border-radius: 18px;
+   	font-size: 17px;
+   	line-height: 36.5px;
+   	color: #fff;
+   	background-color: #f3be56;
+}
+.foot .download-info{
+	font-size: 12px;
+	color: rgba(0,0,0,0.6);
+	margin: 11.5px auto 42px auto;
+}
+.foot .weui-btn:after {
+    border: 0;
+}
+
+/*
+	浮层
+*/
+.mask{
+	width: 100%;
+	height: 100%;
+	position: fixed;
+	top: 0;
+	left: 0;
+	background: rgba(0,0,0,.5);
+	text-align: center;
+	display: none;
+}
+.mask .mask-img{
+	width: 230px;
+	margin: 100px 50px 32px 50px;
+}
+.mask button{
+	width: 180px;
+	height: 60px;
+	display: inline-block;
+	background: url('../img/copy-btn.png');
+	background-size: 100%;
+	border: 0;
+	position: absolute;
+	top: 300px;
+	left: 95px;
+}
+.mask .download-app {
+	position: absolute;
+	top: 208px;
+	left: 110px;
+}
+.mask .download-app img{
+	height: 27px;
+	width: 27px;
+	vertical-align: bottom;
+}
+.mask .download-app a{
+	font-size: 17px;
+	color: #fff;
+	margin-top: 6px;
+}
+.mask button img{
+	width: 180px;
+}
+.mask #mask-copy{
+	opacity: 0;
+	/*width: 0;*/
+}
+.mask .close{
+	width: 40px;
+}
+@media screen and (max-width:414px){
+	.mask button{
+		left: 115px;
+	}
+	.mask .download-app {
+		left: 130px;
+		
+	}
+}
+@media screen and (max-width:412px){
+	.mask button{
+		left: 115px;
+	}
+	.mask .download-app {
+		left: 130px;
+		
+	}
+}
+@media screen and (max-width:375px){
+	.mask button{
+		left: 95px;
+	}
+	.mask .download-app {
+		left: 110px;
+		
+	}
+}
+
+@media screen and (max-width:360px){
+	.mask button{
+		left: 87px;
+	}
+	.mask .download-app {
+		left: 105px;
+		
+	}
+}

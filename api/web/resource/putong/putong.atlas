@@ -1,0 +1,34 @@
+
+putong.png
+size: 2048,512
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+chuai
+  rotate: false
+  xy: 1201, 140
+  size: 155, 160
+  orig: 155, 160
+  offset: 0, 0
+  index: -1
+gai
+  rotate: false
+  xy: 616, 96
+  size: 583, 397
+  orig: 583, 397
+  offset: 0, 0
+  index: -1
+hongbao
+  rotate: true
+  xy: 2, 2
+  size: 491, 612
+  orig: 491, 612
+  offset: 0, 0
+  index: -1
+li
+  rotate: false
+  xy: 1201, 302
+  size: 491, 191
+  orig: 491, 191
+  offset: 0, 0
+  index: -1

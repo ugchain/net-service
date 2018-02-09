@@ -6,6 +6,9 @@ use common\models\CenterBridge;
 use common\helpers\CurlRequest;
 use common\helpers\OutputHelper;
 use common\helpers\ErrorCodes;
+use common\models\RedPacket;
+use common\models\RedPacketRecord;
+use common\models\Trade;
 
 class Operating
 {
@@ -92,6 +95,7 @@ class Operating
         //组装数据
         $send_sign_data = [
             "txId" => $data["app_txid"],
+            "to" => $data["address"],
             "address" => $data["address"],
             "amount" => $data["amount"],
             "gasPrice" => $gas_price,
@@ -115,7 +119,9 @@ class Operating
     {
         //获取离线签名
         $sign_res = CurlRequest::curl($sign_host, $send_sign_data);
-        //var_dump($sign_res);die();
+        //写log
+        OutputHelper::log("离线签名 ".json_encode($send_sign_data)." -- 签名返回信息: ".$sign_res, "internal_transfer");
+
         if(!$sign_res){
             return false;
         }
@@ -123,8 +129,13 @@ class Operating
         if(isset($sign_res_data["status"])){
             return false;
         }
+
         //链上广播交易
         $broadcasting = CurlRequest::ChainCurl($host, $function, [$sign_res_data['data']["raw_transaction"]]);
+
+        //写log
+        OutputHelper::log("链上广播: ".$sign_res_data['data']["transaction_hash"]."-- 链上返回信息: ".$broadcasting, "internal_transfer");
+
         if(!$broadcasting){
             return false;
         }
@@ -167,4 +178,29 @@ class Operating
 
         return $trade_info;
     }
+
+    /**
+     * 修改表状态和时间
+     * @param $type
+     * @param $txid
+     *
+     * @return bool
+     */
+    public static function updateDataBytxid($type, $txid)
+    {
+        if ($type == Trade::CREATE_REDPACKET) {
+            //更新红包表 status创建成功, create_succ_time创建成功时间 expire_time 过期时间
+            $expire_time = time() + 86400;
+            return RedPacket::updateAll(["status" => RedPacket::CREATE_REDPACKET_SUCC, "create_succ_time" => time(),"expire_time" => $expire_time], ["txid" => $txid]);
+        } else if($type == Trade::OPEN_REDPACKET) {
+            //更新红包记录表 status兑换成功, exchange_time兑换时间
+            return RedPacketRecord::updateAll(["status" => RedPacketRecord::EXCHANGE_SUCC, "exchange_time" => time()], ["txid" => $txid]);
+        } else if($type == Trade::BACK_REDPACKET) {
+            //更新红包表 status已过期(不改变), expire_time过期时间
+            return RedPacket::updateAll(["status" => RedPacket::REDPACKET_EXPIRED, "expire_time" => time()], ["txid" => $txid]);
+        } else {
+            return true;
+        }
+    }
+
 }

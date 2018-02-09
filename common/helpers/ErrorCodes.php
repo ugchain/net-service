@@ -13,9 +13,11 @@ class ErrorCodes
         FALL                                                        =   1,
 
         SYSTEM_NOT_POST                                             =   10001,//当前请求方式有误
+        REQUEST_FAILED                                              =   10002,//请求失败
 
         //
-        PARAM_NOT_EXIST                                             =   20101,//参数缺失
+        PARAM_NOT_EXIST                                             =   20101,//
+
         SIGN_NOT_TRUE                                               =   20102,//签名错误
         ADDRESS_NOT_EXIST                                           =   20103,//地址缺失
         NICKNAM_EOVERSIZE                                           =   20104,//昵称过长
@@ -26,7 +28,20 @@ class ErrorCodes
         MEDAL_UPDATE_ERROR                                          =   20108,//勋章地址更新错误
         MEDAL_GIVE_ADD_FAILED                                       =   20109,//转增记录添加失败
         PHONE_WRONGFOL                                              =   20110,//手机号不合法
-        ADVERTISE_EXIST                                             =   20111;//广告已申请
+        ADVERTISE_EXIST                                             =   20111,//广告已申请
+        RED_PACKET_REDEMPTION                                       =   20112,//红包兑换中
+        TRANSACTION_FAIL                                            =   20113,//交易失败
+        RED_PACKET_NOT_EXIST                                        =   20114,//红包不存在
+        RED_PACKET_EXPIRED                                          =   20115,//红包已过期
+        RED_PACKET_EXIST                                            =   20116,//红包以领取
+        RED_PACKET_GRAD_FAIL                                        =   20117,//红包领取失败
+        RED_PACKET_LED_LIGHT                                        =   20118,//红包以领光
+        ROSE_THEME_NOT_EXISTS                                       =   20119,//玫瑰主题未获取到
+        RED_PACKET_QUANTITY_EXCEEDED                                =   20120,//红包数量超出限制
+        RED_PACKET_TITLE_EXCEEDED                                   =   20121,//红包名称超出限制
+        RED_PACKET_OPEN                                             =   20122,//您已经拆过这个红包啦
+        RED_PACKET_NULL                                             =   20123,//红包已被抢光
+        RED_PACKET_REPEAT                                           =   20124;//红包已重复发送
 
 
 
@@ -50,6 +65,20 @@ class ErrorCodes
         self::MEDAL_GIVE_ADD_FAILED                                 =>'转增记录添加失败',
         self::PHONE_WRONGFOL                                        =>'手机号不合法',
         self::ADVERTISE_EXIST                                       =>'广告已申请',
+        self::RED_PACKET_REDEMPTION                                 =>'兑换码无效',
+        self::TRANSACTION_FAIL                                      =>'兑换红包失败',
+        self::RED_PACKET_NOT_EXIST                                  =>'没有这个红包哦',
+        self::RED_PACKET_EXPIRED                                    =>'红包已过期',
+        self::RED_PACKET_EXIST                                      =>'红包以领取',
+        self::RED_PACKET_GRAD_FAIL                                  =>'红包领取失败',
+        self::RED_PACKET_LED_LIGHT                                  =>'红包以领光',
+        self::ROSE_THEME_NOT_EXISTS                                 =>'主题缺失',
+        self::RED_PACKET_QUANTITY_EXCEEDED                          =>'红包数量超出限制',
+        self::RED_PACKET_TITLE_EXCEEDED                             =>'红包名称超出限制',
+        self::RED_PACKET_OPEN                                       =>'您已经拆过这个红包啦',
+        self::REQUEST_FAILED                                        =>'请求失败',
+        self::RED_PACKET_NULL                                       =>'红包已被抢光',
+        self::RED_PACKET_REPEAT                                     =>'红包已重复发送',
     ];
 
 }

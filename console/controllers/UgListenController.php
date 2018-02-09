@@ -3,6 +3,8 @@ namespace console\controllers;
 
 use api\modules\user\models\Trade;
 use common\helpers\OutputHelper;
+use api\modules\redpacket\models\RedPacket;
+use api\modules\redpacket\models\RedPacketRecord;
 use common\wallet\Operating;
 use common\models\CenterBridge;
 use common\models\ExtraPrice;
@@ -10,6 +12,7 @@ use function GuzzleHttp\Psr7\str;
 use Yii;
 use yii\console\Controller;
 use common\helpers\CurlRequest;
+use api\modules\redpacket\models\PacketOfflineSign;
 /**
  * Class UgLisenController By ug-eth监听确认服务
  * @package console\controller
@@ -43,11 +46,15 @@ class UgListenController extends Controller
         {
             //根据交易id获取订单信息
             $block_info = Operating::txidByTransactionInfo(Yii::$app->params['ug']["ug_host"], "eth_getTransactionByHash", [$list["app_txid"]]);
+            //写log
+            OutputHelper::log("ug-eth转账获取订单信息脚本: " . $list["app_txid"] . "--链上返回信息: " . json_encode($block_info),"cross_chain");
             if (!$block_info) {
                 continue;
             }
             //多次判断是否上块
             $receipt_info = CurlRequest::ChainCurl(Yii::$app->params['ug']["ug_host"],"eth_getTransactionReceipt",[$list["app_txid"]]);
+            //写log
+            OutputHelper::log("ug-eth转账确认上块脚本: " . $list["app_txid"] . "--链上返回信息: " . $receipt_info,"cross_chain");
             if(!$receipt_info){
                 continue;
             }
@@ -89,7 +96,7 @@ class UgListenController extends Controller
     }
 
     /**
-     * 检查Ug内部转账
+     * 检查Ug内部交易转账（内部交易转账、创建红包、兑换红包、退还红包）
      * 根据txid到链上获取交易信息，获取blocknumber
      * 更新数据库blocknumber && status && trade_time
      */
@@ -113,6 +120,8 @@ class UgListenController extends Controller
             //根据交易id获取订单信息
             $block_info = Operating::txidByTransactionInfo(Yii::$app->params['ug']["ug_host"],
                 "eth_getTransactionReceipt", [$info["app_txid"]]);
+            //写log
+            OutputHelper::log("UG内部转账脚本: " . $info["app_txid"] . "--链上返回信息: " . json_encode($block_info),"internal_transfer");
             if (!$block_info) {
                 continue;
             }
@@ -122,6 +131,15 @@ class UgListenController extends Controller
 
             //更新数据库
             if(!Trade::updateBlockAndStatusBytxid($info["app_txid"], $trade_info["blockNumber"], Trade::SUCCESS)){
+                echo "更新数据库交易表失败".PHP_EOL;
+                continue;
+            }
+
+            /**
+             * 根据type更新表，记录类型；0内部交易转账；1创建红包交易；2拆红包交易转账；3退换红包交易转账
+             * 根据txid，更新status、time
+             */
+            if (!Operating::updateDataBytxid($info['type'], $info["app_txid"])) {
                 echo "更新数据库失败".PHP_EOL;
                 continue;
             }
@@ -148,12 +166,16 @@ class UgListenController extends Controller
         {
             //根据交易id获取订单信息
             $block_info = Operating::txidByTransactionInfo(Yii::$app->params['ug']["ug_host"], "eth_getTransactionByHash", [$v["owner_txid"]]);
+            //写log
+            OutputHelper::log("ETH-UG确认脚本: " . $v["owner_txid"] . "--链上返回信息: " . json_encode($block_info),"cross_chain");
             if (!$block_info) {
                 echo "监听失败".PHP_EOL;
                 continue;
             }
             //多次判断是否上块
             $receipt_info = CurlRequest::ChainCurl(Yii::$app->params['ug']["ug_host"],"eth_getTransactionReceipt",[$v["owner_txid"]]);
+            //写log
+            OutputHelper::log("ETH-UG多次确认脚本: " . $v["owner_txid"] . "--链上返回信息: " . $receipt_info,"cross_chain");
             if(!$receipt_info){
                 echo "监听确认失败".PHP_EOL;
                 continue;
@@ -177,4 +199,79 @@ class UgListenController extends Controller
         }
         echo "ETH转账UG确认结束".time().PHP_EOL;
     }
+
+    /**
+     * 检查红包超过24小时后过期操作
+     * 1.查询数据库状态为(2)创建成功的数据，获取create_succ_time
+     * 2.create_succ_time + 24小时 < time() 过期，修改红包表和红包记录表状态为已过期
+     */
+    public function actionListenRedPacketCreateSuccTime()
+    {
+        echo "红包监听过期开始".time().PHP_EOL;
+
+        //获取数据库中红包创建成功的数据
+        $unsucc_info = RedPacket::getRedPacketList(RedPacket::CREATE_REDPACKET_SUCC);
+        if (!$unsucc_info) {
+            //OutputHelper::writeLog(dirname(__DIR__) . "/locklog/ugTradeListen.log",json_encode(["status" => Operating::LOG_UNLOCK_STATUS]));
+            echo "暂无红包数据！".PHP_EOL;die;
+        }
+
+        foreach ($unsucc_info as $info) {
+            //create_succ_time + 86400 < time() 过期
+            if (($info['create_succ_time'] + 86400) <= time()) {
+                //检索该红包是否存在记录
+                $list = RedPacketRecord::find()->where(['rid' => $info['id']])->andWhere(['!=', 'status', RedPacketRecord::EXCHANGE_SUCC])->asArray()->all();
+                if (count($list) > 0) {
+                    //根据红包id，更新红包记录表状态为已过期
+                    if (!RedPacketRecord::updateAll(["status" => RedPacketRecord::EXPIRED], "rid = " . $info['id'] . " and status != " . RedPacketRecord::EXCHANGE_SUCC)) {
+                        echo "更新数据库红包记录表失败".PHP_EOL;
+                        continue;
+                    }
+
+                    //退还过期红包金额给发红包账户
+                    $amount = 0;
+                    foreach ($list as $k => $v) {
+                        $amount += $v['amount']; //退还总金额
+                        $v['address'] = $v['from_address'];
+                        $v['app_txid'] = ''; //空的
+                        $result[] = $v;
+                    }
+
+                    //根据红包id，更新红包表状态为过期，修改退还金额
+                    if (!RedPacket::updateAll(["back_amount" => $amount, "status" => RedPacket::REDPACKET_EXPIRED], ['id' => $info['id']])) {
+                        echo "更新数据库红包表失败".PHP_EOL;
+                        continue;
+                    }
+
+                    //组装签名所需数据
+                    $send_sign_data = Operating::getNonceAssembleData($result, Yii::$app->params["ug"]["gas_price"], Yii::$app->params["ug"]["ug_host"], "eth_getTransactionCount", [Yii::$app->params["ug"]["red_packet_address"], "pending"]);
+
+                    //根据组装数据获取签名且广播交易
+                    $res_data = Operating::getSignatureAndBroadcast(Yii::$app->params["ug"]["ug_sign_red_packet"], $send_sign_data, Yii::$app->params["ug"]["ug_host"], "eth_sendRawTransaction");
+
+                    if (isset($res_data['error'])) {
+                        echo "广播交易失败".PHP_EOL;
+                        continue;
+                    }
+
+                    //根据txid去块上确认
+                    $trade_info['blockNumber'] = 0;
+                    $tradeStatus = Trade::CONFIRMED;
+                    $trade_info = Operating::txidByTransactionInfo(Yii::$app->params["ug"]["ug_host"], "eth_getTransactionReceipt", [$res_data["result"]]);
+                    if ($trade_info) {
+                        //截取blockNumber
+                        $trade_info = Operating::substrHexdec($trade_info["blockNumber"]);
+                        $tradeStatus = Trade::SUCCESS;
+                    }
+                    //插入交易记录表
+                    if (!Trade::insertData($res_data["result"], Yii::$app->params["ug"]["owner_address"], $result["from_address"], $amount, $tradeStatus, Trade::BACK_REDPACKET, $trade_info['blockNumber'])) {
+                        echo "插入交易记录表失败".PHP_EOL;
+                    }
+                }
+            }
+        }
+
+        echo "红包监听过期结束".time().PHP_EOL;
+    }
+
 }

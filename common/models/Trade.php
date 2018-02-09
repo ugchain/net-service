@@ -10,6 +10,10 @@ class Trade extends ActiveRecord
     const CONFIRMED = 0;
     const SUCCESS = 1;
     const FAILED = 2;
+    const INTERNAL = 0;  //内部转账交易
+    const CREATE_REDPACKET = 1;  //创建红包交易转账
+    const OPEN_REDPACKET = 2;  //拆红包交易转账
+    const BACK_REDPACKET = 3;  //退还红包交易转账
 
     /**
      * @inheritdoc
@@ -23,14 +27,14 @@ class Trade extends ActiveRecord
      * 参数规则
      * @inheritdoc
      */
-    public function rules()
-    {
-        return [
-            [['status', 'addtime','trade_time'], 'integer'],
-            [['from_address','to_address','amount','addtime'], 'required'],
-            [['app_txid','ug_txid','from_address','to_address','amount','blocknumber'], 'string'],
-        ];
-    }
+//    public function rules()
+//    {
+//        return [
+//            [['type', 'status', 'addtime', 'trade_time'], 'integer'],
+//            [['from_address', 'to_address', 'amount', 'addtime'], 'required'],
+//            [['app_txid', 'ug_txid', 'from_address', 'to_address', 'amount', 'blocknumber'], 'string'],
+//        ];
+//    }
 
     /**
      * 获取交易详细信息
