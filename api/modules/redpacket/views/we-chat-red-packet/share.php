@@ -23,7 +23,7 @@
         <h1 class="packet-title">"<?= $redpacketInfo['title'];?>"</h1>
         <div class="red-img" >
             <div class="get-ugc" style="display: none;">
-                <p id="getugc-num"><?= $record_amount;?>33</p>
+                <p id="getugc-num"><?= $record_amount;?></p>
                 <p>UGC</p>
             </div>
             <div id="packet-close"> </div>
