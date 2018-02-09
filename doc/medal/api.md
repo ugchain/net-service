@@ -6,7 +6,7 @@ doc/api.md
 - `http://t9-cname.ugchain.com`
 
 ### 生产环境host
-- `http://app.ugchain.com`
+- `http://ugc.ugchain.com`
 
 ### 创建账户(暂无使用)
 **请求URL：** 
