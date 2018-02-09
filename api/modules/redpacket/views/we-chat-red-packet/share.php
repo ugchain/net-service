@@ -246,7 +246,9 @@
                         </div>
                         <div class="weui-media-box__bd">
                             <div class="info-l">
-                                <p id="username"><?=$redPacketRecord['wx_name'] ?></p>
+                                <p id="username">
+                                    <?=$redPacketRecord['wx_name'] ?>    
+                                </p>
                                 <p class="time">
                                     <?=$redPacketRecord['time'] ?>
                                 </p>
