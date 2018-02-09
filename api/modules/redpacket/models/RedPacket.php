@@ -24,7 +24,7 @@ class RedPacket extends \common\models\RedPacket
 
         //过滤不存在数据
         if (!$result) {
-            die("");
+            return null;
         }
 
         //红包详情
