@@ -20,7 +20,7 @@ class RedpacketController extends  Controller
 
     public $enableCsrfValidation = false;
 
-    //红包获取最大最小值
+    //红包获取最小值和
     const MIN = 0.01;
     public $REPACK_STATUS;
     /**
@@ -79,8 +79,12 @@ class RedpacketController extends  Controller
                 $redis_data[$i] = $average_amount;
             }
         }else{
+            $min = self::MIN;
+            if($average_amount > self::MIN){
+                $min = mt_rand(self::MIN,$average_amount);
+            }
             //随机红包分配
-            $redis_data = self::rankRedpacket($amount,$data["quantity"],self::MIN);
+            $redis_data = self::rankRedpacket($amount,$data["quantity"],$min);
         }
         //红包金额过小时返回返回
         if(!$redis_data){
