@@ -149,11 +149,12 @@ class RedPacketRecord extends \common\models\RedPacketRecord
         $info['amount'] = !empty($record->amount) ? OutputHelper::fromWei($record->amount) : '';
 
         //如果当前用户与其他用户红包都被提取成功则状态为已结束
-        $receieNotSuccessNums = self::find()->where("rid=$rid and status!=4")->count();
-        if ($redPacket->already_received_quantity >= $redPacket->quantity && !$receieNotSuccessNums) {
-            $info['state'] = 4;
-            return $info;
-        }
+        //需求更改，临时保存，下次迭代删除 [2018 02-09 am]
+        //$receieNotSuccessNums = self::find()->where("rid=$rid and status!=4")->count();
+        //if ($redPacket->already_received_quantity >= $redPacket->quantity && !$receieNotSuccessNums) {
+            //$info['state'] = 4;
+            //return $info;
+        //}
 
         //判断当前红包与当前用户领取状态
         if (empty($record)) {
