@@ -11,17 +11,22 @@ $(function(){
 
 	var clipboard2 = new Clipboard('.btn2');
 	clipboard2.on('success', function(e) {
-		var num = 3
-		time = setInterval(function() {
-			$.toast("复制成功，" + num +"s后即将为您跳转", "text");
-            num--;
-	        if(num == 0){          
-	            clearInterval(time);
-	        }
-		}, 1000);
+		// var num = 3
+		$.toast("复制成功", "text");
 		setTimeout(function() {
 			window.location.href = 'http://download.ugchain.com/ugcApp/'
-		}, 3000)  
+		}, 1000)  
+
+		// time = setInterval(function() {
+		// 	$.toast("复制成功，" + num +"s后即将为您跳转", "text");
+  	//        num--;
+	 //        if(num == 0){          
+	 //            clearInterval(time);
+	 //        }
+		// }, 1000);
+		// setTimeout(function() {
+		// 	window.location.href = 'http://download.ugchain.com/ugcApp/'
+		// }, 3000)  
 	})
 
 	clipboard2.on('error', function(e) {
