@@ -7,7 +7,7 @@ return [
         "gas_limit"=>150000,
         "ug_host"    => "http://47.104.166.51:22000",
         "ug_sign_url" =>"http://118.190.137.150:10000/ug/defreeze",//ug签名
-        "owner_address" => "0x3a96700a6cce699c8219332202eca67b1442fbe1",
+        "owner_address" => "0xed9d02e382b34818e88b88a309c7fe71e65f419d",
         "red_packet_address" => "0x9d431068dbdffdbc0ef7d431a7f14665c1e00674",//红包平台地址
         "ug_sign_red_packet" => "http://118.190.137.150:10000/ug/transfer",//ug红包签名
     ],
