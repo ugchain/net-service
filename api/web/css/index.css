@@ -362,7 +362,7 @@ body{
 	left: 0;
 	background: rgba(0,0,0,.5);
 	text-align: center;
-	display: none;
+	/*display: none;*/
 }
 .mask .mask-img{
 	width: 230px;
@@ -428,6 +428,16 @@ body{
 	}
 	.mask .download-app {
 		left: 110px;
+		
+	}
+}
+
+@media screen and (max-width:360px){
+	.mask button{
+		left: 87px;
+	}
+	.mask .download-app {
+		left: 105px;
 		
 	}
 }
