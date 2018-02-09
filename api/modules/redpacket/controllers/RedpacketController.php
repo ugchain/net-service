@@ -81,7 +81,8 @@ class RedpacketController extends  Controller
         }else{
             $min = self::MIN;
             if($average_amount > self::MIN){
-                $min = mt_rand(self::MIN,$average_amount);
+                $min = mt_rand(self::MIN,round($average_amount ,2));
+                $min =  $min ? $min : self::MIN;
             }
             //随机红包分配
             $redis_data = self::rankRedpacket($amount,$data["quantity"],$min);

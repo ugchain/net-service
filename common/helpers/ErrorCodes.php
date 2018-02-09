@@ -39,7 +39,8 @@ class ErrorCodes
         ROSE_THEME_NOT_EXISTS                                       =   20119,//玫瑰主题未获取到
         RED_PACKET_QUANTITY_EXCEEDED                                =   20120,//红包数量超出限制
         RED_PACKET_TITLE_EXCEEDED                                   =   20121,//红包名称超出限制
-        RED_PACKET_OPEN                                             =   20122;//您已经拆过这个红包啦
+        RED_PACKET_OPEN                                             =   20122,//您已经拆过这个红包啦
+        RED_PACKET_NULL                                             =   20123;//红包已被抢光
 
 
 
@@ -75,6 +76,7 @@ class ErrorCodes
         self::RED_PACKET_TITLE_EXCEEDED                             =>'红包名称超出限制',
         self::RED_PACKET_OPEN                                       =>'您已经拆过这个红包啦',
         self::REQUEST_FAILED                                        =>'请求失败',
+        self::RED_PACKET_NULL                                       =>'红包已被抢光',
     ];
 
 }
