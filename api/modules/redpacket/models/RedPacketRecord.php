@@ -98,18 +98,18 @@ class RedPacketRecord extends \common\models\RedPacketRecord
             ->where("rid=".$this->rid." and openid='".$this->openid."'")
             ->count();
         if ($redPacketRecordCountForCurrentOpenid != 0) {
-            throw new Exception();
+            throw new Exception(\common\helpers\ErrorCodes::RED_PACKET_OPEN);
         }
 
         //红包是否以被领光
         $redPacket = RedPacket::findOne($this->rid);
         if ($redPacket->already_received_quantity >= $redPacket->quantity) {
-            throw new Exception();
+            throw new Exception(\common\helpers\ErrorCodes::RED_PACKET_NULL);
         }
 
         //如果红包状态为0创建红包和1链上失败则不能领取
         if ($redPacket->status == 0 || $redPacket->status == 1) {
-            throw new Exception();
+            throw new Exception(\common\helpers\ErrorCodes::RED_PACKET_GRAD_FAIL);
         }
 
         //去redis获取红包金额
@@ -149,11 +149,12 @@ class RedPacketRecord extends \common\models\RedPacketRecord
         $info['amount'] = !empty($record->amount) ? OutputHelper::fromWei($record->amount) : '';
 
         //如果当前用户与其他用户红包都被提取成功则状态为已结束
-        $receieNotSuccessNums = self::find()->where("rid=$rid and status!=4")->count();
-        if ($redPacket->already_received_quantity >= $redPacket->quantity && !$receieNotSuccessNums) {
-            $info['state'] = 4;
-            return $info;
-        }
+        //需求更改，临时保存，下次迭代删除 [2018 02-09 am]
+        //$receieNotSuccessNums = self::find()->where("rid=$rid and status!=4")->count();
+        //if ($redPacket->already_received_quantity >= $redPacket->quantity && !$receieNotSuccessNums) {
+            //$info['state'] = 4;
+            //return $info;
+        //}
 
         //判断当前红包与当前用户领取状态
         if (empty($record)) {

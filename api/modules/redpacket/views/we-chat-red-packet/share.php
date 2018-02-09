@@ -6,7 +6,7 @@
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
     <meta http-equiv="Pragma" content="no-cache" />
     <meta http-equiv="Expires" content="0" />
-    <title></title>
+    <title>领取UGC红包</title>
     <link rel="stylesheet" href="/css/weui.min.css">
     <link rel="stylesheet" href="/css/jquery-weui.min.css">
     <link rel="stylesheet" type="text/css" href="/css/index.css">
@@ -31,32 +31,33 @@
 
             <script>
                 var theme_id = '<?= $redpacketInfo['theme_id'];?>'
+                // var theme_id = 4
                 var packet_name
                 if(theme_id == 1 ){
                     packet_name = 'putong'
-                    $('.top').css('background-size','100% 70%')
                     $('#packet-close').css({
                         'height': '400px',
-                        'margin-top': '0px',
-                        'margin-bottom': '10px',
-                        'margin-left': '10px'
+                        'margin-top': '-95px',
+                        'margin-bottom': '-10px',
+                        'margin-left': '6px'
                     });
-                    $('.top').css('background-size','100% 80%')
+                    $('.top').css('background-size','100% 72%')
                     $('#packet-open').css({
-                        'height': '400px',
-                        'padding-top': '20px',
-                        'margin-bottom': '20px'
+                        'height': '385px',
+                        'padding-top': '75px',
+                        'margin-bottom': '10px'
                     });
                     $('.get-ugc').css({
-                        'top': '135px',
+                        'top': '175px',
                         'left': '-2px'
                     })
                 }else if(theme_id == 2 ){
                     packet_name = 'xinnian'
-                    $('.top').css('background-size','100% 80%')
+                    $('.top').css('background-size','100% 74%')
                     $('#packet-close').css({
                         'height': '470px',
-                        'margin-top': '-60px'
+                        'margin-top': '-115px',
+                        'margin-bottom': '-15px'
                     });
                     $('#packet-open').css({
                         'height': '470px',
@@ -68,7 +69,7 @@
                     })
                 }else if(theme_id == 3 ){
                     packet_name = 'yuhaihai'
-                    $('.top').css('background-size','100% 80%')
+                    $('.top').css('background-size','100% 75%')
                     $('#packet-close').css({
                         'height': '550px',
                         'margin-top': '-145px',
@@ -76,24 +77,24 @@
                     });
                     $('#packet-open').css({
                         'height': '550px',
-                        'margin-top': '-60px',
+                        'margin-top': '-75px',
                         'margin-bottom': '-40px',
                     });
                     $('.get-ugc').css({
-                        'top': '150px',
+                        'top': '160px',
                         'left': '5px'
                     })
                 }else if(theme_id == 4 ){
                     packet_name = 'jiucai'
-                    $('.top').css('background-size','100% 80%')
+                    $('.top').css('background-size','100% 72%')
                      $('#packet-close').css({
                         'height': '530px',
-                        'margin-top': '-80px',
+                        'margin-top': '-170px',
                         'margin-bottom': '-40px',
                     });
                     $('#packet-open').css({
                         'height': '510px',
-                        'margin-top': '-80px',
+                        'margin-top': '-90px',
                         'margin-bottom': '-40px',
                     });
                     $('.get-ugc').css({
@@ -102,16 +103,16 @@
                     })
                 }else if(theme_id == 5 ){
                     packet_name = 'baoerye'
-                    $('.top').css('background-size','100% 76%')
+                    $('.top').css('background-size','100% 74%')
                     $('#packet-close').css({
                         'height': '440px',
-                        'margin-top': '-40px',
-                        'margin-bottom': '10px',
-                        'margin-left': '15px',
+                        'margin-top': '-60px',
+                        'margin-bottom': '-25px',
+                        'margin-left': '17px',
                     });
                     $('#packet-open').css({
                         'height': '440px',
-                        'margin-top': '-10px',
+                        'margin-top': '-65px',
                         'margin-bottom': '10px',
                         'margin-left': '15px',
                     });
@@ -120,16 +121,16 @@
                         'left': '6px'
                     })
                 }else if(theme_id == 6 ){
-                    $('.top').css('background-size','100% 77%')
+                    $('.top').css('background-size','100% 73%')
                     packet_name = 'yifeichongtian'
                     $('#packet-close').css({
                         'height': '440px',
-                        'margin-top': '-0px',
-                        'margin-bottom': '-10px'
+                        'margin-top': '-80px',
+                        'margin-bottom': '-20px'
                     });
                     $('#packet-open').css({
                         'height': '440px',
-                        'margin-top': '-0px',
+                        'margin-top': '-45px',
                         'margin-bottom': '-10px',
                     });
                      $('.get-ugc').css({
@@ -308,7 +309,7 @@
 <script src="http://res.wx.qq.com/open/js/jweixin-1.2.0.js"></script>
 <script>
     var state = <?= $state ?>;
-    // var state = 4;
+    // var state = 4
     var rid = "<?=$redpacketInfo['id'] ?>";
     var openid = "<?=$openid ?>";
     var nickname = "<?=$nickname ?>";

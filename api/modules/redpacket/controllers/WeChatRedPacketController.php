@@ -146,7 +146,7 @@ class WeChatRedPacketController extends Controller
 
             //验证参数
             if(!($model->openid && $model->rid && $model->wx_name && $model->wx_avatar)){
-                outputHelper::ouputErrorcodeJson(\common\helpers\ErrorCodes::PARAM_NOT_EXIST);
+                throw new Exception(\common\helpers\ErrorCodes::PARAM_NOT_EXIST);
             }
 
             //获得红包金额并累加领取次数
@@ -162,7 +162,7 @@ class WeChatRedPacketController extends Controller
             $tr->commit();
         } catch (Exception $e){
             $tr->rollback();
-            outputHelper::ouputErrorcodeJson(\common\helpers\ErrorCodes::RED_PACKET_GRAD_FAIL);
+            outputHelper::ouputErrorcodeJson($e->getMessage());
         }
         outputHelper::ouputErrorcodeJson(\common\helpers\ErrorCodes::SUCCESS, ['code' => $model->code]);
     }

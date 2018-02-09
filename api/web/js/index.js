@@ -46,7 +46,7 @@ $(function(){
 		})
 		$('.top').css({
 			"background": "url('/img/unreceived.png') no-repeat",
-			"background-size": '100%',
+			"background-size": '100% 100%',
 		})
 		$('.unreceived').show()
 		$('.received').css({
@@ -80,13 +80,15 @@ $(function(){
 	                if(data.code == 0){
 	                	mask()
 	                	$('#mask-copy').val(data.data.code)
+	                }else {
+	                	$.toast(data.message, "text");
 	                }
 	            },
 	            error: function() {
 	            	$('#get-packet-btn').css({
 						'background':'#fcd588'
 					})
-	            	$.toast("您的网络有问题", "text");
+	            	$.toast("请求超时", "text");
 	            }
 	        })
 	    });	
@@ -111,20 +113,23 @@ $(function(){
 	                if(data.code == 0){
 	                	mask()
 	                	$('#mask-copy').val(data.data.code)
+	                }else {
+	                	$.toast(data.message, "text");
 	                }
 	            },
 	            error: function() {
 	            	$('#get-packet-btn').css({
 						'background':'#fcd588'
 					})
-	            	$.toast("您的网络有问题", "text");
+	            	$.toast("请求超时", "text");
 	            }
 	        })
 		})
+
 	}else if(state == 1){
 		// 已领取
 		$('.received').show().css('opacity','1')
-		$('.top').css('background-size', '100% 76%');
+		// $('.top').css('background-size', '100% 70%');
 		$('.finished').hide()
 		$('#packet-open').hide()
 			.siblings('.get-ugc').hide()
@@ -140,19 +145,18 @@ $(function(){
 		$('.exchanged').show()
 		$('.received').hide()
 		$('#packet-close').hide()
-		$('#packet-open').show().css('margin-top','-35px')
+		// $('#packet-open').show().css('margin-top','-45px')
+		 $('#packet-open').show()
 		$('.state-info').show().css('margin-top','-40px')
 		$('.get-ugc').show()
 	}else if(state == 3){
 		// 已领光
-		$('.finished').show()
+		$('.top').css('background-size','100% 101%')
+		// $('.finished').show()
 		$('.received').hide()
 		$('#packet-open').hide()
 			.siblings('.get-ugc').hide()
 			.siblings('#packet-close').show()
-			.css({
-				'margin-top': '-80px',
-			})
 		$('.state-info').show()
 		$('.state-info').find('.state-tips')
 			.show()
@@ -160,18 +164,17 @@ $(function(){
 			.siblings('').hide()
 	}else if(state == 4){
 		// 已结束
-		var str = '于'+ finish_time +'结束'
-		$('.top').css('background-size', '100% 84%');
-		$('.finished').show()
+		// var str = '于'+ finish_time +'结束'
+		$('.top').css('background-size', '100% 102%');
+		// $('.finished').show()
 		$('.received').hide()
 		$('#packet-open').hide()
 			.siblings('.get-ugc').hide()
 			.siblings('#packet-close').show()
 		$('.state-info').show().css({
 				'padding-top': '10px'
-			}).find('.state-time')
-				.text(str)
-				.siblings().hide()
+			}).find('.state-time').siblings().hide()
+			// })
 		$('.state-info').find('.state-tips')
 			.show()
 			.text('红包已结束')
