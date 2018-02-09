@@ -41,6 +41,10 @@ class RedpacketController extends  Controller
     {
         //接收参数&&验证参数
         $data = self::getParams();
+        //检查是否有重复的txid
+        if(RedPacket::getRedListByTxid($data["hash"])){
+            outputHelper::ouputErrorcodeJson(\common\helpers\ErrorCodes::RED_PACKET_REPEAT);
+        }
         //创建红包
         $packet_id = RedPacket::saveRedPacket($data);
         if(!$packet_id){
@@ -91,6 +95,8 @@ class RedpacketController extends  Controller
         if(!$redis_data){
             outputHelper::ouputErrorcodeJson(\common\helpers\ErrorCodes::RED_PACKET_QUANTITY_EXCEEDED);
         }
+        //打乱排序规则
+        shuffle($redis_data);
         $this->REPACK_STATUS = 0;
         //存放redis
         $rewardData = new RewardData();
