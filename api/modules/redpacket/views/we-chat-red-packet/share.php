@@ -30,8 +30,8 @@
             <div id="packet-open"></div>
 
             <script>
-                var theme_id = '<?= $redpacketInfo['theme_id'];?>'
-                // var theme_id = 6
+                // var theme_id = '<?= $redpacketInfo['theme_id'];?>'
+                var theme_id = 4
                 var packet_name
                 if(theme_id == 1 ){
                     packet_name = 'putong'
