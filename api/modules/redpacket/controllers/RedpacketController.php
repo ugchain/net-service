@@ -83,13 +83,8 @@ class RedpacketController extends  Controller
                 $redis_data[$i] = $average_amount;
             }
         }else{
-            $min = self::MIN;
-            if($average_amount > self::MIN){
-                $min = mt_rand(self::MIN,round($average_amount ,2));
-                $min =  $min ? $min : self::MIN;
-            }
             //随机红包分配
-            $redis_data = self::rankRedpacket($amount,$data["quantity"],$min);
+            $redis_data = self::rankRedpacket($amount,$data["quantity"]);
         }
         //红包金额过小时返回返回
         if(!$redis_data){
@@ -191,10 +186,15 @@ class RedpacketController extends  Controller
     /**
      * 批量生成红包值
      */
-    private function rankRedpacket($remainMoney,$remainSize,$min)
+    private function rankRedpacket($remainMoney,$remainSize)
     {
         $size = $remainSize;
         for ($i = 0; $i < $size; $i++) {
+            $arv = round($remainMoney / $remainSize, 2);
+            $min = mt_rand(self::MIN,$arv);
+            if($min <= self::MIN){
+                $min = self::MIN;
+            }
             $data[$i] = self::random_red($remainMoney,$remainSize,$min);
             // 红包中剩余的钱数
             $remainMoney = round($remainMoney - $data[$i], 2);
