@@ -98,18 +98,18 @@ class RedPacketRecord extends \common\models\RedPacketRecord
             ->where("rid=".$this->rid." and openid='".$this->openid."'")
             ->count();
         if ($redPacketRecordCountForCurrentOpenid != 0) {
-            throw new Exception();
+            throw new Exception(\common\helpers\ErrorCodes::RED_PACKET_OPEN);
         }
 
         //红包是否以被领光
         $redPacket = RedPacket::findOne($this->rid);
         if ($redPacket->already_received_quantity >= $redPacket->quantity) {
-            throw new Exception();
+            throw new Exception(\common\helpers\ErrorCodes::RED_PACKET_NULL);
         }
 
         //如果红包状态为0创建红包和1链上失败则不能领取
         if ($redPacket->status == 0 || $redPacket->status == 1) {
-            throw new Exception();
+            throw new Exception(\common\helpers\ErrorCodes::RED_PACKET_GRAD_FAIL);
         }
 
         //去redis获取红包金额
