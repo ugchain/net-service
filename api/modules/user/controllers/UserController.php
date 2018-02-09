@@ -132,7 +132,8 @@ class UserController extends  Controller
         $list = array_merge($rose_list['list'], $medal_list['list']);
 
         if (empty($list)) {
-            outputHelper::ouputErrorcodeJson(\common\helpers\ErrorCodes::SUCCESS, $list);
+            $result['list'] = $list;
+            outputHelper::ouputErrorcodeJson(\common\helpers\ErrorCodes::SUCCESS, $result);
         }
         //排序字段
         $sort = array(

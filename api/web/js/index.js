@@ -61,8 +61,34 @@ $(function(){
 		$('.state-info').hide()
 
 
-		$('#packet-close').on('click', function() {
-	    	mask()
+		$('#packet-close').one('click', function() {
+	    	$('#get-packet-btn').css({
+				'background':'rgba(255,255,255,.3)'
+			})
+	        $.ajax({
+	            url: 'grad-a-redpacket',
+	            type: 'post',
+	            dataType: 'json',
+	            data: {
+	                rid: rid,
+	                openid: openid,
+	                nickname: nickname,
+	                headimgurl: headimgurl,
+	                expire_time: expire_time
+	            },
+	            success: function(data){
+	                if(data.code == 0){
+	                	mask()
+	                	$('#mask-copy').val(data.data.code)
+	                }
+	            },
+	            error: function() {
+	            	$('#get-packet-btn').css({
+						'background':'#fcd588'
+					})
+	            	$.toast("您的网络有问题", "text");
+	            }
+	        })
 	    });	
 
 		// 获取口令 传入微信用户信息
