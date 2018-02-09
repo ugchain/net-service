@@ -259,4 +259,14 @@ class RedPacket extends \common\models\RedPacket
 
         return $redPacketInfo;
     }
+
+    /**
+     * txid获取是否存在
+     * @param $txid
+     * @return array|null|\yii\db\ActiveRecord
+     */
+    public static function getRedListByTxid($txid)
+    {
+        return RedPacket::find()->where(["txid"=>$txid])->asArray()->one();
+    }
 }
