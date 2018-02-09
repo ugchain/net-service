@@ -48,7 +48,7 @@ body{
 	text-align: center;
 	background: url('../img/top-bg.png') no-repeat;
 	background-size: 100%;
-	padding: 36px 0 25px 0;
+	padding: 15px 0 25px 0;
 	overflow: hidden;
 }
 
@@ -93,6 +93,7 @@ body{
 .top .red-img .state-info {
 	margin-top: -12px;
 	margin-bottom: 10px;
+	margin-left: 10px;
 	display: none;
 }
 .top .red-img .state-info .state-tips{
@@ -144,10 +145,10 @@ body{
 .top .received{
 	width: 100%;
 	position: relative;
-	padding-top: 35px;
+	padding-top: 15px;
 	opacity: 0;
 	overflow: hidden;
-	padding-bottom: 10px;
+	padding-bottom: 13px;
 }
 
 .top .received .kl-bg{
