@@ -20,8 +20,7 @@ class RedpacketController extends  Controller
 
     public $enableCsrfValidation = false;
 
-    //红包获取最大最小值
-    const MAX = 1.4;
+    //红包获取最小值和
     const MIN = 0.01;
     public $REPACK_STATUS;
     /**
@@ -80,10 +79,13 @@ class RedpacketController extends  Controller
                 $redis_data[$i] = $average_amount;
             }
         }else{
+            $min = self::MIN;
+            if($average_amount > self::MIN){
+                $min = mt_rand(self::MIN,round($average_amount ,2));
+                $min =  $min ? $min : self::MIN;
+            }
             //随机红包分配
-            $max = $average_amount * self::MAX;
-            $min = $average_amount * self::MIN;
-            $redis_data = self::random_red($amount,$data["quantity"],$max,$min);
+            $redis_data = self::rankRedpacket($amount,$data["quantity"],$min);
         }
         //红包金额过小时返回返回
         if(!$redis_data){
@@ -181,22 +183,45 @@ class RedpacketController extends  Controller
     }
 
     /**
+     * 批量生成红包值
+     */
+    private function rankRedpacket($remainMoney,$remainSize,$min)
+    {
+        $size = $remainSize;
+        for ($i = 0; $i < $size; $i++) {
+            $data[$i] = self::random_red($remainMoney,$remainSize,$min);
+            // 红包中剩余的钱数
+            $remainMoney = round($remainMoney - $data[$i], 2);
+            // 红包剩余的个数
+            $remainSize =  $remainSize - 1;
+        }
+        return $data;
+    }
+    /**
      * 生成随机红包算法
      */
-    private function random_red($total, $num, $max, $min)
+    private function random_red($remainMoney, $remainSize,  $min)
     {
-        #总共要发的红包金额，留出一个最大值;
-        $total = $total - $max;
-        $reward = new Reward();
-        $result_merge = $reward->splitReward($total, $num, $max - 0.01, $min);
-        sort($result_merge);
-        $result_merge[1] = $result_merge[1] + $result_merge[0];
-        $result_merge[0] = $max * 100;
-        foreach ($result_merge as &$v) {
-            $v = $v / 100;
-            $v = round($v,2);
+        //判断总量*最小钱数小于总钱数
+        if(round($remainSize * $min, 2) > round($remainMoney, 2)){
+            return false;
         }
-        return $result_merge;
+        //最大值
+        $max = $remainMoney - $min * $remainSize;
+        //数量/2
+        $k = $remainSize / 2 ;
+        if($remainSize <= 2){
+            $k = $remainSize;
+        }
+        $max = $max / $k;
+        $money = ($min * 100 + mt_rand(0, 1) * ($max * 100 - $min * 100 +1));
+
+        if($remainSize != 1){
+            $money = $money / 100;
+        }else{
+            $money = $remainMoney;
+        }
+        return round($money, 2);
     }
 
     /**

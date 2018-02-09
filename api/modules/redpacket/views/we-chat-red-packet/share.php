@@ -10,12 +10,12 @@
     <link rel="stylesheet" href="/css/weui.min.css">
     <link rel="stylesheet" href="/css/jquery-weui.min.css">
     <link rel="stylesheet" type="text/css" href="/css/index.css">
-    <script src="/js/vconsole.min.js"></script>
+    <!-- <script src="/js/vconsole.min.js"></script> -->
     <script src="/js/spine-widget.js"></script>
     <script src="/js/jquery-3.3.1.min.js"></script>
-    <script>
+  <!--   <script>
         var vConsole = new VConsole();
-    </script>
+    </script> -->
 </head>
 <body>
     <!-- 头部红包 -->
@@ -23,7 +23,7 @@
         <h1 class="packet-title">"<?= $redpacketInfo['title'];?>"</h1>
         <div class="red-img" >
             <div class="get-ugc" style="display: none;">
-                <p id="getugc-num"><?= $record_amount;?>44</p>
+                <p id="getugc-num"><?= $record_amount;?></p>
                 <p>UGC</p>
             </div>
             <div id="packet-close"> </div>
@@ -158,7 +158,7 @@
 					恭喜您抢到
 				</span>
                 <span class="state-getugc">
-    				<?= $record_amount;?>44
+    				<?= $record_amount;?>
     			</span>
                 <span class="ugc-unit">
     					个UGC
@@ -294,9 +294,10 @@
                 <img src="/img/logo.png">
                 <a href="http://download.ugchain.com/ugcApp/">点击下载“UGC”</a>
             </div>
+
             <button class="btn2" data-clipboard-action="copy" data-clipboard-target="#mask-copy">
             </button>
-            <input id="mask-copy" type="text" readonly="true">     
+            <input id="mask-copy" type="text" value="" readonly="true">     
         </div>
         <p><img src="/img/close.png" class="close"></p>
     </div>

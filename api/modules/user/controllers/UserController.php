@@ -132,7 +132,8 @@ class UserController extends  Controller
         $list = array_merge($rose_list['list'], $medal_list['list']);
 
         if (empty($list)) {
-            outputHelper::ouputErrorcodeJson(\common\helpers\ErrorCodes::SUCCESS, $list);
+            $result['list'] = $list;
+            outputHelper::ouputErrorcodeJson(\common\helpers\ErrorCodes::SUCCESS, $result);
         }
         //排序字段
         $sort = array(
@@ -151,6 +152,7 @@ class UserController extends  Controller
 
         foreach ($list as $k => $v) {
             $list[$k]['type'] = isset($v['medal_name'])?"1":"2";
+            $list[$k]['name'] = isset($v['medal_name'])?$v['medal_name']:$v['rose_name'];
         }
 
         $result['list'] = $list;
