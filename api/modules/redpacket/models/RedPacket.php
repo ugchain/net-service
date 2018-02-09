@@ -22,6 +22,11 @@ class RedPacket extends \common\models\RedPacket
     {
         $result = self::findOne($id);
 
+        //过滤不存在数据
+        if (!$result) {
+            return null;
+        }
+
         //红包详情
         $redpacketInfo = [
             'id' => $result->id,
