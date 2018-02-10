@@ -70,6 +70,8 @@ class WeChatRedPacketController extends Controller
      */
     public $enableCsrfValidation = false;
 
+    public $maxRepeatTimes = 2;
+
     /**
      * 分享微信红包的url
      * @return string
@@ -139,7 +141,9 @@ class WeChatRedPacketController extends Controller
      */
     public function actionGradARedpacket()
     {
-        $tr = Yii::$app->db->beginTransaction();
+        //开启事务
+        $transaction = Yii::$app->db->beginTransaction();
+
         try {
             $model = new RedPacketRecord();
             $model->openid = Yii::$app->request->post('openid', '');
@@ -152,21 +156,39 @@ class WeChatRedPacketController extends Controller
                 throw new Exception(\common\helpers\ErrorCodes::PARAM_NOT_EXIST);
             }
 
-            //获得红包金额并累加领取次数
-            $model->setInfoWithRedpacket();
-            //生成红包口令
-            $model->grenerateRedpacketCode();
-            //红包获得时间
-            $model->addtime = time();
-            //过滤emoji
-            $model->wx_name = $this->filterEmoji($model->wx_name);
-
-            $model->save();
-            $tr->commit();
+            //redis锁
+            $redis = \Yii::$app->redis;
+            $lock = "redpacket:lock:$model->rid";
+            $repeatTimes = 0;
+            //`gote repeat;`，重复执行抢红包
+            repeat:
+            //抢占当前红包的redis锁
+            if ($redis->set($lock, 1, "nx", "ex", 5)) {
+                $model->setInfoWithRedpacket();
+                $model->grenerateRedpacketCode();
+                $model->addtime = time();
+                $model->wx_name = $this->filterEmoji($model->wx_name);
+                $model->save();
+                $transaction->commit();
+                //解开当前红包的redis锁
+                $redis->del($lock);
+            }else {
+                //超过最大重复数则提示信息给用户
+                if ($repeatTimes >= $this->maxRepeatTimes) {
+                    throw new Exception(\common\helpers\ErrorCodes::RED_PACKET_REPEAT_MAX);
+                }
+                //等待两秒重复抢当前红包
+                sleep(2);
+                $repeatTimes += 1;
+                goto repeat;
+            }
         } catch (Exception $e){
-            $tr->rollback();
+            //解开当前红包的redis锁
+            $redis->del($lock);
+            $transaction->rollback();
             outputHelper::ouputErrorcodeJson($e->getMessage());
         }
+
         outputHelper::ouputErrorcodeJson(\common\helpers\ErrorCodes::SUCCESS, ['code' => $model->code]);
     }
 

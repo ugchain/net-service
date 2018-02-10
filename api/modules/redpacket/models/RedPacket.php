@@ -95,7 +95,7 @@ class RedPacket extends \common\models\RedPacket
     public function getRedPacketRecords()
     {
         return $this->hasMany(RedPacketRecord::className(), ['rid' => 'id'])
-            ->orderBy('id');;
+            ->orderBy('id DESC');
     }
 
     public function getRedPacketTheme()
