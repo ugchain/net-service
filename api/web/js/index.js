@@ -86,13 +86,18 @@ $(function(){
 	                if(data.code == 0){
 	                	mask()
 	                	$('#mask-copy').val(data.data.code)
+	                }else if(data.code == 20125){
+	                	$.toast(data.message, "text");
+	                	setTimeout(function() {
+							$('#get-packet-btn').text('抢红包').removeChild('.weui-loading')
+						}, 3000)
+	                	return false;
 	                }else {
 	                	$.toast(data.message, "text");
 	                	setTimeout(function() {
-							$('#get-packet-btn').css({
-								'background':'#fcd588'
-							}).text('抢红包').removeChild('.weui-loading')
+							$('#get-packet-btn').text('抢红包').removeChild('.weui-loading')
 						}, 3000)
+	                	event.preventDefault();  
 	                }
 	            },
 	            error: function() {
@@ -122,12 +127,18 @@ $(function(){
 	                if(data.code == 0){
 	                	mask()
 	                	$('#mask-copy').val(data.data.code)
-	                }else {
+	                }else if(data.code == 20125){
 	                	$.toast(data.message, "text");
 	                	setTimeout(function() {
 							$('#get-packet-btn').text('抢红包').removeChild('.weui-loading')
 						}, 3000)
 	                	return false;
+	                }else {
+	                	$.toast(data.message, "text");
+	                	setTimeout(function() {
+							$('#get-packet-btn').text('抢红包').removeChild('.weui-loading')
+						}, 3000)
+	                	event.preventDefault();  
 	                }
 	            },
 	            error: function() {

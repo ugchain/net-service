@@ -175,6 +175,11 @@ class Operating
         if($trade_info["blockNumber"] == null){
             return false;
         }
+        if(isset($trade_info["status"])){
+            if($trade_info["status"] != "0x1"){
+                return false;
+            }
+        }
 
         return $trade_info;
     }
