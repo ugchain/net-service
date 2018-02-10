@@ -66,10 +66,11 @@ $(function(){
 		$('.state-info').hide()
 
 
-		$('#packet-close').one('click', function() {
+		$('#packet-close').on('click', function() {
+			var pedding = '<i class="weui-loading"></i> '
 	    	$('#get-packet-btn').css({
 				'background':'rgba(255,255,255,.3)'
-			})
+			}).text('').append(pedding)
 	        $.ajax({
 	            url: 'grad-a-redpacket',
 	            type: 'post',
@@ -87,22 +88,25 @@ $(function(){
 	                	$('#mask-copy').val(data.data.code)
 	                }else {
 	                	$.toast(data.message, "text");
+	                	setTimeout(function() {
+							$('#get-packet-btn').css({
+								'background':'#fcd588'
+							}).text('抢红包').removeChild('.weui-loading')
+						}, 3000)
 	                }
 	            },
 	            error: function() {
-	            	$('#get-packet-btn').css({
-						'background':'#fcd588'
-					})
+	            	$('#get-packet-btn').text('抢红包').removeChild('.weui-loading')
 	            	$.toast("请求超时", "text");
+
 	            }
 	        })
 	    });	
 
 		// 获取口令 传入微信用户信息
-		$('#get-packet-btn').one('click',function(){
-			$('#get-packet-btn').css({
-				'background':'rgba(255,255,255,.3)'
-			})
+		$('#get-packet-btn').on('click',function(){
+			var pedding = '<i class="weui-loading"></i> '
+			$('#get-packet-btn').text('').append(pedding)
 	        $.ajax({
 	            url: 'grad-a-redpacket',
 	            type: 'post',
@@ -120,12 +124,14 @@ $(function(){
 	                	$('#mask-copy').val(data.data.code)
 	                }else {
 	                	$.toast(data.message, "text");
+	                	setTimeout(function() {
+							$('#get-packet-btn').text('抢红包').removeChild('.weui-loading')
+						}, 3000)
+	                	return false;
 	                }
 	            },
 	            error: function() {
-	            	$('#get-packet-btn').css({
-						'background':'#fcd588'
-					})
+	            	$('#get-packet-btn').text('抢红包').removeChild('.weui-loading')
 	            	$.toast("请求超时", "text");
 	            }
 	        })
