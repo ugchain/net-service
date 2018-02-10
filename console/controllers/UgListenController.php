@@ -265,8 +265,9 @@ class UgListenController extends Controller
                         echo "更新数据库红包表失败".PHP_EOL;
                         continue;
                     }
+                    $blocknumber = isset($trade_info["blockNumber"]) ? isset($trade_info["blockNumber"]) : "0";
                     //插入交易记录表
-                    if (!Trade::insertData($res_data["result"], Yii::$app->params["ug"]["red_packet_address"], $info["address"], $amount, $tradeStatus, Trade::BACK_REDPACKET, $trade_info['blockNumber'])) {
+                    if (!Trade::insertData($res_data["result"], Yii::$app->params["ug"]["red_packet_address"], $info["address"], $amount, $tradeStatus, Trade::BACK_REDPACKET, $blocknumber)) {
                         echo "插入交易记录表失败".PHP_EOL;
                     }
                 }
