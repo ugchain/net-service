@@ -80,7 +80,7 @@ class ErrorCodes
         self::REQUEST_FAILED                                        =>'请求失败',
         self::RED_PACKET_NULL                                       =>'红包已被抢光',
         self::RED_PACKET_REPEAT                                     =>'红包已重复发送',
-        slef::RED_PACKET_REPEAT_MAX                                 =>'当前网络拥挤，请重试'
+        self::RED_PACKET_REPEAT_MAX                                 =>'当前网络拥挤，请重试'
     ];
 
 }

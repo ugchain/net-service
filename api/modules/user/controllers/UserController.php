@@ -221,8 +221,19 @@ class UserController extends  Controller
             $ug_balance = OutputHelper::NumToString($ug_balance);
             $ug_balance = number_format($ug_balance);
         }
+        //获取以太坊块高度
+        $res_eth_block = CurlRequest::ChainCurl($eth_host,"eth_blockNumber");
+        $eth_block = "";
+        if($res_eth_block){
+            $res_eth_block = json_decode($res_eth_block,true);
+            $res_eth_block = Operating::substrHexdec($res_eth_block);
+            $eth_block = $res_eth_block["result"];
+            $eth_block = OutputHelper::NumToString($eth_block);
+            $eth_block = number_format($eth_block);
+        }
         echo "以太坊eth余额：".$eth_balance."&emsp;&emsp;&emsp;<span style='color: red'>(警戒值:小于0.5时通知钉钉群)</span><br />";
         echo "以太坊ugc余额：".$eth_ugc_balance."&emsp;&emsp;&emsp;<span style='color: red'>(警戒值:小于5000时通知钉钉群)</span><br />";
         echo "ug网络余额：".$ug_balance."&emsp;&emsp;&emsp;<span style='color: red'>(警戒值:小于50万时通知钉钉群)</span><br />";
+        echo "以太坊块高度：".$eth_block;
     }
 }
