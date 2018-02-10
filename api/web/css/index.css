@@ -445,9 +445,9 @@ body{
 	}
 }
 .float{
-	height: 40px;
+	height: 30px;
 	width: 100%;
-	line-height: 18px;
+	line-height: 17px;
 	padding: 15px 15px;
 	background: rgba(0,0,0,.65);
 	position: fixed;
@@ -473,11 +473,11 @@ body{
 	height:25px;
 	line-height: 25px;
 	width: 60px;
-	border: 1px solid rgba(255,255,255,.87);
+	border: 1px solid #f3be56;
 	border-radius: 10px;
 	float: right;
-	margin-top: 6px;
-	color: rgba(255,255,255,.87);
+	margin-top: 3px;
+	color: #f3be56;
 	text-align: center;
 	display: block;
 }
@@ -485,7 +485,7 @@ body{
 	height:20px;
 	vertical-align: middle;
 	float: right;
-	margin-top: 10px;
+	margin-top: 6px;
 	margin-right: 30px;
 	margin-left: 15px;
 }
