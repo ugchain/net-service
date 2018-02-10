@@ -206,9 +206,13 @@ class RedPacket extends \common\models\RedPacket
      *
      * @return array|\yii\db\ActiveRecord[]
      */
-    public static function getRedPacketList($status)
+    public static function getRedPacketListByStatus()
     {
-        return RedPacket::find()->where(['status' => $status])->asArray()->all();
+        return RedPacket::find()
+            ->where(['status' => [RedPacket::CREATE_REDPACKET_SUCC,RedPacket::REDPACKET_FINISHED,RedPacket::REDPACKET_EXPIRED]])
+            ->andWhere(['back_amount' => "0"])
+            //->createCommand()->getRawSql();
+            ->asArray()->all();
     }
 
     /**

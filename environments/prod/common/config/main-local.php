@@ -14,9 +14,10 @@ return [
         ],
         'redis' => [
             'class' => 'yii\redis\Connection',
-            'hostname' => '10.10.10.36',
+            'hostname' => 'r-m5e89db0536e06b4.redis.rds.aliyuncs.com',
             'port' => 6379,
             'database' => 0,
+            'password' => '4Xmu44N34Hme96rE8BGb72',
         ],
     ],
 ];

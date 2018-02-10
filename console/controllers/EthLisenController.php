@@ -101,7 +101,7 @@ class EthLisenController extends Controller
 
             //根据组装数据获取签名且广播交易
             $res_data = Operating::getSignatureAndBroadcast(Yii::$app->params["ug"]["ug_sign_url"], $send_sign_data, Yii::$app->params["ug"]["ug_host"], "eth_sendRawTransaction");
-            if (isset($res_data['error'])) {
+            if (!$res_data ||isset($res_data['error'])) {
                 echo "数据获取签名且广播交易错误";
                 continue;
             }
