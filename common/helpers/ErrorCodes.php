@@ -41,7 +41,8 @@ class ErrorCodes
         RED_PACKET_TITLE_EXCEEDED                                   =   20121,//红包名称超出限制
         RED_PACKET_OPEN                                             =   20122,//您已经拆过这个红包啦
         RED_PACKET_NULL                                             =   20123,//红包已被抢光
-        RED_PACKET_REPEAT                                           =   20124;//红包已重复发送
+        RED_PACKET_REPEAT                                           =   20124,//红包已重复发送
+        RED_PACKET_REPEAT_MAX                                       =   20125;//当前网络拥挤，请重试
 
 
 
@@ -79,6 +80,7 @@ class ErrorCodes
         self::REQUEST_FAILED                                        =>'请求失败',
         self::RED_PACKET_NULL                                       =>'红包已被抢光',
         self::RED_PACKET_REPEAT                                     =>'红包已重复发送',
+        slef::RED_PACKET_REPEAT_MAX                                 =>'当前网络拥挤，请重试'
     ];
 
 }
