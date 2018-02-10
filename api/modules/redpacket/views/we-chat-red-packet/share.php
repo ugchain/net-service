@@ -16,6 +16,7 @@
   <!--   <script>
         var vConsole = new VConsole();
     </script> -->
+
 </head>
 <body>
     <!-- 头部红包 -->
@@ -372,8 +373,18 @@
             }
         })
     })
+
+    var h = $(window).height()
+    if(h == 744){
+        $('.float').css({
+            'height': '50px',
+
+        })
+    }
     $('.float_close').on('click', function() {
        $('.float').hide()
     });
+   
+
 </script>
 </html>
