@@ -218,7 +218,7 @@ class UgListenController extends Controller
 
         foreach ($unsucc_info as $info) {
             //create_succ_time + 86400 < time() 过期
-            if (($info['create_succ_time'] + 400) <= time()) {
+            if (($info['create_succ_time'] + 86400) <= time()) {
                 //检索该红包是否存在记录
                 $list = RedPacketRecord::find()->where(['rid' => $info['id']])->andWhere(['!=', 'status', RedPacketRecord::EXCHANGE_SUCC])->asArray()->all();
                 if (count($list) > 0) {
@@ -229,6 +229,16 @@ class UgListenController extends Controller
                         $amount = OutputHelper::NumToString($info["amount"]);
                     }else{
                         $amount = OutputHelper::NumToString($info["amount"] - $count_exchange["amount"]);
+                    }
+                    //根据红包id，更新红包记录表状态为已过期
+                    if (!RedPacketRecord::updateAll(["status" => RedPacketRecord::EXPIRED], "rid = " . $info['id'] . " and status != " . RedPacketRecord::EXCHANGE_SUCC)) {
+                        echo "更新数据库红包记录表失败".PHP_EOL;
+                        continue;
+                    }
+                    //根据红包id，更新红包表状态为过期，修改退还金额
+                    if (!RedPacket::updateAll(["back_amount" => $amount, "status" => RedPacket::REDPACKET_EXPIRED], ['id' => $info['id']])) {
+                        echo "更新数据库红包表失败".PHP_EOL;
+                        continue;
                     }
                     $result =[
                         "app_txid" => $info["txid"],
@@ -254,16 +264,6 @@ class UgListenController extends Controller
                         //截取blockNumber
                         $trade_info = Operating::substrHexdec($trade_info["blockNumber"]);
                         $tradeStatus = Trade::SUCCESS;
-                    }
-                    //根据红包id，更新红包记录表状态为已过期
-                    if (!RedPacketRecord::updateAll(["status" => RedPacketRecord::EXPIRED], "rid = " . $info['id'] . " and status != " . RedPacketRecord::EXCHANGE_SUCC)) {
-                        echo "更新数据库红包记录表失败".PHP_EOL;
-                        continue;
-                    }
-                    //根据红包id，更新红包表状态为过期，修改退还金额
-                    if (!RedPacket::updateAll(["back_amount" => $amount, "status" => RedPacket::REDPACKET_EXPIRED], ['id' => $info['id']])) {
-                        echo "更新数据库红包表失败".PHP_EOL;
-                        continue;
                     }
                     $blocknumber = isset($trade_info["blockNumber"]) ? isset($trade_info["blockNumber"]) : "0";
                     //插入交易记录表
