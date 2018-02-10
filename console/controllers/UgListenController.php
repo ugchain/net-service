@@ -210,7 +210,7 @@ class UgListenController extends Controller
         echo "红包监听过期开始".time().PHP_EOL;
 
         //获取数据库中红包创建成功的数据
-        $unsucc_info = RedPacket::getRedPacketList(RedPacket::CREATE_REDPACKET_SUCC);
+        $unsucc_info = RedPacket::getRedPacketListByStatus();
         if (!$unsucc_info) {
             //OutputHelper::writeLog(dirname(__DIR__) . "/locklog/ugTradeListen.log",json_encode(["status" => Operating::LOG_UNLOCK_STATUS]));
             echo "暂无红包数据！".PHP_EOL;die;
@@ -226,9 +226,9 @@ class UgListenController extends Controller
                     $count_exchange = RedPacketRecord::find()->select("sum(amount) as amount")->where(['rid' => $info['id'],"status"=>RedPacketRecord::EXCHANGE_SUCC])->asArray()->one();
                     //退还过期红包金额给发红包账户
                     if(!$count_exchange || $count_exchange["amount"] == 0){
-                        $amount = $info["amount"];
+                        $amount = OutputHelper::NumToString($info["amount"]);
                     }else{
-                        $amount = $info["amount"] - $count_exchange["amount"];
+                        $amount = OutputHelper::NumToString($info["amount"] - $count_exchange["amount"]);
                     }
                     $result =[
                         "app_txid" => $info["txid"],
