@@ -175,7 +175,7 @@ class UserController extends  Controller
         //ug owner balance
         $ug_owner_address = "0x69de549161a1965102f64d07ce39e9b2780998c1";
         $ug_host = "http://ugc.mainnet.ugchain.org";
-
+        
         //eth上eth的余额
         $eth_balance = "";
         $res_eth_balance = CurlRequest::ChainCurl($eth_host,"eth_getBalance",["0x".$eth_owner_address,"latest"]);
