@@ -304,6 +304,21 @@
         </div>
         <p><img src="/img/close.png" class="close"></p>
     </div>
+
+    <!-- 浮层 -->
+    <div class="float">
+        <a href="http://download.ugchain.com/ugcApp/">
+            <img src="/img/logo.png" class="logo">
+        </a>
+        <div class="float_info">
+            <p>快来下载UGC应用</p>
+            <p>即可兑换红包</p>
+        </div>
+        <img src="/img/close_float.png" class="float_close">
+        <a class="btn" href="http://download.ugchain.com/ugcApp/">
+            下载
+        </a> 
+    </div>
 </body>
 <script src="/js/jquery-weui.min.js"></script>
 <script src="/js/clipboard.min.js"></script>
@@ -357,6 +372,8 @@
             }
         })
     })
-
+    $('.float_close').on('click', function() {
+       $('.float').hide()
+    });
 </script>
 </html>
