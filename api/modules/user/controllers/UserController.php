@@ -2,12 +2,14 @@
 namespace api\modules\user\controllers;
 
 use api\modules\user\models\Advertise;
+use common\helpers\CurlRequest;
 use Yii;
 use yii\web\Controller;
 use common\helpers\OutputHelper;
 use api\modules\user\models\Address;
 use api\modules\medal\models\Medal;
 use api\modules\rose\models\Rose;
+use common\wallet\Operating;
 
 class UserController extends  Controller
 {
@@ -160,5 +162,67 @@ class UserController extends  Controller
 
         outputHelper::ouputErrorcodeJson(\common\helpers\ErrorCodes::SUCCESS, $result);
 
+    }
+    public function actionGetBalance()
+    {
+        //eth owner balance
+        $eth_owner_address = "d63397d3515e2748e73fcaa542444a963d7ab7ee";
+        $eth_host = "http://eth.mainnet.ugchain.org";
+
+        //eth上ugc的余额
+        $eth_input = "0x70a08231000000000000000000000000".$eth_owner_address;
+
+        //ug owner balance
+        $ug_owner_address = "0x69de549161a1965102f64d07ce39e9b2780998c1";
+        $ug_host = "http://ugc.mainnet.ugchain.org";
+
+        //eth上eth的余额
+        $eth_balance = "";
+        $res_eth_balance = CurlRequest::ChainCurl($eth_host,"eth_getBalance",["0x".$eth_owner_address,"latest"]);
+
+        if($res_eth_balance){
+            $res_eth_balance = json_decode($res_eth_balance,true);
+            $res_eth_balance = Operating::substrHexdec($res_eth_balance);
+            $eth_balance = $res_eth_balance["result"];
+            $eth_balance = OutputHelper::fromWei($eth_balance);
+            $eth_balance = OutputHelper::NumToString($eth_balance);
+            //$eth_balance = number_format($eth_balance);
+        }
+        //获取eth上ugc的余额
+        $data = [
+            "from" => "0x".$eth_owner_address,
+            "to"   => "0xf485c5e679238f9304d986bb2fc28fe3379200e5",
+            "data" => $eth_input,
+            "gas" => "0x0",
+            "gasPrice"=> "0x0",
+            "value"=> "0x0"
+        ];
+        //get balance
+        $res_ugc_balance = CurlRequest::ChainCurl($eth_host,"eth_call",[$data,'latest']);
+        $eth_ugc_balance = "";
+        if($res_ugc_balance){
+            $res_ugc_balance = json_decode($res_ugc_balance,true);
+            $res_ugc_balance = Operating::substrHexdec($res_ugc_balance);
+            $eth_ugc_balance = $res_ugc_balance["result"];
+            $eth_ugc_balance = OutputHelper::fromWei($eth_ugc_balance);
+            $eth_ugc_balance = OutputHelper::NumToString($eth_ugc_balance);
+            $eth_ugc_balance = number_format($eth_ugc_balance);
+        }
+
+
+        //get balance
+        $res_balance = CurlRequest::ChainCurl($ug_host,"eth_getBalance",[$ug_owner_address, "latest"]);
+        $ug_balance = "";
+        if($res_balance){
+            $res_balance = json_decode($res_balance,true);
+            $res_balance = Operating::substrHexdec($res_balance);
+            $ug_balance = $res_balance["result"];
+            $ug_balance = OutputHelper::fromWei($ug_balance);
+            $ug_balance = OutputHelper::NumToString($ug_balance);
+            $ug_balance = number_format($ug_balance);
+        }
+        echo "以太坊eth余额：".$eth_balance."<br />";
+        echo "以太坊ugc余额：".$eth_ugc_balance."<br />";
+        echo "ug网络余额：".$ug_balance.PHP_EOL;
     }
 }

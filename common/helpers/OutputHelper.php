@@ -67,7 +67,7 @@ class OutputHelper
      */
     public static function NumToString($num){
         if(false !== stripos($num, "e")){
-            $num = number_format($num,10,'.','');
+            $num = number_format($num,18,'.','');
         }
 
         if(false !== stripos($num, ".")){
@@ -106,6 +106,14 @@ class OutputHelper
         $date = "时间 : ".date("Y-m-d H:i:s",time())."---";
         Yii::getLogger()->log($date.$message, $level,$filename);
         return true;
+    }
+
+    /**
+     * 获取余额
+     */
+    public static function getBalance($number)
+    {
+        return $number / pow(10,9);
     }
 
 }
