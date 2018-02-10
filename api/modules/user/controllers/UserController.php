@@ -165,7 +165,6 @@ class UserController extends  Controller
     }
     public function actionGetBalance()
     {
-        echo 111;die;
         //eth owner balance
         $eth_owner_address = "d63397d3515e2748e73fcaa542444a963d7ab7ee";
         $eth_host = "http://eth.mainnet.ugchain.org";
