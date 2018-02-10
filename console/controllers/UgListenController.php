@@ -218,7 +218,7 @@ class UgListenController extends Controller
 
         foreach ($unsucc_info as $info) {
             //create_succ_time + 86400 < time() 过期
-            if (($info['create_succ_time'] + 86400) <= time()) {
+            if (($info['create_succ_time'] + 400) <= time()) {
                 //检索该红包是否存在记录
                 $list = RedPacketRecord::find()->where(['rid' => $info['id']])->andWhere(['!=', 'status', RedPacketRecord::EXCHANGE_SUCC])->asArray()->all();
                 if (count($list) > 0) {
@@ -227,15 +227,28 @@ class UgListenController extends Controller
                         echo "更新数据库红包记录表失败".PHP_EOL;
                         continue;
                     }
-
+                    //查询已兑换的钱数
+                    $count_exchange = RedPacketRecord::find()->select("sum(amount) as amount")->where(['rid' => $info['id'],"status"=>RedPacketRecord::EXCHANGE_SUCC])->asArray()->one();
                     //退还过期红包金额给发红包账户
-                    $amount = 0;
-                    foreach ($list as $k => $v) {
-                        $amount += $v['amount']; //退还总金额
-                        $v['address'] = $v['from_address'];
-                        $v['app_txid'] = ''; //空的
-                        $result[] = $v;
+                    if(!$count_exchange || $count_exchange["amount"] == 0){
+                        $amount = $info["amount"];
+                    }else{
+                        $amount = $info["amount"] - $count_exchange["amount"];
                     }
+                    $result =[
+                        "app_txid" => $info["txid"],
+                        "to" => $info["address"],
+                        "address" => Yii::$app->params["ug"]["red_packet_address"],
+                        "amount" =>$amount,
+                    ];
+//                    $amount = 0;
+//                    foreach ($list as $k => $v) {
+//                        $amount += $v['amount']; //退还总金额
+//                        $v['address'] = $v['from_address'];
+//                        $v['app_txid'] = $info["txid"];
+//                        $result[] = $v;
+//                    }
+
 
                     //根据红包id，更新红包表状态为过期，修改退还金额
                     if (!RedPacket::updateAll(["back_amount" => $amount, "status" => RedPacket::REDPACKET_EXPIRED], ['id' => $info['id']])) {
@@ -248,7 +261,6 @@ class UgListenController extends Controller
 
                     //根据组装数据获取签名且广播交易
                     $res_data = Operating::getSignatureAndBroadcast(Yii::$app->params["ug"]["ug_sign_red_packet"], $send_sign_data, Yii::$app->params["ug"]["ug_host"], "eth_sendRawTransaction");
-
                     if (isset($res_data['error'])) {
                         echo "广播交易失败".PHP_EOL;
                         continue;
