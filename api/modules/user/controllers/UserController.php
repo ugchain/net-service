@@ -175,7 +175,7 @@ class UserController extends  Controller
         //ug owner balance
         $ug_owner_address = "0x69de549161a1965102f64d07ce39e9b2780998c1";
         $ug_host = "http://ugc.mainnet.ugchain.org";
-        
+
         //eth上eth的余额
         $eth_balance = "";
         $res_eth_balance = CurlRequest::ChainCurl($eth_host,"eth_getBalance",["0x".$eth_owner_address,"latest"]);
@@ -231,9 +231,13 @@ class UserController extends  Controller
             $eth_block = OutputHelper::NumToString($eth_block);
             $eth_block = number_format($eth_block);
         }
+        echo '<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1, user-scalable=no"><title>监控余额</title></head>
+<body>';
         echo "以太坊eth余额：".$eth_balance."&emsp;&emsp;&emsp;<span style='color: red'>(警戒值:小于0.5时通知钉钉群)</span><br />";
         echo "以太坊ugc余额：".$eth_ugc_balance."&emsp;&emsp;&emsp;<span style='color: red'>(警戒值:小于5000时通知钉钉群)</span><br />";
         echo "ug网络余额：".$ug_balance."&emsp;&emsp;&emsp;<span style='color: red'>(警戒值:小于50万时通知钉钉群)</span><br />";
         echo "以太坊块高度：".$eth_block;
+echo "</body></html>";
+
     }
 }
