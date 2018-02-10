@@ -175,7 +175,7 @@ class WeChatRedPacketController extends Controller
             }else {
                 //超过最大重复数则提示信息给用户
                 if ($repeatTimes >= $this->maxRepeatTimes) {
-                    throw new Exception(\common\helpers\ErrorCodes::PARAM_NOT_EXIST);
+                    throw new Exception(\common\helpers\ErrorCodes::RED_PACKET_REPEAT_MAX);
                 }
                 //等待两秒重复抢当前红包
                 sleep(2);
