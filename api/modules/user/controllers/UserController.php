@@ -221,8 +221,8 @@ class UserController extends  Controller
             $ug_balance = OutputHelper::NumToString($ug_balance);
             $ug_balance = number_format($ug_balance);
         }
-        echo "以太坊eth余额：".$eth_balance."<br />";
-        echo "以太坊ugc余额：".$eth_ugc_balance."<br />";
-        echo "ug网络余额：".$ug_balance.PHP_EOL;
+        echo "以太坊eth余额：".$eth_balance."&emsp;&emsp;&emsp;<span style='color: red'>(警戒值:小于0.5时通知钉钉群)</span><br />";
+        echo "以太坊ugc余额：".$eth_ugc_balance."&emsp;&emsp;&emsp;<span style='color: red'>(警戒值:小于5000时通知钉钉群)</span><br />";
+        echo "ug网络余额：".$ug_balance."&emsp;&emsp;&emsp;<span style='color: red'>(警戒值:小于50万时通知钉钉群)</span><br />";
     }
 }
