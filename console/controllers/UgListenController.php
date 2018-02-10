@@ -210,7 +210,7 @@ class UgListenController extends Controller
         echo "红包监听过期开始".time().PHP_EOL;
 
         //获取数据库中红包创建成功的数据
-        $unsucc_info = RedPacket::getRedPacketList(RedPacket::CREATE_REDPACKET_SUCC);
+        $unsucc_info = RedPacket::getRedPacketListByStatus();
         if (!$unsucc_info) {
             //OutputHelper::writeLog(dirname(__DIR__) . "/locklog/ugTradeListen.log",json_encode(["status" => Operating::LOG_UNLOCK_STATUS]));
             echo "暂无红包数据！".PHP_EOL;die;
@@ -222,34 +222,36 @@ class UgListenController extends Controller
                 //检索该红包是否存在记录
                 $list = RedPacketRecord::find()->where(['rid' => $info['id']])->andWhere(['!=', 'status', RedPacketRecord::EXCHANGE_SUCC])->asArray()->all();
                 if (count($list) > 0) {
+                    //查询已兑换的钱数
+                    $count_exchange = RedPacketRecord::find()->select("sum(amount) as amount")->where(['rid' => $info['id'],"status"=>RedPacketRecord::EXCHANGE_SUCC])->asArray()->one();
+                    //退还过期红包金额给发红包账户
+                    if(!$count_exchange || $count_exchange["amount"] == 0){
+                        $amount = OutputHelper::NumToString($info["amount"]);
+                    }else{
+                        $amount = OutputHelper::NumToString($info["amount"] - $count_exchange["amount"]);
+                    }
                     //根据红包id，更新红包记录表状态为已过期
                     if (!RedPacketRecord::updateAll(["status" => RedPacketRecord::EXPIRED], "rid = " . $info['id'] . " and status != " . RedPacketRecord::EXCHANGE_SUCC)) {
                         echo "更新数据库红包记录表失败".PHP_EOL;
                         continue;
                     }
-
-                    //退还过期红包金额给发红包账户
-                    $amount = 0;
-                    foreach ($list as $k => $v) {
-                        $amount += $v['amount']; //退还总金额
-                        $v['address'] = $v['from_address'];
-                        $v['app_txid'] = ''; //空的
-                        $result[] = $v;
-                    }
-
                     //根据红包id，更新红包表状态为过期，修改退还金额
                     if (!RedPacket::updateAll(["back_amount" => $amount, "status" => RedPacket::REDPACKET_EXPIRED], ['id' => $info['id']])) {
                         echo "更新数据库红包表失败".PHP_EOL;
                         continue;
                     }
-
+                    $result =[
+                        "app_txid" => $info["txid"],
+                        "to" => $info["address"],
+                        "address" => Yii::$app->params["ug"]["red_packet_address"],
+                        "amount" =>$amount,
+                    ];
                     //组装签名所需数据
                     $send_sign_data = Operating::getNonceAssembleData($result, Yii::$app->params["ug"]["gas_price"], Yii::$app->params["ug"]["ug_host"], "eth_getTransactionCount", [Yii::$app->params["ug"]["red_packet_address"], "pending"]);
 
                     //根据组装数据获取签名且广播交易
                     $res_data = Operating::getSignatureAndBroadcast(Yii::$app->params["ug"]["ug_sign_red_packet"], $send_sign_data, Yii::$app->params["ug"]["ug_host"], "eth_sendRawTransaction");
-
-                    if (isset($res_data['error'])) {
+                    if (!$res_data || isset($res_data['error'])) {
                         echo "广播交易失败".PHP_EOL;
                         continue;
                     }
@@ -263,8 +265,9 @@ class UgListenController extends Controller
                         $trade_info = Operating::substrHexdec($trade_info["blockNumber"]);
                         $tradeStatus = Trade::SUCCESS;
                     }
+                    $blocknumber = isset($trade_info["blockNumber"]) ? isset($trade_info["blockNumber"]) : "0";
                     //插入交易记录表
-                    if (!Trade::insertData($res_data["result"], Yii::$app->params["ug"]["owner_address"], $result["from_address"], $amount, $tradeStatus, Trade::BACK_REDPACKET, $trade_info['blockNumber'])) {
+                    if (!Trade::insertData($res_data["result"], Yii::$app->params["ug"]["red_packet_address"], $info["address"], $amount, $tradeStatus, Trade::BACK_REDPACKET, $blocknumber)) {
                         echo "插入交易记录表失败".PHP_EOL;
                     }
                 }
