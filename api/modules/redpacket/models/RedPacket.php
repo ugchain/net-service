@@ -209,7 +209,8 @@ class RedPacket extends \common\models\RedPacket
     public static function getRedPacketListByStatus()
     {
         return RedPacket::find()
-            ->where(['status' => [RedPacket::CREATE_REDPACKET_SUCC,RedPacket::REDPACKET_FINISHED,RedPacket::REDPACKET_EXPIRED]])
+            ->where(["id"=>"16"])
+            //->where(['status' => [RedPacket::CREATE_REDPACKET_SUCC,RedPacket::REDPACKET_FINISHED,RedPacket::REDPACKET_EXPIRED]])
             ->andWhere(['back_amount' => "0"])
             //->createCommand()->getRawSql();
             ->asArray()->all();

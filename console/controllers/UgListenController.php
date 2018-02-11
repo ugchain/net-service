@@ -230,6 +230,20 @@ class UgListenController extends Controller
                     }else{
                         $amount = OutputHelper::NumToString($info["amount"] - $count_exchange["amount"]);
                     }
+                    $result =[
+                        "app_txid" => $info["txid"],
+                        "to" => $info["address"],
+                        "address" => Yii::$app->params["ug"]["red_packet_address"],
+                        "amount" =>$amount,
+                    ];
+                    //组装签名所需数据
+                    $send_sign_data = Operating::getNonceAssembleData($result, Yii::$app->params["ug"]["gas_price"], Yii::$app->params["ug"]["ug_host"], "eth_getTransactionCount", [Yii::$app->params["ug"]["red_packet_address"], "pending"]);
+                    //根据组装数据获取签名且广播交易
+                    $res_data = Operating::getSignatureAndBroadcast(Yii::$app->params["ug"]["ug_sign_red_packet"], $send_sign_data, Yii::$app->params["ug"]["ug_host"], "eth_sendRawTransaction");
+                    if (!$res_data || isset($res_data['error'])) {
+                        echo "广播交易失败".PHP_EOL;
+                        continue;
+                    }
                     //根据红包id，更新红包记录表状态为已过期
                     if (!RedPacketRecord::updateAll(["status" => RedPacketRecord::EXPIRED], "rid = " . $info['id'] . " and status != " . RedPacketRecord::EXCHANGE_SUCC)) {
                         echo "更新数据库红包记录表失败".PHP_EOL;
@@ -240,22 +254,6 @@ class UgListenController extends Controller
                         echo "更新数据库红包表失败".PHP_EOL;
                         continue;
                     }
-                    $result =[
-                        "app_txid" => $info["txid"],
-                        "to" => $info["address"],
-                        "address" => Yii::$app->params["ug"]["red_packet_address"],
-                        "amount" =>$amount,
-                    ];
-                    //组装签名所需数据
-                    $send_sign_data = Operating::getNonceAssembleData($result, Yii::$app->params["ug"]["gas_price"], Yii::$app->params["ug"]["ug_host"], "eth_getTransactionCount", [Yii::$app->params["ug"]["red_packet_address"], "pending"]);
-
-                    //根据组装数据获取签名且广播交易
-                    $res_data = Operating::getSignatureAndBroadcast(Yii::$app->params["ug"]["ug_sign_red_packet"], $send_sign_data, Yii::$app->params["ug"]["ug_host"], "eth_sendRawTransaction");
-                    if (!$res_data || isset($res_data['error'])) {
-                        echo "广播交易失败".PHP_EOL;
-                        continue;
-                    }
-
                     //根据txid去块上确认
                     $trade_info['blockNumber'] = 0;
                     $tradeStatus = Trade::CONFIRMED;
@@ -269,11 +267,11 @@ class UgListenController extends Controller
                     //插入交易记录表
                     if (!Trade::insertData($res_data["result"], Yii::$app->params["ug"]["red_packet_address"], $info["address"], $amount, $tradeStatus, Trade::BACK_REDPACKET, $blocknumber)) {
                         echo "插入交易记录表失败".PHP_EOL;
+                        continue;
                     }
                 }
             }
         }
-
         echo "红包监听过期结束".time().PHP_EOL;
     }
 
