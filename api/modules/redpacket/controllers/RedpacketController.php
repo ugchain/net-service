@@ -85,10 +85,7 @@ class RedpacketController extends  Controller
         }else{
             //随机红包分配
             //$redis_data = self::rankRedpacket($amount,$data["quantity"]);
-            $red_data = self::getRed($data["quantity"],$amount * 100);
-            foreach ($red_data as $key => $num){
-                $redis_data[$key] = round($num /100, 2);
-            }
+            $redis_data = self::getRed($data["quantity"],$amount);
         }
         //红包金额过小时返回返回
         if(!$redis_data){
@@ -190,9 +187,7 @@ class RedpacketController extends  Controller
      * 最新红包算法
      */
     private function getRed($number, $total) {
-        $min   = 1;
-        $max   = 1;
-        $money = 1;
+        $total = $total * 100;
         $data  = [];
 
         // 红包分配不足
@@ -212,15 +207,18 @@ class RedpacketController extends  Controller
         }
 
         for ($i=1; $i < $number; $i++) {
+            $min = intval(($total / $number) * 0.3);
+            if($min < 1) {
+                $min = 1;
+            }
+
             //保证即使一个红包是最大的了,后面剩下的红包,每个红包也不会小于最小值
             $max = $total - $min * ($number - $i);
-
             $k = intval(($number - $i) / 2);
             //保证最后两个人拿的红包不超出剩余红包
             if ($number - $i <= 2) {
                 $k = $number - $i;
             }
-
             //最大的红包限定的平均线上下
             $max = intval($max / $k);
             if($max == 0) {
@@ -230,10 +228,10 @@ class RedpacketController extends  Controller
             //随机红包
             $money  = mt_rand($min, $max);
             $total  = $total - $money;
-            $data[] = $money;
+            $data[] = round($money/100, 2);
         }
         //最后一个人拿走剩下的红包
-        $data[] = $total;
+        $data[] = round($total/100, 2);
 
         //将数组打乱
         shuffle($data);
