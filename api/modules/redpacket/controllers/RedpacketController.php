@@ -84,14 +84,16 @@ class RedpacketController extends  Controller
             }
         }else{
             //随机红包分配
-            $redis_data = self::rankRedpacket($amount,$data["quantity"]);
+            //$redis_data = self::rankRedpacket($amount,$data["quantity"]);
+            $red_data = self::getRed($data["quantity"],$amount * 100);
+            foreach ($red_data as $key => $num){
+                $redis_data[$key] = round($num /100, 2);
+            }
         }
         //红包金额过小时返回返回
         if(!$redis_data){
             outputHelper::ouputErrorcodeJson(\common\helpers\ErrorCodes::RED_PACKET_QUANTITY_EXCEEDED);
         }
-        //打乱排序规则
-        shuffle($redis_data);
         $this->REPACK_STATUS = 0;
         //存放redis
         $rewardData = new RewardData();
@@ -183,8 +185,63 @@ class RedpacketController extends  Controller
         return $data;
     }
 
+
     /**
-     * 批量生成红包值
+     * 最新红包算法
+     */
+    private function getRed($number, $total) {
+        $min   = 1;
+        $max   = 1;
+        $money = 1;
+        $data  = [];
+
+        // 红包分配不足
+        if($total < $number){
+            return false;
+        }
+
+        // 只发一个红包
+        if($number == 1) {
+            return array($total);
+        }
+
+        // 每人一分钱
+        if($total == $number) {
+            $data = array_pad($data,$number, 1);
+            return $data;
+        }
+
+        for ($i=1; $i < $number; $i++) {
+            //保证即使一个红包是最大的了,后面剩下的红包,每个红包也不会小于最小值
+            $max = $total - $min * ($number - $i);
+
+            $k = intval(($number - $i) / 2);
+            //保证最后两个人拿的红包不超出剩余红包
+            if ($number - $i <= 2) {
+                $k = $number - $i;
+            }
+
+            //最大的红包限定的平均线上下
+            $max = intval($max / $k);
+            if($max == 0) {
+                $max = 1;
+            }
+
+            //随机红包
+            $money  = mt_rand($min, $max);
+            $total  = $total - $money;
+            $data[] = $money;
+        }
+        //最后一个人拿走剩下的红包
+        $data[] = $total;
+
+        //将数组打乱
+        shuffle($data);
+
+        return $data;
+    }
+    /**
+     * 批量生成红包值(不用)
      */
     private function rankRedpacket($remainMoney,$remainSize)
     {
@@ -204,7 +261,7 @@ class RedpacketController extends  Controller
         return $data;
     }
     /**
-     * 生成随机红包算法
+     * 生成随机红包算法(不用)
      */
     private function random_red($remainMoney, $remainSize,  $min)
     {
