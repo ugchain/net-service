@@ -98,7 +98,8 @@ class RewardData
         }
         //重建索引
         sort($data);
-
+        //重新打乱顺序
+        shuffle($data);
         //重新保存
         $this->set($id,$data);
 
