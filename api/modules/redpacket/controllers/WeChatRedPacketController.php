@@ -116,7 +116,7 @@ class WeChatRedPacketController extends Controller
         $userInfoData = $this->useGetRequestUrl($wechatUserInfoUrl);
 
         //获取当前红包的详细信息
-        $redpacketInfo = RedPacket::getRedPacketInfoWithRecordList($redpacketId, false);
+        $redpacketInfo = RedPacket::getRedPacketInfoWithRecordList($redpacketId, false, false);
         if (!$redpacketInfo)  return $this->render('does-not-exist');
 
 

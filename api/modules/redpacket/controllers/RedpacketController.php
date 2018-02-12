@@ -376,7 +376,7 @@ class RedpacketController extends  Controller
             outputHelper::ouputErrorcodeJson(\common\helpers\ErrorCodes::PARAM_NOT_EXIST);
         }
         //获取红包详情数据
-        $result = RedPacket::getRedPacketInfoWithRecordList($id,true,"app");
+        $result = RedPacket::getRedPacketInfoWithRecordList($id);
         if($result["status"] == 0){
             //检测是否上链--成功5%
             $block_info = CurlRequest::ChainCurl(Yii::$app->params["ug"]["ug_host"], "eth_getTransactionReceipt", [$result["txid"]]);
