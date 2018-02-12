@@ -121,7 +121,7 @@ class WeChatRedPacketController extends Controller
 
 
         //获取当前用户的红包状态、红包口令
-        $recordInfo = RedPacketRecord::getRedPacketRecordInfo($redpacketInfo['id'], $userInfoData->openid);
+        $recordInfo = RedPacketRecord::getRedPacketRecordInfo($redpacketInfo['txid'], $userInfoData->openid);
 
         //渲染页面
         return $this->render('share', [

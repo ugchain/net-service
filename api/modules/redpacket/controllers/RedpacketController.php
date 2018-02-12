@@ -125,7 +125,7 @@ class RedpacketController extends  Controller
         $repack_info = RedPacket::getPacketInfoById($packet_id);
         //组装返回数据
         $return_data = [
-            "share_url"=>Yii::$app->params["host"]."/redpacket/we-chat-red-packet/redirect-url?redpacket_id=".$packet_id,
+            "share_url"=>Yii::$app->params["host"]."/redpacket/we-chat-red-packet/redirect-url?redpacket_id=".$data["hash"],
             "id"=>$packet_id,
             "status"=>$this->REPACK_STATUS,
             "expire_time"=>$repack_info["expire_time"],
@@ -376,7 +376,7 @@ class RedpacketController extends  Controller
             outputHelper::ouputErrorcodeJson(\common\helpers\ErrorCodes::PARAM_NOT_EXIST);
         }
         //获取红包详情数据
-        $result = RedPacket::getRedPacketInfoWithRecordList($id);
+        $result = RedPacket::getRedPacketInfoWithRecordList($id,true,"app");
         if($result["status"] == 0){
             //检测是否上链--成功5%
             $block_info = CurlRequest::ChainCurl(Yii::$app->params["ug"]["ug_host"], "eth_getTransactionReceipt", [$result["txid"]]);
