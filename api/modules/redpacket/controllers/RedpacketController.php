@@ -125,7 +125,7 @@ class RedpacketController extends  Controller
         $repack_info = RedPacket::getPacketInfoById($packet_id);
         //组装返回数据
         $return_data = [
-            "share_url"=>Yii::$app->params["host"]."/redpacket/we-chat-red-packet/redirect-url?redpacket_id=".$packet_id,
+            "share_url"=>Yii::$app->params["host"]."/redpacket/we-chat-red-packet/redirect-url?redpacket_id=".$data["hash"],
             "id"=>$packet_id,
             "status"=>$this->REPACK_STATUS,
             "expire_time"=>$repack_info["expire_time"],

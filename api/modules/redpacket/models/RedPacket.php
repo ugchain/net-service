@@ -18,10 +18,13 @@ class RedPacket extends \common\models\RedPacket
      * @param $type boolean 是否fromWei
      * @return array
      */
-    public static function getRedPacketInfoWithRecordList($id, $type = true)
+    public static function getRedPacketInfoWithRecordList($id, $type = true, $platform = true)
     {
-        $result = self::findOne($id);
-
+        if(!$platform){
+            $result = self::find()->where(["txid"=>$id])->one();
+        }else{
+            $result = self::findOne($id);
+        }
         //过滤不存在数据
         if (!$result) {
             return null;
@@ -86,7 +89,7 @@ class RedPacket extends \common\models\RedPacket
         $redpacketInfo['theme_share_img'] = !empty($redPacketTheme->share_img) ? $redPacketTheme->share_img : '';
         $redpacketInfo['redPacketRecordList'] = $redPacketRecordList;
         $redpacketInfo['image_url'] = Yii::$app->params['image_url'];
-        $redpacketInfo["share_url"] = Yii::$app->params["host"]."/redpacket/we-chat-red-packet/redirect-url?redpacket_id=".$result->id;
+        $redpacketInfo["share_url"] = Yii::$app->params["host"]."/redpacket/we-chat-red-packet/redirect-url?redpacket_id=".$result->txid;
 
 
         return $redpacketInfo;
