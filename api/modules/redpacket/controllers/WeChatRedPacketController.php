@@ -141,6 +141,10 @@ class WeChatRedPacketController extends Controller
      */
     public function actionGradARedpacket()
     {
+    
+        outputHelper::ouputErrorcodeJson(\common\helpers\ErrorCodes::PARAM_NOT_EXIST, ['code' => 1]);
+        return;
+        
         //开启事务
         $transaction = Yii::$app->db->beginTransaction();
 
