@@ -210,7 +210,7 @@ class RedPacket extends \common\models\RedPacket
     {
         return RedPacket::find()
             //->where(["id"=>"16"])
-            ->where(['status' => [RedPacket::CREATE_REDPACKET_SUCC,RedPacket::REDPACKET_FINISHED,RedPacket::REDPACKET_EXPIRED]])
+            ->where(['status' => RedPacket::CREATE_REDPACKET_SUCC])
             ->andWhere(['back_amount' => "0"])
             //->createCommand()->getRawSql();
             ->asArray()->all();

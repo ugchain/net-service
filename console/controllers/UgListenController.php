@@ -238,7 +238,7 @@ class UgListenController extends Controller
                     //组装签名所需数据
                     $send_sign_data = Operating::getNonceAssembleData($result, Yii::$app->params["ug"]["gas_price"], Yii::$app->params["ug"]["ug_host"], "eth_getTransactionCount", [Yii::$app->params["ug"]["red_packet_address"], "pending"]);
                     //根据组装数据获取签名且广播交易
-                    $res_data = Operating::getSignatureAndBroadcast(Yii::$app->params["ug"]["ug_sign_red_packet"], $send_sign_data, Yii::$app->params["ug"]["ug_sign_red_packet"], "eth_sendRawTransaction");
+                    $res_data = Operating::getSignatureAndBroadcast(Yii::$app->params["ug"]["ug_sign_red_packet"], $send_sign_data, Yii::$app->params["ug"]["ug_host"], "eth_sendRawTransaction");
                     if (!$res_data || isset($res_data['error'])) {
                         echo "广播交易失败".PHP_EOL;
                         continue;
@@ -249,7 +249,7 @@ class UgListenController extends Controller
                         continue;
                     }
                     //根据红包id，更新红包记录表状态为已过期
-                    if(RedPacketRecord::find()->where(["status" => [RedPacketRecord::RECEIVED,RedPacketRecord::EXCHANGE_FAIL]])->asArray()->all()){
+                    if(RedPacketRecord::find()->where(["status" => [RedPacketRecord::RECEIVED,RedPacketRecord::EXCHANGE_FAIL],"rid" => $info['id']])->asArray()->all()){
                         if (!RedPacketRecord::updateAll(["status" => RedPacketRecord::EXPIRED], "rid = " . $info['id'] . " and status != " . RedPacketRecord::EXCHANGE_SUCC)) {
                             echo "更新数据库红包记录表失败".PHP_EOL;
                             //continue;
