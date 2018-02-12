@@ -89,12 +89,6 @@ class WeChatRedPacketController extends Controller
      */
     public function actionShare()
     {
-
-
-        var_dump($_GET);exit;
-
-
-
         //微信授权认证返回code码
         $code = Yii::$app->request->get("code", "");
         $redpacketId = Yii::$app->request->get("redpacket_id", "");
@@ -127,7 +121,7 @@ class WeChatRedPacketController extends Controller
 
 
         //获取当前用户的红包状态、红包口令
-        $recordInfo = RedPacketRecord::getRedPacketRecordInfo($redpacketInfo['txid'], $userInfoData->openid);
+        $recordInfo = RedPacketRecord::getRedPacketRecordInfo($redpacketInfo['id'], $userInfoData->openid);
 
         //渲染页面
         return $this->render('share', [
