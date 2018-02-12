@@ -21,7 +21,11 @@ class RedPacket extends \common\models\RedPacket
     public static function getRedPacketInfoWithRecordList($id, $type = true, $platform = true)
     {
         if(!$platform){
-            $result = self::find()->where(["txid"=>$id])->one();
+            if($id <= "126"){
+                $result = self::findOne($id);
+            }else{
+                $result = self::find()->where(["txid"=>$id])->one();
+            }
         }else{
             $result = self::findOne($id);
         }
