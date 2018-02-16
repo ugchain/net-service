@@ -296,9 +296,8 @@ class UgListenController extends Controller
             //获取nince且组装签名数据
             $result['address'] = $v['to_address'];
             $result['app_txid'] = ''; //空的
-
             $send_sign_data = Operating::getNonceAssembleData($result, Yii::$app->params["ug"]["gas_price"], Yii::$app->params["ug"]["ug_host"], "eth_getTransactionCount", [Yii::$app->params["ug"]["red_packet_address"], "pending"]);
-
+            
             //根据组装数据获取签名且广播交易
             $res_data = Operating::getSignatureAndBroadcast(Yii::$app->params["ug"]["ug_sign_red_packet"], $send_sign_data, Yii::$app->params["ug"]["ug_host"], "eth_sendRawTransaction");
 
@@ -322,7 +321,7 @@ class UgListenController extends Controller
             }
 
             //修改红包记录表状态
-            if (!RedPacketRecord::updateStatusAndTxidByid($result['id'], $recordStatus, $res_data["result"], $address, $exchangeTime)) {
+            if (!RedPacketRecord::updateStatusAndTxidByid($result['id'], $recordStatus, $res_data["result"], $v['to_address'], $exchangeTime)) {
                 continue;
             }
 
@@ -336,7 +335,7 @@ class UgListenController extends Controller
             }
 
             //插入内部交易表
-            if (!Trade::insertData($res_data["result"], Yii::$app->params["ug"]["red_packet_address"], $address, $result["amount"], $tradeStatus, Trade::OPEN_REDPACKET, empty($trade_info['blockNumber'])?0:$trade_info['blockNumber'])) {
+            if (!Trade::insertData($res_data["result"], Yii::$app->params["ug"]["red_packet_address"], $v['to_address'], $result["amount"], $tradeStatus, Trade::OPEN_REDPACKET, empty($trade_info['blockNumber'])?0:$trade_info['blockNumber'])) {
                 continue;
             }
         }

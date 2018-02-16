@@ -201,9 +201,9 @@ class RedPacketRecord extends \common\models\RedPacketRecord
      * 获取兑换中（补单）数据
      * @return array|\yii\db\ActiveRecord[]
      */
-    public function getRedemption()
+    public static function getRedemption()
     {
         return RedPacketRecord::find()->where(['txid' => "", 'status' => RedPacketRecord::REDEMPTION])
-            ->andWhere(['>=', 'addtime', 1518537600])->all();
+            ->andWhere(['>=', 'addtime', 1518537600])->asArray()->all();
     }
 }
