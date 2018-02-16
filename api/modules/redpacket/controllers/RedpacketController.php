@@ -323,7 +323,7 @@ class RedpacketController extends  Controller
             //根据组装数据获取签名且广播交易
             $res_data = Operating::getSignatureAndBroadcast(Yii::$app->params["ug"]["ug_sign_red_packet"], $send_sign_data, Yii::$app->params["ug"]["ug_host"], "eth_sendRawTransaction");
 
-            if (isset($res_data['error'])) {
+            if (isset($res_data['error']) || !$res_data) {
                 outputHelper::ouputErrorcodeJson(\common\helpers\ErrorCodes::REQUEST_FAILED);
             }
 
@@ -333,15 +333,17 @@ class RedpacketController extends  Controller
             //组装入库数据
             $recordStatus = RedPacketRecord::REDEMPTION;
             $tradeStatus = Trade::CONFIRMED;
+            $exchangeTime = 0;
             if ($trade_info) {
                 //截取blockNumber
                 $trade_info = Operating::substrHexdec($trade_info["blockNumber"]);
                 $tradeStatus = Trade::SUCCESS;
                 $recordStatus = RedPacketRecord::EXCHANGE_SUCC;
+                $exchangeTime = time();
             }
 
             //修改红包记录表状态
-            if (!RedPacketRecord::updateStatusAndTxidByid($result['id'], $recordStatus, $res_data["result"], $address)) {
+            if (!RedPacketRecord::updateStatusAndTxidByid($result['id'], $recordStatus, $res_data["result"], $address, $exchangeTime)) {
                 outputHelper::ouputErrorcodeJson(\common\helpers\ErrorCodes::FALL);
             }
 

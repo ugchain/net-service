@@ -276,4 +276,72 @@ class UgListenController extends Controller
         echo "红包监听过期结束".time().PHP_EOL;
     }
 
+    /**
+     * 兑换补单定时任务
+     * 用于解决在兑换中获取noce值失败的情况
+     * 检索红包记录表中状态为（2）兑换中，txid(交易id)为空的数据
+     * 遍历后，获取noce，签名，上链，更新红包记录表状态，trade交易表插入数据
+     */
+    public function actionSendRedPacketRecordRedemption()
+    {
+        echo "红包兑换失败数据处理开始".time().PHP_EOL;
+
+        //获取红包记录表兑换中数据
+        $list = RedPacketRecord::getRedemption();
+        if (!$list) {
+            echo "暂无红包兑换数据！".PHP_EOL;die;
+        }
+
+        foreach ($list as $k => $v) {
+            //获取nince且组装签名数据
+            $result['address'] = $v['to_address'];
+            $result['app_txid'] = ''; //空的
+
+            $send_sign_data = Operating::getNonceAssembleData($result, Yii::$app->params["ug"]["gas_price"], Yii::$app->params["ug"]["ug_host"], "eth_getTransactionCount", [Yii::$app->params["ug"]["red_packet_address"], "pending"]);
+
+            //根据组装数据获取签名且广播交易
+            $res_data = Operating::getSignatureAndBroadcast(Yii::$app->params["ug"]["ug_sign_red_packet"], $send_sign_data, Yii::$app->params["ug"]["ug_host"], "eth_sendRawTransaction");
+
+            if (isset($res_data['error']) || !$res_data) {
+                continue;
+            }
+
+            //根据txid去块上确认
+            $trade_info = Operating::txidByTransactionInfo(Yii::$app->params["ug"]["ug_host"], "eth_getTransactionReceipt", [$res_data["result"]]);
+
+            //组装入库数据
+            $recordStatus = RedPacketRecord::REDEMPTION;
+            $tradeStatus = Trade::CONFIRMED;
+            $exchangeTime = 0;
+            if ($trade_info) {
+                //截取blockNumber
+                $trade_info = Operating::substrHexdec($trade_info["blockNumber"]);
+                $tradeStatus = Trade::SUCCESS;
+                $recordStatus = RedPacketRecord::EXCHANGE_SUCC;
+                $exchangeTime = time();
+            }
+
+            //修改红包记录表状态
+            if (!RedPacketRecord::updateStatusAndTxidByid($result['id'], $recordStatus, $res_data["result"], $address, $exchangeTime)) {
+                continue;
+            }
+
+            $redPacketInfo = RedPacket::find()->where(['id' => $v['rid']])->one();
+            //如果所有红包记录都兑换完成，更新红包状态
+            $exchangeCount = RedPacketRecord::find()->where(['rid' => $v['rid'], 'status' => RedPacketRecord::EXCHANGE_SUCC])->count();
+            if ($redPacketInfo['quantity'] == $exchangeCount) {
+                if (!RedPacket::updateStatus($v['rid'], RedPacket::REDPACKET_EXPIRED)) {
+                    continue;
+                }
+            }
+
+            //插入内部交易表
+            if (!Trade::insertData($res_data["result"], Yii::$app->params["ug"]["red_packet_address"], $address, $result["amount"], $tradeStatus, Trade::OPEN_REDPACKET, empty($trade_info['blockNumber'])?0:$trade_info['blockNumber'])) {
+                continue;
+            }
+        }
+        echo "红包兑换失败数据处理结束".time().PHP_EOL;
+    }
+
+
 }
