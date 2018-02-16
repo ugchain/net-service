@@ -203,7 +203,7 @@ class RedPacketRecord extends \common\models\RedPacketRecord
      */
     public function getRedemption()
     {
-        return RedPacketRecord::find()->where(['txid' => 0, 'status' => RedPacketRecord::REDEMPTION])
+        return RedPacketRecord::find()->where(['txid' => "", 'status' => RedPacketRecord::REDEMPTION])
             ->andWhere(['>=', 'addtime', 1518537600])->all();
     }
 }
