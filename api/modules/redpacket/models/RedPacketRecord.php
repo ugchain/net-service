@@ -73,9 +73,9 @@ class RedPacketRecord extends \common\models\RedPacketRecord
      *
      * @return int
      */
-    public static function updateStatusAndTxidByid($id, $status, $txid, $to_address)
+    public static function updateStatusAndTxidByid($id, $status, $txid, $to_address, $exchangeTime)
     {
-        return RedPacketRecord::updateAll(["status" => $status, "txid" => $txid, "to_address" => $to_address], ["id" => $id]);
+        return RedPacketRecord::updateAll(["status" => $status, "txid" => $txid, "to_address" => $to_address, 'exchange_time' => $exchangeTime], ["id" => $id]);
     }
 
     /**
@@ -195,5 +195,15 @@ class RedPacketRecord extends \common\models\RedPacketRecord
         }
 
         return self::$_salt;
+    }
+
+    /**
+     * 获取兑换中（补单）数据
+     * @return array|\yii\db\ActiveRecord[]
+     */
+    public static function getRedemption()
+    {
+        return RedPacketRecord::find()->where(['txid' => "", 'status' => RedPacketRecord::REDEMPTION])
+            ->andWhere(['>=', 'addtime', 1518537600])->asArray()->all();
     }
 }
