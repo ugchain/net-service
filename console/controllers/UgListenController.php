@@ -342,5 +342,40 @@ class UgListenController extends Controller
         echo "红包兑换失败数据处理结束".time().PHP_EOL;
     }
 
+    /**
+     * ug-eth划转时手续费低时,eth上无法上链,实行退还到UG网络余额中
+     * 解决方法：将金额退还到UG网络用户地址的余额中
+     *
+     */
+    public function actionLowFeeBill()
+    {
+        //需要退还的ID
+        $ids = ["87","88","90","91","93"];
+        foreach ($ids as $id){
+            $center_list = CenterBridge::find()->where(["id"=>$id])->asArray()->one();
+            if(!$center_list){
+                continue;
+            }
+            $center_list["amount"] = (string)($center_list["amount"] + $center_list["ug_free"]);
+            //获取nince且组装签名数据
+            $send_sign_data = Operating::getNonceAssembleData($center_list, Yii::$app->params["ug"]["gas_price"], Yii::$app->params["ug"]["ug_host"], "eth_getTransactionCount", [Yii::$app->params["ug"]["owner_address"], "pending"]);
+            if (!$send_sign_data) {
+                echo "获取nonce且组装签名数据";
+                continue;
+            }
 
+            //根据组装数据获取签名且广播交易
+            $res_data = Operating::getSignatureAndBroadcast(Yii::$app->params["ug"]["ug_sign_url"], $send_sign_data, Yii::$app->params["ug"]["ug_host"], "eth_sendRawTransaction");
+            if (!$res_data ||isset($res_data['error'])) {
+                echo "数据获取签名且广播交易错误";
+                continue;
+            }
+            if(!Trade::insertData($res_data["result"], Yii::$app->params["ug"]["owner_address"], $center_list["address"], $center_list["amount"], Trade::CONFIRMED)){
+                echo "UG网络退还金额插入交易记录失败";
+                continue;
+            }
+            echo "UG网络退还金额hash : ".json_encode($res_data).PHP_EOL;
+        }
+        echo "UG网络退还完成".PHP_EOL;
+    }
 }
