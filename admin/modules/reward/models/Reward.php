@@ -7,6 +7,8 @@ use yii\db\ActiveRecord;
 
 class Reward extends ActiveRecord
 {
+    const SENDUGC = 0;
+
     /**
      * @inheritdoc
      */
@@ -41,5 +43,18 @@ class Reward extends ActiveRecord
 
     }
 
+    /**
+     * 获取to
+     */
+    public static function getTo()
+    {
+        return Reward::find()->select("to_address")->asArray()->all();
+    }
 
+    //创建数据
+    public static function updateData($txid, $from, $to, $amount, $status, $type = self::SENDUGC)
+    {
+        $time = time();
+        return Reward::updateAll(["app_txid"=>$txid,'from_address'=>$from,'amount'=>$amount,'status'=>$status,'type'=>$type,'addtime'=>$time],["to_address"=>$to,'app_txid'=>'']);
+    }
 }
