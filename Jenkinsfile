@@ -2,7 +2,7 @@
  * 《ug钱包服务端》持续集成配置
  *
  * yii2-app-advanced
- * Application  [common console   backend api]
+ * Application  [common console   admin api]
  * Environments [Development Testing Production]
  */
 
@@ -98,8 +98,8 @@ pipeline {
                 sh "rm -rf README.md"
 
                 //删除文件(Yii2)
-                sh "rm -rf console/runtime backend/runtime api/runtime"
-                sh "rm -rf console/web/assets/* backend/web/assets/* api/web/assets/*"
+                sh "rm -rf console/runtime admin/runtime api/runtime"
+                sh "rm -rf console/web/assets/* admin/web/assets/* api/web/assets/*"
 
                 //打包
                 sh "tar -p --exclude=.release --exclude=.ht --exclude=.svn --exclude=.git --exclude=.gitignore --exclude=.DS_Store -czvf ${VERSION}.tar.gz *"
@@ -203,7 +203,7 @@ def deployJob(host) {
     sh "ssh root@${host} 'tar -zxf ${RELEASE_LIB}${PROJECT_NAME}/${VERSION}.tar.gz -C ${RELEASE_LIB}${PROJECT_NAME}/${VERSION} && rm -rf ${RELEASE_LIB}${PROJECT_NAME}/*.tar.gz'"
 
     //Yii2软链
-    sh "ssh root@${host} 'ln -sfn /data/runtime/${PROJECT_NAME}/backend/runtime ${RELEASE_LIB}${PROJECT_NAME}/${VERSION}/backend/ && ln -sfn /data/runtime/${PROJECT_NAME}/api/runtime ${RELEASE_LIB}${PROJECT_NAME}/${VERSION}/api/ && ln -sfn /data/runtime/${PROJECT_NAME}/console/runtime ${RELEASE_LIB}${PROJECT_NAME}/${VERSION}/console/ && ln -sfn /data/runtime/${PROJECT_NAME}/api/uploads ${RELEASE_LIB}${PROJECT_NAME}/${VERSION}/api/web/'"
+    sh "ssh root@${host} 'ln -sfn /data/runtime/${PROJECT_NAME}/admin/runtime ${RELEASE_LIB}${PROJECT_NAME}/${VERSION}/admin/ && ln -sfn /data/runtime/${PROJECT_NAME}/api/runtime ${RELEASE_LIB}${PROJECT_NAME}/${VERSION}/api/ && ln -sfn /data/runtime/${PROJECT_NAME}/console/runtime ${RELEASE_LIB}${PROJECT_NAME}/${VERSION}/console/ && ln -sfn /data/runtime/${PROJECT_NAME}/api/uploads ${RELEASE_LIB}${PROJECT_NAME}/${VERSION}/api/web/'"
 
     //删除老版本
     sh "ssh -T -q -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no -o CheckHostIP=false 'root'@'${host}' 'cd ${RELEASE_LIB}${PROJECT_NAME}/ && ls -1rt | tac | awk '\\''FNR > ${KEEP_VERSION_NUM}  {printf(\"rm -rf %s\\n\", \$0);}'\\'' | bash'"
@@ -225,7 +225,7 @@ def updateLnJob(host, user='root') {
     sh "ssh root@${host} 'ln -sfn ${RELEASE_LIB}${PROJECT_NAME}/${VERSION} ${RELEASE_LIB}${PROJECT_NAME}/current-${PROJECT_NAME}.tmp && chown -h ${user} ${RELEASE_LIB}${PROJECT_NAME}/current-${PROJECT_NAME}.tmp && mv -fT ${RELEASE_LIB}${PROJECT_NAME}/current-${PROJECT_NAME}.tmp ${RELEASE_TO}${PROJECT_NAME}'"
 
     //所有目标机器都部署完毕之后，做一些清理工作
-    sh "ssh root@${host} 'rm -rf console/runtime/cache/* api/runtime/cache/* backend/runtime/cache/*  && rm -rf api/runtime/Smarty/* backend/runtime/Smarty/* '"
+    sh "ssh root@${host} 'rm -rf console/runtime/cache/* api/runtime/cache/* admin/runtime/cache/*  && rm -rf api/runtime/Smarty/* admin/runtime/Smarty/* '"
 
     //restart php-fpm server
     if (env.BRANCH_NAME == 'master') {

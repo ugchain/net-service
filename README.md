@@ -4,7 +4,7 @@ UGchain
 common
     config/              contains shared configurations
     mail/                contains view files for e-mails
-    models/              contains model classes used in both backend and frontend
+    models/              contains model classes used in both admin and frontend
     tests/               contains tests for common classes    
 console
     config/              contains console configurations
@@ -12,13 +12,13 @@ console
     migrations/          contains database migrations
     models/              contains console-specific model classes
     runtime/             contains files generated during runtime
-backend
+admin
     assets/              contains application assets such as JavaScript and CSS
-    config/              contains backend configurations
+    config/              contains admin configurations
     controllers/         contains Web controller classes
-    models/              contains backend-specific model classes
+    models/              contains admin-specific model classes
     runtime/             contains files generated during runtime
-    tests/               contains tests for backend application    
+    tests/               contains tests for admin application    
     views/               contains view files for the Web application
     web/                 contains the entry script and Web resources
 frontend
