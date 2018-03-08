@@ -4,7 +4,7 @@ namespace admin\modules\reward\controllers;
 
 use Yii;
 use yii\web\Controller;
-use admin\modules\reward\models\reward;
+use admin\modules\reward\models\Reward;
 
 class RewardController extends  Controller
 {
@@ -17,7 +17,7 @@ class RewardController extends  Controller
         if(Yii::$app->request->isPost){
             $tos = Yii::$app->request->post('to');
             $data = explode(' ',$tos);
-            reward::saveReward($data);
+            Reward::saveReward($data);
         }
         return $this->render('index.html');
     }
