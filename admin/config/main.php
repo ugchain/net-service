@@ -13,6 +13,9 @@ return [
     'bootstrap' => ['log'],
     //模块类
     'modules' => [
+        'admin' => [
+            'class' => 'mdm\admin\Module',
+        ],
         'reward' => [
             'class' => 'admin\modules\reward\Module',
         ]
