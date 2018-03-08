@@ -205,7 +205,7 @@ class Operating
         } else if($type == Trade::BACK_REDPACKET) {
             //更新红包表 status已过期(不改变), expire_time过期时间
             return RedPacket::updateAll(["status" => RedPacket::REDPACKET_EXPIRED, "expire_time" => time()], ["txid" => $txid]);
-        } else if($type == Trade::BACK_REDPACKET) {
+        } else if($type == Trade::REWARD) {
             //更新奖励表
             return Reward::updateAll(["status" => Reward::REWARD_SUCCESS, "trade_time" => time()], ["app_txid" => $txid]);
         } else {
