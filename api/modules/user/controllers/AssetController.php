@@ -175,7 +175,7 @@ class AssetController extends  Controller
             outputHelper::ouputErrorcodeJson(\common\helpers\ErrorCodes::TXID_EXIST);
         }
 
-        if(!Trade::insertData($txid, $from, $to, $amount, Trade::CONFIRMED)){
+        if(!Trade::insertData($txid, $from, $to, $amount, Trade::CONFIRMED,Trade::REWARD)){
             outputHelper::ouputErrorcodeJson(\common\helpers\ErrorCodes::FALL);
         }
         //确认转账成功
