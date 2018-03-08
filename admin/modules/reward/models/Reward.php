@@ -8,6 +8,8 @@ use yii\db\ActiveRecord;
 class Reward extends ActiveRecord
 {
     const SENDUGC = 0;
+    const REWARD_SUCCESS = 1;//状态成功
+    const REWARD_FAIL = 2;//状态失败
 
     /**
      * @inheritdoc
@@ -48,7 +50,7 @@ class Reward extends ActiveRecord
      */
     public static function getTo()
     {
-        return Reward::find()->select("to_address")->asArray()->all();
+        return Reward::find()->select("to_address")->where("app_txid=''")->asArray()->all();
     }
 
     //创建数据
