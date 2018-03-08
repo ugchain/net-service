@@ -178,26 +178,7 @@ class AssetController extends  Controller
         if(!Trade::insertData($txid, $from, $to, $amount, Trade::CONFIRMED,Trade::REWARD)){
             outputHelper::ouputErrorcodeJson(\common\helpers\ErrorCodes::FALL);
         }
-        //确认转账成功
-        $block_info = CurlRequest::ChainCurl(Yii::$app->params["ug"]["ug_host"], "eth_getTransactionReceipt", [$txid]);
-        //写入log
-        OutputHelper::log("ug划转链上确认信息: ".$txid."--".$block_info, "internal_transfer");
-
-        if (!$block_info) {
-            outputHelper::ouputErrorcodeJson(\common\helpers\ErrorCodes::FALL);
-        }
-        $block_info = json_decode($block_info,true);
-        if (isset($block_info["error"])) {
-            outputHelper::ouputErrorcodeJson(\common\helpers\ErrorCodes::FALL);
-        }
-        if($block_info["result"]["blockNumber"] == null){
-            outputHelper::ouputErrorcodeJson(\common\helpers\ErrorCodes::FALL);
-        }
-        //进制转换
-        $block_info["result"] = Operating::substrHexdec($block_info["result"]);
-        if(!Trade::updateBlockAndStatusBytxid($txid, $block_info["result"]["blockNumber"], Trade::SUCCESS)){
-            outputHelper::ouputErrorcodeJson(\common\helpers\ErrorCodes::FALL);
-        }
+        
         outputHelper::ouputErrorcodeJson(\common\helpers\ErrorCodes::SUCCESS);
     }
 }
