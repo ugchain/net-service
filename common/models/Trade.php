@@ -14,6 +14,7 @@ class Trade extends ActiveRecord
     const CREATE_REDPACKET = 1;  //创建红包交易转账
     const OPEN_REDPACKET = 2;  //拆红包交易转账
     const BACK_REDPACKET = 3;  //退还红包交易转账
+    const REWARD = 4;  //活动奖励
 
     /**
      * @inheritdoc

@@ -96,7 +96,7 @@ class UgListenController extends Controller
     }
 
     /**
-     * 检查Ug内部交易转账（内部交易转账、创建红包、兑换红包、退还红包）
+     * 检查Ug内部交易转账（内部交易转账、创建红包、兑换红包、退还红包、ugc奖励活动）
      * 根据txid到链上获取交易信息，获取blocknumber
      * 更新数据库blocknumber && status && trade_time
      */
@@ -136,7 +136,7 @@ class UgListenController extends Controller
             }
 
             /**
-             * 根据type更新表，记录类型；0内部交易转账；1创建红包交易；2拆红包交易转账；3退换红包交易转账
+             * 根据type更新表，记录类型；0内部交易转账；1创建红包交易；2拆红包交易转账；3退换红包交易转账 4:活动奖励
              * 根据txid，更新status、time
              */
             if (!Operating::updateDataBytxid($info['type'], $info["app_txid"])) {

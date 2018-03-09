@@ -8,6 +8,7 @@ use common\helpers\OutputHelper;
 use common\helpers\CurlRequest;
 use api\modules\user\models\Trade;
 use api\modules\user\models\CenterBridge;
+use admin\modules\reward\models\Reward;
 use common\wallet\Operating;
 use common\models\ExtraPrice;
 
@@ -139,5 +140,51 @@ class AssetController extends  Controller
         }
         $data["ug_free"] = $free_info["ug_extra_free"];
         outputHelper::ouputErrorcodeJson(\common\helpers\ErrorCodes::SUCCESS,$data);
+    }
+
+    /**
+     * 获取活动to_address
+     */
+    public function actionGettoaddress()
+    {
+        $data = Reward::getTo();
+        outputHelper::ouputErrorcodeJson(\common\helpers\ErrorCodes::SUCCESS,$data);
+    }
+
+    /**
+     * ugc发放活动
+     */
+    public function actionUgReward()
+    {
+        //交易id
+        $txid = Yii::$app->request->post("txid", "");
+        //地址
+        $from = Yii::$app->request->post("from", "");
+        //地址
+        $to = Yii::$app->request->post("to", "");
+        //价格
+        $amount = Yii::$app->request->post("amount", 0);
+        //写入log
+        OutputHelper::log("ugc奖励api信息: ".json_encode(["txid" => $txid, "from" => $from, "to" => $to, "amount" => $amount]),"internal_transfer");
+        // 通过to地址update
+        if(!Reward::updateData($txid, $from, $to, $amount, Trade::CONFIRMED)){
+            //写入log
+            OutputHelper::log("ugc奖励错误信息1: ".json_encode(["txid" => $txid, "from" => $from, "to" => $to, "amount" => $amount]),"internal_transfer");
+            outputHelper::ouputErrorcodeJson(\common\helpers\ErrorCodes::FALL);
+        }
+        //检验txid是否存在
+        if ($txid_info = Trade::getTxidInfo($txid)) {
+            //写入log
+            OutputHelper::log("ugc奖励错误信息2: ".json_encode(["txid" => $txid, "from" => $from, "to" => $to, "amount" => $amount]),"internal_transfer");
+            outputHelper::ouputErrorcodeJson(\common\helpers\ErrorCodes::TXID_EXIST);
+        }
+
+        if(!Trade::insertData($txid, $from, $to, $amount, Trade::CONFIRMED,Trade::REWARD)){
+            //写入log
+            OutputHelper::log("ugc奖励错误信息3: ".json_encode(["txid" => $txid, "from" => $from, "to" => $to, "amount" => $amount]),"internal_transfer");
+            outputHelper::ouputErrorcodeJson(\common\helpers\ErrorCodes::FALL);
+        }
+        
+        outputHelper::ouputErrorcodeJson(\common\helpers\ErrorCodes::SUCCESS);
     }
 }

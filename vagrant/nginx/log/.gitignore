@@ -1,5 +1,5 @@
 # nginx logs
-backend-access.log
-backend-error.log
+admin-access.log
+admin-error.log
 frontend-access.log
 frontend-error.log

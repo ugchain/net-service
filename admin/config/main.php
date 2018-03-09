@@ -1,0 +1,70 @@
+<?php
+$params = array_merge(
+    require __DIR__ . '/../../common/config/params.php',
+    require __DIR__ . '/../../common/config/params-local.php',
+    require __DIR__ . '/params.php',
+    require __DIR__ . '/params-local.php'
+);
+
+return [
+    'id' => 'app-admin',
+    'basePath' => dirname(__DIR__),
+    'controllerNamespace' => 'admin\controllers',
+    'bootstrap' => ['log'],
+    //模块类
+    'modules' => [
+        'admin' => [
+            'class' => 'mdm\admin\Module',
+        ],
+        'reward' => [
+            'class' => 'admin\modules\reward\Module',
+        ]
+    ],
+    "aliases" => [
+        "@mdm/admin" => '@vendor/mdmsoft/yii2-admin',
+    ],
+    'components' => [
+        'request' => [
+            'csrfParam' => '_csrf-admin',
+        ],
+        'user' => [
+            'identityClass' => 'common\models\User',
+            'enableAutoLogin' => true,
+            'identityCookie' => ['name' => '_identity-admin', 'httpOnly' => true],
+        ],
+        'session' => [
+            // this is the name of the session cookie used for login on the admin
+            'name' => 'advanced-admin',
+        ],
+        'log' => [
+            'traceLevel' => YII_DEBUG ? 3 : 0,
+            'targets' => [
+                [
+                    'class' => 'yii\log\FileTarget',
+                    'levels' => ['error', 'warning'],
+                ],
+            ],
+        ],
+        'errorHandler' => [
+            'errorAction' => 'site/error',
+        ],
+        "authManager" => [
+            "class" => 'yii\rbac\DbManager', //这里记得用单引号而不是双引号
+            "defaultRoles" => ['guest'],
+        ],
+        'urlManager' => [
+            'enablePrettyUrl' => true,
+            'showScriptName' => false,
+            'rules' => [
+                '*'
+            ],
+        ],
+    ],
+    'as access' => [
+        'class' => 'mdm\admin\components\AccessControl',
+        'allowActions' => [
+            '*'
+        ]
+    ],
+    'params' => $params,
+];
