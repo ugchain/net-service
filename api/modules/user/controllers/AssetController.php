@@ -168,14 +168,20 @@ class AssetController extends  Controller
         OutputHelper::log("ugc奖励api信息: ".json_encode(["txid" => $txid, "from" => $from, "to" => $to, "amount" => $amount]),"internal_transfer");
         // 通过to地址update
         if(!Reward::updateData($txid, $from, $to, $amount, Trade::CONFIRMED)){
+            //写入log
+            OutputHelper::log("ugc奖励错误信息1: ".json_encode(["txid" => $txid, "from" => $from, "to" => $to, "amount" => $amount]),"internal_transfer");
             outputHelper::ouputErrorcodeJson(\common\helpers\ErrorCodes::FALL);
         }
         //检验txid是否存在
         if ($txid_info = Trade::getTxidInfo($txid)) {
+            //写入log
+            OutputHelper::log("ugc奖励错误信息2: ".json_encode(["txid" => $txid, "from" => $from, "to" => $to, "amount" => $amount]),"internal_transfer");
             outputHelper::ouputErrorcodeJson(\common\helpers\ErrorCodes::TXID_EXIST);
         }
 
         if(!Trade::insertData($txid, $from, $to, $amount, Trade::CONFIRMED,Trade::REWARD)){
+            //写入log
+            OutputHelper::log("ugc奖励错误信息3: ".json_encode(["txid" => $txid, "from" => $from, "to" => $to, "amount" => $amount]),"internal_transfer");
             outputHelper::ouputErrorcodeJson(\common\helpers\ErrorCodes::FALL);
         }
         
