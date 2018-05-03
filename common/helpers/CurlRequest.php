@@ -13,7 +13,7 @@ class CurlRequest
      */
     public static function ChainCurl($url,$method,$params=[],$type='post')
     {
-        $data = ["jsonrpc"=>"2.0","method"=>$method,"params"=>$params,"id"=>"1"];
+        $data = ["jsonrpc"=>"2.0","method"=>$method,"params"=>$params,"id"=> 1 ];
         $json_data = json_encode($data);
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_POST, true);
